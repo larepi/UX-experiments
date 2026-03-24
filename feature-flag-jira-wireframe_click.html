@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jira Integration - Interactive Prototype</title>
+    <title>Feature Flag Management - Low-Fi Wireframe</title>
     <style>
         * {
             margin: 0;
@@ -13,32 +13,112 @@
 
         body {
             font-family: 'Courier New', monospace;
-            background: #e8e8e8;
+            background: #f0f0f0;
             color: #000;
-            line-height: 1.6;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: #fff;
-            min-height: 100vh;
-            border-left: 3px solid #000;
+        /* Sidebar */
+        .sidebar {
+            width: 200px;
+            background: #e0e0e0;
             border-right: 3px solid #000;
+            padding: 20px 0;
+            overflow-y: auto;
         }
 
-        /* Header */
-        .header {
+        .sidebar-header {
+            padding: 10px 20px;
+            border-bottom: 2px solid #999;
+            margin-bottom: 15px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .nav-item {
+            padding: 10px 20px;
+            border-left: 4px solid transparent;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .nav-item:hover {
+            background: #d0d0d0;
+        }
+
+        .nav-item.active {
+            background: #ccc;
+            border-left-color: #000;
+            font-weight: bold;
+        }
+
+        /* Main content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        /* Top bar */
+        .top-bar {
             background: #000;
             color: #fff;
-            padding: 15px 20px;
+            padding: 10px 20px;
             border-bottom: 3px solid #000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .breadcrumb {
             font-size: 12px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            width: 30px;
+            height: 30px;
+            border: 2px solid #fff;
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        /* Content area */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        /* Flag header */
+        .flag-header {
+            border: 3px solid #000;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #f9f9f9;
+        }
+
+        .flag-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .flag-meta {
+            font-size: 11px;
+            color: #666;
+            display: flex;
+            gap: 20px;
         }
 
         /* Tabs */
@@ -46,64 +126,222 @@
             display: flex;
             gap: 0;
             border-bottom: 3px solid #000;
-            background: #ddd;
+            margin-bottom: 20px;
         }
 
         .tab {
             padding: 12px 24px;
-            border-right: 2px solid #000;
-            background: #ccc;
+            border: 2px solid #000;
+            border-bottom: none;
+            background: #ddd;
             cursor: pointer;
             font-weight: bold;
-            transition: background 0.2s;
+            font-size: 13px;
+            margin-bottom: -3px;
         }
 
         .tab:hover {
-            background: #bbb;
+            background: #ccc;
         }
 
         .tab.active {
             background: #fff;
-            cursor: default;
+            border-bottom: 3px solid #fff;
         }
 
-        /* Content area */
-        .content {
-            padding: 30px;
-            min-height: 600px;
+        /* Tab content */
+        .tab-content {
+            display: block;
         }
 
-        .page-header {
+        .tab-content.hidden {
+            display: none;
+        }
+
+        /* Section */
+        .section {
+            border: 3px solid #000;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #fff;
+        }
+
+        .section-header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 3px solid #ccc;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #ccc;
         }
 
-        .page-title {
-            font-size: 24px;
+        .section-title {
+            font-size: 18px;
             font-weight: bold;
-            margin-bottom: 5px;
         }
 
-        .page-subtitle {
+        /* Table */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 2px solid #000;
+        }
+
+        .table th,
+        .table td {
+            border: 2px solid #000;
+            padding: 12px;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        .table th {
+            background: #e0e0e0;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 11px;
+        }
+
+        .table td {
+            background: #fff;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border: 2px solid #000;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .badge.setup {
+            background: #fff;
+        }
+
+        /* Toggle switch */
+        .toggle {
+            width: 40px;
+            height: 20px;
+            border: 2px solid #000;
+            background: #fff;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .toggle::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #666;
+            left: 2px;
+            top: 0;
+        }
+
+        .toggle.on::after {
+            left: 20px;
+            background: #000;
+        }
+
+        /* Checkbox */
+        .checkbox {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #000;
+            background: #fff;
+            display: inline-block;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+
+        .checkbox.checked {
+            background: #000;
+        }
+
+        /* Select/Dropdown */
+        .select {
+            border: 2px solid #000;
+            padding: 8px 12px;
+            background: #fff;
+            font-family: inherit;
+            font-size: 12px;
+            min-width: 150px;
+        }
+
+        /* Filter bar */
+        .filter-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 2px solid #999;
+            background: #f5f5f5;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            border: 3px dashed #999;
+            background: #fafafa;
+        }
+
+        .empty-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .empty-text {
             font-size: 14px;
             color: #666;
+            margin-bottom: 10px;
         }
 
-        /* Buttons */
-        .btn {
+        .empty-subtext {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            font-size: 12px;
+        }
+
+        .pagination-btn {
+            width: 30px;
+            height: 30px;
+            border: 2px solid #000;
             background: #fff;
-            border: 3px solid #000;
-            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .pagination-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* Button */
+        .btn {
+            border: 2px solid #000;
+            padding: 8px 16px;
+            background: #fff;
             font-family: inherit;
-            font-size: 14px;
+            font-size: 12px;
+            font-weight: bold;
             cursor: pointer;
             text-transform: uppercase;
-            font-weight: bold;
-            transition: background 0.2s;
         }
 
         .btn:hover {
@@ -125,38 +363,18 @@
             border-color: #666;
         }
 
-        .btn-danger:hover {
-            background: #555;
-        }
-
         .btn-sm {
-            padding: 6px 12px;
-            font-size: 12px;
+            padding: 5px 10px;
+            font-size: 11px;
         }
 
-        .btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        /* Form elements */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
+        /* Input */
         .input {
+            border: 2px solid #000;
+            padding: 8px 12px;
             width: 100%;
-            padding: 10px;
-            border: 3px solid #000;
             font-family: inherit;
-            font-size: 14px;
+            font-size: 12px;
             background: #fff;
         }
 
@@ -167,16 +385,14 @@
 
         .input:disabled {
             background: #e8e8e8;
-            color: #666;
         }
 
-        /* Cards for tickets */
+        /* Card for tickets */
         .card {
-            border: 3px solid #000;
-            padding: 20px;
+            border: 2px solid #000;
+            padding: 15px;
             margin-bottom: 15px;
             background: #fff;
-            transition: border-color 0.2s;
         }
 
         .card:hover {
@@ -187,77 +403,26 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             padding-bottom: 10px;
             border-bottom: 2px solid #ccc;
         }
 
         .card-title {
-            font-size: 18px;
+            font-size: 14px;
             font-weight: bold;
         }
 
         .card-row {
             display: flex;
             gap: 15px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            font-size: 12px;
         }
 
         .card-label {
             font-weight: bold;
-            min-width: 100px;
-        }
-
-        .card-value {
-            flex: 1;
-        }
-
-        /* Badge */
-        .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border: 2px solid #000;
-            background: #ddd;
-            font-size: 11px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .badge.in-progress {
-            background: #bbb;
-        }
-
-        .badge.done {
-            background: #ddd;
-        }
-
-        .badge.todo {
-            background: #fff;
-        }
-
-        /* Empty state */
-        .empty-state {
-            border: 3px dashed #999;
-            padding: 60px 30px;
-            text-align: center;
-            background: #f9f9f9;
-        }
-
-        .empty-icon {
-            font-size: 48px;
-            margin-bottom: 20px;
-        }
-
-        .empty-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .empty-text {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 20px;
+            min-width: 80px;
         }
 
         /* Modal */
@@ -269,7 +434,7 @@
             right: 0;
             bottom: 0;
             background: rgba(0, 0, 0, 0.6);
-            z-index: 999;
+            z-index: 1000;
             align-items: center;
             justify-content: center;
         }
@@ -280,16 +445,14 @@
 
         .modal {
             background: #fff;
-            border: 5px solid #000;
-            padding: 30px;
+            border: 4px solid #000;
+            padding: 25px;
             width: 90%;
             max-width: 500px;
-            max-height: 90vh;
-            overflow-y: auto;
         }
 
         .modal-title {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: bold;
             margin-bottom: 20px;
             padding-bottom: 15px;
@@ -297,22 +460,82 @@
         }
 
         .modal-actions {
-            margin-top: 25px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid #ccc;
             display: flex;
             gap: 10px;
             justify-content: flex-end;
-            padding-top: 20px;
-            border-top: 2px solid #ccc;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 30px;
+            border: 2px dashed #999;
+            background: #f5f5f5;
+            margin: 15px 0;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #ddd;
+            border-top-color: #000;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Preview box */
+        .preview-box {
+            border: 2px solid #000;
+            padding: 15px;
+            background: #f8f8f8;
+            margin: 15px 0;
+        }
+
+        .preview-header {
+            font-weight: bold;
+            margin-bottom: 12px;
+            font-size: 11px;
+            text-transform: uppercase;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #000;
+        }
+
+        /* Error message */
+        .error-message {
+            background: #f5f5f5;
+            border: 2px solid #999;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 11px;
         }
 
         /* Info box */
         .info-box {
             background: #f5f5f5;
-            border: 3px solid #999;
-            border-left-width: 8px;
-            padding: 15px;
-            margin: 20px 0;
-            font-size: 13px;
+            border: 2px solid #999;
+            border-left-width: 6px;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 11px;
         }
 
         /* Link */
@@ -328,89 +551,207 @@
             color: #fff;
         }
 
-        /* Divider */
-        .divider {
-            height: 2px;
-            background: #ccc;
-            margin: 15px 0;
-        }
-
-        /* Loading spinner */
-        .loading {
-            text-align: center;
-            padding: 30px;
-            border: 3px solid #ccc;
-            background: #f5f5f5;
-            margin: 20px 0;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid #ddd;
-            border-top-color: #000;
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Error message */
-        .error-message {
-            color: #000;
-            background: #f5f5f5;
-            border: 3px solid #999;
-            padding: 10px 15px;
-            margin-top: 10px;
-            font-size: 13px;
-        }
-
-        /* Hidden helper class */
+        /* Hidden */
         .hidden {
             display: none;
         }
 
-        /* Ticket count badge */
-        .count-badge {
-            color: #666;
-            font-weight: normal;
-            font-size: 16px;
+        /* Badge variations */
+        .badge.in-progress {
+            background: #bbb;
+        }
+
+        .badge.done {
+            background: #ddd;
+        }
+
+        .badge.todo {
+            background: #fff;
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: #ccc;
+            margin: 12px 0;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <div class="breadcrumb">Flags / feature-x-rollout / Jira Integration</div>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="sidebar-header">[LOGO] FM playground</div>
+        <div class="nav-item">Home</div>
+        <div class="nav-item">Components</div>
+        <div class="nav-item">Runs</div>
+        <div class="nav-item">Applications</div>
+        <div class="nav-item">Releases</div>
+        <div class="nav-item active">Feature management</div>
+        <div class="nav-item">Security</div>
+        <div class="nav-item">Audit history</div>
+        <div class="nav-item">Analytics</div>
+        <div class="nav-item">Configurations</div>
+        <div class="nav-item">Jenkins® management</div>
+        <div class="nav-item">Smart tests</div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="breadcrumb">
+                FM playground / Feature management / app-1 / Flags / fm-test-flag-new / Flag health
+            </div>
+            <div class="top-actions">
+                <button class="icon-btn">[?]</button>
+                <button class="icon-btn">[☰]</button>
+                <button class="icon-btn">[USER]</button>
+            </div>
         </div>
 
-        <!-- Tabs -->
-        <div class="tabs">
-            <div class="tab">General</div>
-            <div class="tab">Targeting</div>
-            <div class="tab">Variations</div>
-            <div class="tab">Settings</div>
-            <div class="tab active">Jira</div>
-        </div>
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Flag Header -->
+            <div class="flag-header">
+                <div class="flag-title">[FLAG] fm-test-flag-new</div>
+                <div class="flag-meta">
+                    <span>Created: 2026/03/11 12:12:54 PM</span>
+                    <span>Last updated: 2026/03/11 12:12:54 PM</span>
+                    <span style="color: #000; text-decoration: underline; cursor: pointer;">Add labels</span>
+                </div>
+            </div>
 
-        <!-- Main Content -->
-        <div class="content" id="mainContent">
-            <!-- Content will be dynamically rendered -->
+            <!-- Tabs -->
+            <div class="tabs">
+                <div class="tab" onclick="switchTab('configure')">Configure</div>
+                <div class="tab" onclick="switchTab('impressions')">Impressions</div>
+                <div class="tab active" onclick="switchTab('flag-health')">Flag health</div>
+                <div class="tab" onclick="switchTab('jira')">Jira</div>
+            </div>
+
+            <!-- Flag Health Tab Content -->
+            <div id="flag-health-content" class="tab-content">
+            <!-- Configuration Preview Section -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title">Configuration Preview</div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span class="checkbox"></span>
+                        <span style="font-size: 13px;">Switch off all configurations</span>
+                    </div>
+                </div>
+
+                <!-- Data Table -->
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Environment ↑</th>
+                            <th>Last update</th>
+                            <th>Activity status</th>
+                            <th>Impressions ⓘ</th>
+                            <th>Configuration</th>
+                            <th>Configuration status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>env-1</strong></td>
+                            <td>2026/03/11 (12:12:54)</td>
+                            <td><span class="badge setup">Setup</span></td>
+                            <td>0</td>
+                            <td>Value written in code</td>
+                            <td><div class="toggle"></div></td>
+                        </tr>
+                        <tr>
+                            <td><strong>env-2</strong></td>
+                            <td>2026/03/11 (12:12:54)</td>
+                            <td><span class="badge setup">Setup</span></td>
+                            <td>0</td>
+                            <td>Value written in code</td>
+                            <td><div class="toggle"></div></td>
+                        </tr>
+                        <tr>
+                            <td><strong>env3</strong></td>
+                            <td>2026/03/11 (12:12:54)</td>
+                            <td><span class="badge setup">Setup</span></td>
+                            <td>0</td>
+                            <td>Value written in code</td>
+                            <td><div class="toggle"></div></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Pagination -->
+                <div class="pagination">
+                    <span>Rows per page:</span>
+                    <select class="select" style="min-width: 60px;">
+                        <option>10</option>
+                        <option>20</option>
+                        <option>50</option>
+                    </select>
+                    <span>1–3 of 3</span>
+                    <button class="pagination-btn" disabled>‹</button>
+                    <button class="pagination-btn" disabled>›</button>
+                </div>
+            </div>
+
+            <!-- Review Affected Code Section -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title">Review affected code (0 references)</div>
+                </div>
+
+                <!-- Filter Bar -->
+                <div class="filter-bar">
+                    <div>
+                        <label style="font-size: 11px; display: block; margin-bottom: 5px;">Repositories: All</label>
+                        <select class="select">
+                            <option>All</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size: 11px; display: block; margin-bottom: 5px;">Branches: main</label>
+                        <select class="select">
+                            <option>main</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size: 11px; display: block; margin-bottom: 5px;">File extensions: All</label>
+                        <select class="select">
+                            <option>All</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Empty State -->
+                <div class="empty-state">
+                    <div class="empty-icon">[📁]</div>
+                    <div class="empty-text">We couldn't find any repositories linked to this application.</div>
+                    <div class="empty-subtext">Connect a component with a repository to access code references for this flag.</div>
+                </div>
+            </div>
+            </div>
+            <!-- End Flag Health Content -->
+
+            <!-- Jira Tab Content -->
+            <div id="jira-content" class="tab-content hidden">
+                <div id="jiraMainContent">
+                    <!-- Content will be dynamically rendered -->
+                </div>
+            </div>
+            <!-- End Jira Content -->
+
         </div>
     </div>
 
-    <!-- Add Ticket Modal -->
+    <!-- Add Jira Ticket Modal -->
     <div class="modal-overlay" id="addTicketModal">
         <div class="modal">
             <div class="modal-title">Add Jira Ticket</div>
 
             <div class="form-group">
                 <label class="label">Jira Issue Key *</label>
-                <input type="text" class="input" id="ticketKeyInput" placeholder="e.g., PROJ-123, CBP-456">
+                <input type="text" class="input" id="ticketKeyInput" placeholder="e.g., CBP-12345, PROJ-789">
                 <div id="inputError" class="error-message hidden"></div>
             </div>
 
@@ -422,8 +763,8 @@
             </div>
 
             <div id="ticketPreview" class="hidden">
-                <div style="border: 3px solid #000; padding: 15px; background: #f9f9f9; margin-top: 15px;">
-                    <div style="font-weight: bold; margin-bottom: 15px; font-size: 14px; text-transform: uppercase; border-bottom: 2px solid #000; padding-bottom: 8px;">Ticket Preview</div>
+                <div class="preview-box">
+                    <div class="preview-header">Ticket Preview</div>
                     <div class="card-row">
                         <div class="card-label">Issue Key:</div>
                         <div class="card-value" id="previewKey"></div>
@@ -440,12 +781,12 @@
             </div>
 
             <div class="info-box">
-                <strong>Info:</strong> Enter a valid Jira issue key. System will fetch ticket details from your Jira instance.
+                <strong>INFO:</strong> Enter a valid Jira issue key. System will fetch ticket details from your Jira instance.
             </div>
 
             <div class="modal-actions">
                 <button class="btn" onclick="closeAddTicketModal()">Cancel</button>
-                <button class="btn btn-primary" id="validateBtn" onclick="validateTicket()">Validate Ticket</button>
+                <button class="btn btn-primary" id="validateBtn" onclick="validateTicket()">Validate</button>
                 <button class="btn btn-primary hidden" id="linkBtn" onclick="linkTicket()">Link Ticket</button>
             </div>
         </div>
@@ -456,12 +797,12 @@
         <div class="modal">
             <div class="modal-title">Remove Jira Ticket</div>
 
-            <p style="margin-bottom: 20px; font-size: 14px;">
+            <p style="margin-bottom: 15px; font-size: 12px;">
                 Are you sure you want to remove the link to <strong id="removeTicketKey"></strong>?
             </p>
 
             <div class="info-box">
-                <strong>Info:</strong> This will only remove the link. The Jira ticket itself will not be affected.
+                <strong>INFO:</strong> This will only remove the link. The Jira ticket itself will not be affected.
             </div>
 
             <div class="modal-actions">
@@ -472,51 +813,63 @@
     </div>
 
     <script>
-        // Mock data - simulates Jira API responses
+        // Mock Jira API data
         const mockJiraTickets = {
             'CBP-12345': { summary: 'Implement Feature X with new API', status: 'In Progress' },
             'CBP-12346': { summary: 'Add unit tests for Feature X', status: 'Done' },
             'CBP-12347': { summary: 'Deploy Feature X to production', status: 'To Do' },
-            'PROJ-100': { summary: 'Update documentation for new feature', status: 'In Progress' },
-            'PROJ-101': { summary: 'Code review and refactoring', status: 'To Do' },
-            'PROJ-102': { summary: 'Database migration for new schema', status: 'Done' }
+            'PROJ-100': { summary: 'Update documentation', status: 'In Progress' },
+            'PROJ-101': { summary: 'Code review', status: 'To Do' }
         };
 
-        // State management
+        // State
         let linkedTickets = [];
         let currentTicketToRemove = null;
         let currentTicketData = null;
 
-        // Initialize the page
-        function init() {
-            renderContent();
+        // Tab switching
+        function switchTab(tabName) {
+            // Update tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+
+            if (tabName === 'jira') {
+                document.getElementById('jira-content').classList.remove('hidden');
+                renderJiraContent();
+            } else if (tabName === 'flag-health') {
+                document.getElementById('flag-health-content').classList.remove('hidden');
+            }
         }
 
-        // Render main content
-        function renderContent() {
-            const content = document.getElementById('mainContent');
+        // Render Jira content
+        function renderJiraContent() {
+            const content = document.getElementById('jiraMainContent');
 
             if (linkedTickets.length === 0) {
                 content.innerHTML = `
-                    <div class="page-header">
-                        <div>
-                            <div class="page-title">Jira Integration</div>
-                            <div class="page-subtitle">Link Jira tickets to track related work for this flag</div>
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-title">Jira Integration</div>
+                            <button class="btn btn-primary" onclick="openAddTicketModal()">+ Add Jira Ticket</button>
                         </div>
-                        <button class="btn btn-primary" onclick="openAddTicketModal()">+ Add Jira Ticket</button>
-                    </div>
 
-                    <div class="empty-state">
-                        <div class="empty-icon">[📋]</div>
-                        <div class="empty-title">No Jira Tickets Linked</div>
-                        <div class="empty-text">Start by adding a Jira issue key to link work items with this feature flag</div>
-                        <button class="btn btn-primary" onclick="openAddTicketModal()">+ Add Jira Ticket</button>
-                    </div>
+                        <div class="empty-state">
+                            <div class="empty-icon">[📋]</div>
+                            <div class="empty-text">No Jira tickets linked</div>
+                            <div class="empty-subtext">Link Jira tickets to track related work for this feature flag</div>
+                        </div>
 
-                    <div class="info-box">
-                        <strong>AC4:</strong> Jira tab is visible in flag configuration. Empty state shown when no tickets are linked.
-                        <br><br>
-                        <strong>Try it:</strong> Click "Add Jira Ticket" and enter one of these keys: CBP-12345, CBP-12346, CBP-12347, PROJ-100, PROJ-101, PROJ-102
+                        <div class="info-box">
+                            <strong>AC4:</strong> Jira tab visible. Empty state shown when no tickets are linked.<br>
+                            <strong>Try:</strong> CBP-12345, CBP-12346, CBP-12347, PROJ-100, PROJ-101
+                        </div>
                     </div>
                 `;
             } else {
@@ -537,39 +890,36 @@
                         <div class="divider"></div>
                         <div class="card-row">
                             <div class="card-label">Jira Link:</div>
-                            <div class="card-value"><a href="#" class="link" onclick="alert('Would open: https://jira.company.com/browse/${ticket.key}'); return false;">View in Jira →</a></div>
+                            <div class="card-value"><a href="#" class="link" onclick="alert('Opens: https://jira.company.com/browse/${ticket.key}'); return false;">View in Jira →</a></div>
                         </div>
                     </div>
                 `).join('');
 
                 content.innerHTML = `
-                    <div class="page-header">
-                        <div>
-                            <div class="page-title">Linked Jira Tickets <span class="count-badge">(${linkedTickets.length})</span></div>
-                            <div class="page-subtitle">Manage tickets linked to this feature flag</div>
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-title">Linked Jira Tickets (${linkedTickets.length})</div>
+                            <button class="btn btn-primary" onclick="openAddTicketModal()">+ Add Jira Ticket</button>
                         </div>
-                        <button class="btn btn-primary" onclick="openAddTicketModal()">+ Add Jira Ticket</button>
-                    </div>
 
-                    ${ticketsHtml}
+                        ${ticketsHtml}
 
-                    <div class="info-box">
-                        <strong>AC3 & AC4:</strong> Multiple tickets supported. Each shows issue key, summary, current status, and clickable link to Jira.
-                        <br><br>
-                        <strong>AC5:</strong> Click "Remove" on any ticket to unlink it from this flag.
+                        <div class="info-box">
+                            <strong>AC3 & AC4:</strong> Multiple tickets supported. Each shows issue key, summary, status, and clickable Jira link.<br>
+                            <strong>AC5:</strong> Click "Remove" to unlink ticket from flag.
+                        </div>
                     </div>
                 `;
             }
         }
 
-        // Helper to get status badge class
+        // Helper functions
         function getStatusClass(status) {
             if (status === 'Done') return 'done';
             if (status === 'In Progress') return 'in-progress';
             return 'todo';
         }
 
-        // Open add ticket modal
         function openAddTicketModal() {
             document.getElementById('addTicketModal').classList.add('show');
             document.getElementById('ticketKeyInput').value = '';
@@ -580,17 +930,13 @@
             document.getElementById('validateBtn').classList.remove('hidden');
             document.getElementById('linkBtn').classList.add('hidden');
             currentTicketData = null;
-
-            // Focus input
             setTimeout(() => document.getElementById('ticketKeyInput').focus(), 100);
         }
 
-        // Close add ticket modal
         function closeAddTicketModal() {
             document.getElementById('addTicketModal').classList.remove('show');
         }
 
-        // Validate ticket
         function validateTicket() {
             const key = document.getElementById('ticketKeyInput').value.trim().toUpperCase();
             const errorDiv = document.getElementById('inputError');
@@ -601,7 +947,6 @@
                 return;
             }
 
-            // Check if already linked
             if (linkedTickets.find(t => t.key === key)) {
                 errorDiv.textContent = 'This ticket is already linked to this flag';
                 errorDiv.classList.remove('hidden');
@@ -611,14 +956,11 @@
             errorDiv.classList.add('hidden');
             document.getElementById('ticketKeyInput').disabled = true;
             document.getElementById('validateBtn').disabled = true;
-
-            // Show loading state
             document.getElementById('loadingContainer').classList.remove('hidden');
 
             // Simulate API call
             setTimeout(() => {
                 if (mockJiraTickets[key]) {
-                    // Success - show preview
                     const ticket = mockJiraTickets[key];
                     currentTicketData = { key, ...ticket };
 
@@ -632,51 +974,44 @@
                     document.getElementById('validateBtn').classList.add('hidden');
                     document.getElementById('linkBtn').classList.remove('hidden');
                 } else {
-                    // Error - ticket not found
                     document.getElementById('loadingContainer').classList.add('hidden');
                     document.getElementById('ticketKeyInput').disabled = false;
                     document.getElementById('validateBtn').disabled = false;
-                    errorDiv.textContent = 'Ticket not found. Please check the issue key and try again. Valid keys: CBP-12345, CBP-12346, CBP-12347, PROJ-100, PROJ-101, PROJ-102';
+                    errorDiv.textContent = 'Ticket not found. Valid keys: CBP-12345, CBP-12346, CBP-12347, PROJ-100, PROJ-101';
                     errorDiv.classList.remove('hidden');
                 }
             }, 1500);
         }
 
-        // Link ticket
         function linkTicket() {
             if (currentTicketData) {
                 linkedTickets.push(currentTicketData);
-                renderContent();
+                renderJiraContent();
                 closeAddTicketModal();
             }
         }
 
-        // Open remove ticket modal
         function openRemoveTicketModal(key) {
             currentTicketToRemove = key;
             document.getElementById('removeTicketKey').textContent = key;
             document.getElementById('removeTicketModal').classList.add('show');
         }
 
-        // Close remove ticket modal
         function closeRemoveTicketModal() {
             document.getElementById('removeTicketModal').classList.remove('show');
             currentTicketToRemove = null;
         }
 
-        // Confirm remove ticket
         function confirmRemoveTicket() {
             if (currentTicketToRemove) {
                 linkedTickets = linkedTickets.filter(t => t.key !== currentTicketToRemove);
-                renderContent();
+                renderJiraContent();
                 closeRemoveTicketModal();
             }
         }
 
-        // Allow Enter key to validate
+        // Event listeners
         document.addEventListener('DOMContentLoaded', () => {
-            init();
-
             document.getElementById('ticketKeyInput').addEventListener('keypress', (e) => {
                 if (e.key === 'Enter' && !document.getElementById('validateBtn').classList.contains('hidden')) {
                     validateTicket();
@@ -688,16 +1023,13 @@
         document.querySelectorAll('.modal-overlay').forEach(overlay => {
             overlay.addEventListener('click', (e) => {
                 if (e.target === overlay) {
-                    if (overlay.id === 'addTicketModal') {
-                        closeAddTicketModal();
-                    } else if (overlay.id === 'removeTicketModal') {
-                        closeRemoveTicketModal();
-                    }
+                    closeAddTicketModal();
+                    closeRemoveTicketModal();
                 }
             });
         });
 
-        // Close modal on Escape key
+        // Close modals on Escape
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeAddTicketModal();
