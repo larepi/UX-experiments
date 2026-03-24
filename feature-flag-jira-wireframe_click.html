@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jira Integration - Interactive Prototype</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #e8e8e8;
+            color: #000;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #fff;
+            min-height: 100vh;
+            border-left: 3px solid #000;
+            border-right: 3px solid #000;
+        }
+
+        /* Header */
+        .header {
+            background: #000;
+            color: #fff;
+            padding: 15px 20px;
+            border-bottom: 3px solid #000;
+        }
+
+        .breadcrumb {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0;
+            border-bottom: 3px solid #000;
+            background: #ddd;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            border-right: 2px solid #000;
+            background: #ccc;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .tab:hover {
+            background: #bbb;
+        }
+
+        .tab.active {
+            background: #fff;
+            cursor: default;
+        }
+
+        /* Content area */
+        .content {
+            padding: 30px;
+            min-height: 600px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #ccc;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .page-subtitle {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Buttons */
+        .btn {
+            background: #fff;
+            border: 3px solid #000;
+            padding: 10px 20px;
+            font-family: inherit;
+            font-size: 14px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: #f0f0f0;
+        }
+
+        .btn-primary {
+            background: #000;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #333;
+        }
+
+        .btn-danger {
+            background: #666;
+            color: #fff;
+            border-color: #666;
+        }
+
+        .btn-danger:hover {
+            background: #555;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* Form elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .input {
+            width: 100%;
+            padding: 10px;
+            border: 3px solid #000;
+            font-family: inherit;
+            font-size: 14px;
+            background: #fff;
+        }
+
+        .input:focus {
+            outline: none;
+            background: #f9f9f9;
+        }
+
+        .input:disabled {
+            background: #e8e8e8;
+            color: #666;
+        }
+
+        /* Cards for tickets */
+        .card {
+            border: 3px solid #000;
+            padding: 20px;
+            margin-bottom: 15px;
+            background: #fff;
+            transition: border-color 0.2s;
+        }
+
+        .card:hover {
+            border-color: #666;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ccc;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .card-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .card-label {
+            font-weight: bold;
+            min-width: 100px;
+        }
+
+        .card-value {
+            flex: 1;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border: 2px solid #000;
+            background: #ddd;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .badge.in-progress {
+            background: #bbb;
+        }
+
+        .badge.done {
+            background: #ddd;
+        }
+
+        .badge.todo {
+            background: #fff;
+        }
+
+        /* Empty state */
+        .empty-state {
+            border: 3px dashed #999;
+            padding: 60px 30px;
+            text-align: center;
+            background: #f9f9f9;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .empty-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .empty-text {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: #fff;
+            border: 5px solid #000;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #000;
+        }
+
+        .modal-actions {
+            margin-top: 25px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            padding-top: 20px;
+            border-top: 2px solid #ccc;
+        }
+
+        /* Info box */
+        .info-box {
+            background: #f5f5f5;
+            border: 3px solid #999;
+            border-left-width: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 13px;
+        }
+
+        /* Link */
+        .link {
+            color: #000;
+            text-decoration: underline;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .link:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        /* Divider */
+        .divider {
+            height: 2px;
+            background: #ccc;
+            margin: 15px 0;
+        }
+
+        /* Loading spinner */
+        .loading {
+            text-align: center;
+            padding: 30px;
+            border: 3px solid #ccc;
+            background: #f5f5f5;
+            margin: 20px 0;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #ddd;
+            border-top-color: #000;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Error message */
+        .error-message {
+            color: #000;
+            background: #f5f5f5;
+            border: 3px solid #999;
+            padding: 10px 15px;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+
+        /* Hidden helper class */
+        .hidden {
+            display: none;
+        }
+
+        /* Ticket count badge */
+        .count-badge {
+            color: #666;
+            font-weight: normal;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="breadcrumb">Flags / feature-x-rollout / Jira Integration</div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab">General</div>
+            <div class="tab">Targeting</div>
+            <div class="tab">Variations</div>
+            <div class="tab">Settings</div>
+            <div class="tab active">Jira</div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content" id="mainContent">
+            <!-- Content will be dynamically rendered -->
+        </div>
+    </div>
+
+    <!-- Add Ticket Modal -->
+    <div class="modal-overlay" id="addTicketModal">
+        <div class="modal">
+            <div class="modal-title">Add Jira Ticket</div>
+
+            <div class="form-group">
+                <label class="label">Jira Issue Key *</label>
+                <input type="text" class="input" id="ticketKeyInput" placeholder="e.g., PROJ-123, CBP-456">
+                <div id="inputError" class="error-message hidden"></div>
+            </div>
+
+            <div id="loadingContainer" class="hidden">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <div>Validating ticket via Jira API...</div>
+                </div>
+            </div>
+
+            <div id="ticketPreview" class="hidden">
+                <div style="border: 3px solid #000; padding: 15px; background: #f9f9f9; margin-top: 15px;">
+                    <div style="font-weight: bold; margin-bottom: 15px; font-size: 14px; text-transform: uppercase; border-bottom: 2px solid #000; padding-bottom: 8px;">Ticket Preview</div>
+                    <div class="card-row">
+                        <div class="card-label">Issue Key:</div>
+                        <div class="card-value" id="previewKey"></div>
+                    </div>
+                    <div class="card-row">
+                        <div class="card-label">Summary:</div>
+                        <div class="card-value" id="previewSummary"></div>
+                    </div>
+                    <div class="card-row">
+                        <div class="card-label">Status:</div>
+                        <div class="card-value"><span class="badge" id="previewStatus"></span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <strong>Info:</strong> Enter a valid Jira issue key. System will fetch ticket details from your Jira instance.
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn" onclick="closeAddTicketModal()">Cancel</button>
+                <button class="btn btn-primary" id="validateBtn" onclick="validateTicket()">Validate Ticket</button>
+                <button class="btn btn-primary hidden" id="linkBtn" onclick="linkTicket()">Link Ticket</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Remove Ticket Modal -->
+    <div class="modal-overlay" id="removeTicketModal">
+        <div class="modal">
+            <div class="modal-title">Remove Jira Ticket</div>
+
+            <p style="margin-bottom: 20px; font-size: 14px;">
+                Are you sure you want to remove the link to <strong id="removeTicketKey"></strong>?
+            </p>
+
+            <div class="info-box">
+                <strong>Info:</strong> This will only remove the link. The Jira ticket itself will not be affected.
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn" onclick="closeRemoveTicketModal()">Cancel</button>
+                <button class="btn btn-danger" onclick="confirmRemoveTicket()">Remove Link</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock data - simulates Jira API responses
+        const mockJiraTickets = {
+            'CBP-12345': { summary: 'Implement Feature X with new API', status: 'In Progress' },
+            'CBP-12346': { summary: 'Add unit tests for Feature X', status: 'Done' },
+            'CBP-12347': { summary: 'Deploy Feature X to production', status: 'To Do' },
+            'PROJ-100': { summary: 'Update documentation for new feature', status: 'In Progress' },
+            'PROJ-101': { summary: 'Code review and refactoring', status: 'To Do' },
+            'PROJ-102': { summary: 'Database migration for new schema', status: 'Done' }
+        };
+
+        // State management
+        let linkedTickets = [];
+        let currentTicketToRemove = null;
+        let currentTicketData = null;
+
+        // Initialize the page
+        function init() {
+            renderContent();
+        }
+
+        // Render main content
+        function renderContent() {
+            const content = document.getElementById('mainContent');
+
+            if (linkedTickets.length === 0) {
+                content.innerHTML = `
+                    <div class="page-header">
+                        <div>
+                            <div class="page-title">Jira Integration</div>
+                            <div class="page-subtitle">Link Jira tickets to track related work for this flag</div>
+                        </div>
+                        <button class="btn btn-primary" onclick="openAddTicketModal()">+ Add Jira Ticket</button>
+                    </div>
+
+                    <div class="empty-state">
+                        <div class="empty-icon">[📋]</div>
+                        <div class="empty-title">No Jira Tickets Linked</div>
+                        <div class="empty-text">Start by adding a Jira issue key to link work items with this feature flag</div>
+                        <button class="btn btn-primary" onclick="openAddTicketModal()">+ Add Jira Ticket</button>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>AC4:</strong> Jira tab is visible in flag configuration. Empty state shown when no tickets are linked.
+                        <br><br>
+                        <strong>Try it:</strong> Click "Add Jira Ticket" and enter one of these keys: CBP-12345, CBP-12346, CBP-12347, PROJ-100, PROJ-101, PROJ-102
+                    </div>
+                `;
+            } else {
+                let ticketsHtml = linkedTickets.map(ticket => `
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">${ticket.key}</div>
+                            <button class="btn btn-sm" onclick="openRemoveTicketModal('${ticket.key}')">✕ Remove</button>
+                        </div>
+                        <div class="card-row">
+                            <div class="card-label">Summary:</div>
+                            <div class="card-value">${ticket.summary}</div>
+                        </div>
+                        <div class="card-row">
+                            <div class="card-label">Status:</div>
+                            <div class="card-value"><span class="badge ${getStatusClass(ticket.status)}">${ticket.status}</span></div>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="card-row">
+                            <div class="card-label">Jira Link:</div>
+                            <div class="card-value"><a href="#" class="link" onclick="alert('Would open: https://jira.company.com/browse/${ticket.key}'); return false;">View in Jira →</a></div>
+                        </div>
+                    </div>
+                `).join('');
+
+                content.innerHTML = `
+                    <div class="page-header">
+                        <div>
+                            <div class="page-title">Linked Jira Tickets <span class="count-badge">(${linkedTickets.length})</span></div>
+                            <div class="page-subtitle">Manage tickets linked to this feature flag</div>
+                        </div>
+                        <button class="btn btn-primary" onclick="openAddTicketModal()">+ Add Jira Ticket</button>
+                    </div>
+
+                    ${ticketsHtml}
+
+                    <div class="info-box">
+                        <strong>AC3 & AC4:</strong> Multiple tickets supported. Each shows issue key, summary, current status, and clickable link to Jira.
+                        <br><br>
+                        <strong>AC5:</strong> Click "Remove" on any ticket to unlink it from this flag.
+                    </div>
+                `;
+            }
+        }
+
+        // Helper to get status badge class
+        function getStatusClass(status) {
+            if (status === 'Done') return 'done';
+            if (status === 'In Progress') return 'in-progress';
+            return 'todo';
+        }
+
+        // Open add ticket modal
+        function openAddTicketModal() {
+            document.getElementById('addTicketModal').classList.add('show');
+            document.getElementById('ticketKeyInput').value = '';
+            document.getElementById('ticketKeyInput').disabled = false;
+            document.getElementById('inputError').classList.add('hidden');
+            document.getElementById('loadingContainer').classList.add('hidden');
+            document.getElementById('ticketPreview').classList.add('hidden');
+            document.getElementById('validateBtn').classList.remove('hidden');
+            document.getElementById('linkBtn').classList.add('hidden');
+            currentTicketData = null;
+
+            // Focus input
+            setTimeout(() => document.getElementById('ticketKeyInput').focus(), 100);
+        }
+
+        // Close add ticket modal
+        function closeAddTicketModal() {
+            document.getElementById('addTicketModal').classList.remove('show');
+        }
+
+        // Validate ticket
+        function validateTicket() {
+            const key = document.getElementById('ticketKeyInput').value.trim().toUpperCase();
+            const errorDiv = document.getElementById('inputError');
+
+            if (!key) {
+                errorDiv.textContent = 'Please enter a Jira issue key';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            // Check if already linked
+            if (linkedTickets.find(t => t.key === key)) {
+                errorDiv.textContent = 'This ticket is already linked to this flag';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            errorDiv.classList.add('hidden');
+            document.getElementById('ticketKeyInput').disabled = true;
+            document.getElementById('validateBtn').disabled = true;
+
+            // Show loading state
+            document.getElementById('loadingContainer').classList.remove('hidden');
+
+            // Simulate API call
+            setTimeout(() => {
+                if (mockJiraTickets[key]) {
+                    // Success - show preview
+                    const ticket = mockJiraTickets[key];
+                    currentTicketData = { key, ...ticket };
+
+                    document.getElementById('previewKey').textContent = key;
+                    document.getElementById('previewSummary').textContent = ticket.summary;
+                    document.getElementById('previewStatus').textContent = ticket.status;
+                    document.getElementById('previewStatus').className = 'badge ' + getStatusClass(ticket.status);
+
+                    document.getElementById('loadingContainer').classList.add('hidden');
+                    document.getElementById('ticketPreview').classList.remove('hidden');
+                    document.getElementById('validateBtn').classList.add('hidden');
+                    document.getElementById('linkBtn').classList.remove('hidden');
+                } else {
+                    // Error - ticket not found
+                    document.getElementById('loadingContainer').classList.add('hidden');
+                    document.getElementById('ticketKeyInput').disabled = false;
+                    document.getElementById('validateBtn').disabled = false;
+                    errorDiv.textContent = 'Ticket not found. Please check the issue key and try again. Valid keys: CBP-12345, CBP-12346, CBP-12347, PROJ-100, PROJ-101, PROJ-102';
+                    errorDiv.classList.remove('hidden');
+                }
+            }, 1500);
+        }
+
+        // Link ticket
+        function linkTicket() {
+            if (currentTicketData) {
+                linkedTickets.push(currentTicketData);
+                renderContent();
+                closeAddTicketModal();
+            }
+        }
+
+        // Open remove ticket modal
+        function openRemoveTicketModal(key) {
+            currentTicketToRemove = key;
+            document.getElementById('removeTicketKey').textContent = key;
+            document.getElementById('removeTicketModal').classList.add('show');
+        }
+
+        // Close remove ticket modal
+        function closeRemoveTicketModal() {
+            document.getElementById('removeTicketModal').classList.remove('show');
+            currentTicketToRemove = null;
+        }
+
+        // Confirm remove ticket
+        function confirmRemoveTicket() {
+            if (currentTicketToRemove) {
+                linkedTickets = linkedTickets.filter(t => t.key !== currentTicketToRemove);
+                renderContent();
+                closeRemoveTicketModal();
+            }
+        }
+
+        // Allow Enter key to validate
+        document.addEventListener('DOMContentLoaded', () => {
+            init();
+
+            document.getElementById('ticketKeyInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !document.getElementById('validateBtn').classList.contains('hidden')) {
+                    validateTicket();
+                }
+            });
+        });
+
+        // Close modals on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    if (overlay.id === 'addTicketModal') {
+                        closeAddTicketModal();
+                    } else if (overlay.id === 'removeTicketModal') {
+                        closeRemoveTicketModal();
+                    }
+                }
+            });
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeAddTicketModal();
+                closeRemoveTicketModal();
+            }
+        });
+    </script>
+</body>
+</html>
