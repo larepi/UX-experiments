@@ -1,0 +1,1884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feature Flag Management - Low-Fi Wireframe</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect x='20' y='30' width='60' height='50' fill='%23333' stroke='%23000' stroke-width='2'/><rect x='30' y='40' width='15' height='15' fill='%23666'/><rect x='55' y='40' width='15' height='15' fill='%23666'/><rect x='40' y='60' width='20' height='5' fill='%23999'/><rect x='35' y='15' width='30' height='20' fill='%23333' stroke='%23000' stroke-width='2'/><circle cx='45' cy='25' r='3' fill='%23ff0'/><circle cx='55' cy='25' r='3' fill='%23ff0'/></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+            color: #000;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 200px;
+            background: #e0e0e0;
+            border-right: 1px solid #000;
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 10px 20px;
+            border-bottom: 1px solid #999;
+            margin-bottom: 15px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .nav-item {
+            padding: 10px 20px;
+            border-left: 1px solid transparent;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .nav-item:hover {
+            background: #d0d0d0;
+        }
+
+        .nav-item.active {
+            background: #ccc;
+            border-left-color: #000;
+            font-weight: bold;
+        }
+
+        /* Main content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        /* Top bar */
+        .top-bar {
+            background: #000;
+            color: #fff;
+            padding: 10px 20px;
+            border-bottom: 1px solid #000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .breadcrumb {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #fff;
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        /* Content area */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        /* Flag header */
+        .flag-header {
+            border: 1px solid #000;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #f9f9f9;
+        }
+
+        .flag-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .flag-meta {
+            font-size: 11px;
+            color: #666;
+            display: flex;
+            gap: 20px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0;
+            border-bottom: 1px solid #000;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            border: 1px solid #000;
+            border-bottom: none;
+            background: #ddd;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: -1px;
+        }
+
+        .tab:hover {
+            background: #ccc;
+        }
+
+        .tab.active {
+            background: #fff;
+            border-bottom: 1px solid #fff;
+        }
+
+        /* Tab content */
+        .tab-content {
+            display: block;
+        }
+
+        .tab-content.hidden {
+            display: none;
+        }
+
+        /* Section */
+        .section {
+            border: 1px solid #000;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #fff;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* Table */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #000;
+        }
+
+        .table th,
+        .table td {
+            border: 1px solid #000;
+            padding: 12px;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        .table th {
+            background: #e0e0e0;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 11px;
+        }
+
+        .table td {
+            background: #fff;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border: 1px solid #000;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .badge.setup {
+            background: #fff;
+        }
+
+        /* Toggle switch */
+        .toggle {
+            width: 40px;
+            height: 20px;
+            border: 1px solid #000;
+            background: #fff;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .toggle::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #666;
+            left: 2px;
+            top: 0;
+        }
+
+        .toggle.on::after {
+            left: 20px;
+            background: #000;
+        }
+
+        /* Checkbox */
+        .checkbox {
+            width: 16px;
+            height: 16px;
+            border: 1px solid #000;
+            background: #fff;
+            display: inline-block;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+
+        .checkbox.checked {
+            background: #000;
+        }
+
+        /* Select/Dropdown */
+        .select {
+            border: 1px solid #000;
+            padding: 8px 12px;
+            background: #fff;
+            font-family: inherit;
+            font-size: 12px;
+            min-width: 150px;
+        }
+
+        /* Filter bar */
+        .filter-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #999;
+            background: #f5f5f5;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            border: 1px dashed #999;
+            background: #fafafa;
+        }
+
+        .empty-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .empty-text {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .empty-subtext {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            font-size: 12px;
+        }
+
+        .pagination-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #000;
+            background: #fff;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .pagination-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* Button */
+        .btn {
+            border: 1px solid #000;
+            padding: 8px 16px;
+            background: #fff;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .btn:hover {
+            background: #f0f0f0;
+        }
+
+        .btn-primary {
+            background: #000;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #333;
+        }
+
+        .btn-danger {
+            background: #666;
+            color: #fff;
+            border-color: #666;
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 11px;
+        }
+
+        /* Input */
+        .input {
+            border: 1px solid #000;
+            padding: 8px 12px;
+            width: 100%;
+            font-family: inherit;
+            font-size: 12px;
+            background: #fff;
+        }
+
+        .input:focus {
+            outline: none;
+            background: #f9f9f9;
+        }
+
+        .input:disabled {
+            background: #e8e8e8;
+        }
+
+        /* Card for tickets */
+        .card {
+            border: 1px solid #000;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #fff;
+        }
+
+        .card:hover {
+            border-color: #666;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .card-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        .card-label {
+            font-weight: bold;
+            min-width: 80px;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: #fff;
+            border: 1px solid #000;
+            padding: 25px;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #000;
+        }
+
+        .modal-actions {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #ccc;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 30px;
+            border: 1px dashed #999;
+            background: #f5f5f5;
+            margin: 15px 0;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #ddd;
+            border-top-color: #000;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Preview box */
+        .preview-box {
+            border: 1px solid #000;
+            padding: 15px;
+            background: #f8f8f8;
+            margin: 15px 0;
+        }
+
+        .preview-header {
+            font-weight: bold;
+            margin-bottom: 12px;
+            font-size: 11px;
+            text-transform: uppercase;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #000;
+        }
+
+        /* Error message */
+        .error-message {
+            background: #f5f5f5;
+            border: 1px solid #999;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 11px;
+        }
+
+        /* Info box */
+        .info-box {
+            background: #f5f5f5;
+            border: 1px solid #999;
+            border-left-width: 3px;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 11px;
+        }
+
+        /* Link */
+        .link {
+            color: #000;
+            text-decoration: underline;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .link:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        /* Hidden */
+        .hidden {
+            display: none;
+        }
+
+        /* Badge variations */
+        .badge.in-progress {
+            background: #bbb;
+        }
+
+        .badge.done {
+            background: #ddd;
+        }
+
+        .badge.todo {
+            background: #fff;
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: #ccc;
+            margin: 12px 0;
+        }
+
+        /* Status badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border: 1px solid #000;
+            background: #fff;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-badge.connected {
+            background: #ddd;
+        }
+
+        .status-badge.disconnected {
+            background: #fff;
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border: 1px solid #000;
+            background: #999;
+        }
+
+        .status-indicator.active {
+            background: #000;
+        }
+
+        /* Wizard/Stepper */
+        .wizard-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #000;
+        }
+
+        .wizard-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .wizard-step-number {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #000;
+            background: #fff;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .wizard-step.active .wizard-step-number {
+            background: #000;
+            color: #fff;
+        }
+
+        .wizard-step.completed .wizard-step-number {
+            background: #ddd;
+        }
+
+        .wizard-step-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .wizard-step::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            width: 100%;
+            height: 1px;
+            background: #ccc;
+            z-index: -1;
+        }
+
+        .wizard-step:last-child::after {
+            display: none;
+        }
+
+        /* Success message */
+        .success-message {
+            background: #e0e0e0;
+            border: 1px solid #000;
+            border-left-width: 3px;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 11px;
+        }
+
+        /* Warning message */
+        .warning-message {
+            background: #f5f5f5;
+            border: 1px solid #666;
+            border-left-width: 3px;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 11px;
+        }
+
+        /* Popover */
+        .popover {
+            position: absolute;
+            background: #fff;
+            border: 1px solid #000;
+            padding: 15px;
+            min-width: 250px;
+            max-width: 350px;
+            z-index: 2000;
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+        }
+
+        .popover-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+            font-size: 12px;
+        }
+
+        .popover-body {
+            font-size: 11px;
+            line-height: 1.4;
+        }
+
+        .popover-arrow {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            border: 1px solid #000;
+            transform: rotate(45deg);
+            border-right: none;
+            border-bottom: none;
+            top: -6px;
+            left: 20px;
+        }
+
+        /* Code block */
+        .code-block {
+            background: #f5f5f5;
+            border: 1px solid #999;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+
+        /* Modal large */
+        .modal.modal-large {
+            max-width: 700px;
+        }
+
+        /* Button group */
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Textarea */
+        .textarea {
+            border: 1px solid #000;
+            padding: 8px 12px;
+            width: 100%;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            background: #fff;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Info list */
+        .info-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 12px;
+        }
+
+        .info-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* Jira mockup */
+        .jira-mockup {
+            border: 1px solid #999;
+            padding: 20px;
+            background: #fafafa;
+            margin: 15px 0;
+        }
+
+        .jira-mockup-header {
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #999;
+            font-size: 13px;
+        }
+
+        .jira-field {
+            margin-bottom: 15px;
+        }
+
+        .jira-field-label {
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .jira-field-value {
+            font-size: 12px;
+            padding: 8px;
+            background: #fff;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="sidebar-header">[LOGO] FM playground</div>
+        <div class="nav-item">Home</div>
+        <div class="nav-item">Components</div>
+        <div class="nav-item">Runs</div>
+        <div class="nav-item">Applications</div>
+        <div class="nav-item">Releases</div>
+        <div class="nav-item active">Feature management</div>
+        <div class="nav-item">Security</div>
+        <div class="nav-item">Audit history</div>
+        <div class="nav-item">Analytics</div>
+        <div class="nav-item">Configurations</div>
+        <div class="nav-item">Jenkins® management</div>
+        <div class="nav-item">Smart tests</div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="breadcrumb">
+                FM playground / Feature management / app-1 / Flags / fm-test-flag-new / Flag health
+            </div>
+            <div class="top-actions">
+                <button class="icon-btn">[?]</button>
+                <button class="icon-btn">[☰]</button>
+                <button class="icon-btn">[USER]</button>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Flag Header -->
+            <div class="flag-header">
+                <div class="flag-title">[FLAG] fm-test-flag-new</div>
+                <div class="flag-meta">
+                    <span>Created: 2026/03/11 12:12:54 PM</span>
+                    <span>Last updated: 2026/03/11 12:12:54 PM</span>
+                    <span style="color: #000; text-decoration: underline; cursor: pointer;">Add labels</span>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <div class="tab" onclick="switchTab('configure')">Configure</div>
+                <div class="tab" onclick="switchTab('impressions')">Impressions</div>
+                <div class="tab active" onclick="switchTab('flag-health')">Flag health</div>
+                <div class="tab" onclick="switchTab('jira')">Jira</div>
+            </div>
+
+            <!-- Flag Health Tab Content -->
+            <div id="flag-health-content" class="tab-content">
+            <!-- Configuration Preview Section -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title">Configuration Preview</div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span class="checkbox"></span>
+                        <span style="font-size: 13px;">Switch off all configurations</span>
+                    </div>
+                </div>
+
+                <!-- Data Table -->
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Environment ↑</th>
+                            <th>Last update</th>
+                            <th>Activity status</th>
+                            <th>Impressions ⓘ</th>
+                            <th>Configuration</th>
+                            <th>Configuration status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>env-1</strong></td>
+                            <td>2026/03/11 (12:12:54)</td>
+                            <td><span class="badge setup">Setup</span></td>
+                            <td>0</td>
+                            <td>Value written in code</td>
+                            <td><div class="toggle"></div></td>
+                        </tr>
+                        <tr>
+                            <td><strong>env-2</strong></td>
+                            <td>2026/03/11 (12:12:54)</td>
+                            <td><span class="badge setup">Setup</span></td>
+                            <td>0</td>
+                            <td>Value written in code</td>
+                            <td><div class="toggle"></div></td>
+                        </tr>
+                        <tr>
+                            <td><strong>env3</strong></td>
+                            <td>2026/03/11 (12:12:54)</td>
+                            <td><span class="badge setup">Setup</span></td>
+                            <td>0</td>
+                            <td>Value written in code</td>
+                            <td><div class="toggle"></div></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Pagination -->
+                <div class="pagination">
+                    <span>Rows per page:</span>
+                    <select class="select" style="min-width: 60px;">
+                        <option>10</option>
+                        <option>20</option>
+                        <option>50</option>
+                    </select>
+                    <span>1–3 of 3</span>
+                    <button class="pagination-btn" disabled>‹</button>
+                    <button class="pagination-btn" disabled>›</button>
+                </div>
+            </div>
+
+            <!-- Review Affected Code Section -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title">Review affected code (0 references)</div>
+                </div>
+
+                <!-- Filter Bar -->
+                <div class="filter-bar">
+                    <div>
+                        <label style="font-size: 11px; display: block; margin-bottom: 5px;">Repositories: All</label>
+                        <select class="select">
+                            <option>All</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size: 11px; display: block; margin-bottom: 5px;">Branches: main</label>
+                        <select class="select">
+                            <option>main</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size: 11px; display: block; margin-bottom: 5px;">File extensions: All</label>
+                        <select class="select">
+                            <option>All</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Empty State -->
+                <div class="empty-state">
+                    <div class="empty-icon">[📁]</div>
+                    <div class="empty-text">We couldn't find any repositories linked to this application.</div>
+                    <div class="empty-subtext">Connect a component with a repository to access code references for this flag.</div>
+                </div>
+            </div>
+            </div>
+            <!-- End Flag Health Content -->
+
+            <!-- Jira Tab Content -->
+            <div id="jira-content" class="tab-content hidden">
+                <div id="jiraMainContent">
+                    <!-- Content will be dynamically rendered -->
+                </div>
+            </div>
+            <!-- End Jira Content -->
+
+        </div>
+    </div>
+
+    <!-- Add Jira Ticket Modal -->
+    <div class="modal-overlay" id="addTicketModal">
+        <div class="modal">
+            <div class="modal-title">Add Jira Ticket</div>
+
+            <div class="form-group">
+                <label class="label">Jira Issue Key *</label>
+                <input type="text" class="input" id="ticketKeyInput" placeholder="e.g., CBP-12345, PROJ-789">
+                <div id="inputError" class="error-message hidden"></div>
+            </div>
+
+            <div id="loadingContainer" class="hidden">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <div>Validating ticket via Jira API...</div>
+                </div>
+            </div>
+
+            <div id="ticketPreview" class="hidden">
+                <div class="preview-box">
+                    <div class="preview-header">Ticket Preview</div>
+                    <div class="card-row">
+                        <div class="card-label">Issue Key:</div>
+                        <div class="card-value" id="previewKey"></div>
+                    </div>
+                    <div class="card-row">
+                        <div class="card-label">Summary:</div>
+                        <div class="card-value" id="previewSummary"></div>
+                    </div>
+                    <div class="card-row">
+                        <div class="card-label">Status:</div>
+                        <div class="card-value"><span class="badge" id="previewStatus"></span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <strong>INFO:</strong> Enter a valid Jira issue key. System will fetch ticket details from your Jira instance.
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn" onclick="closeAddTicketModal()">Cancel</button>
+                <button class="btn btn-primary" id="validateBtn" onclick="validateTicket()">Validate</button>
+                <button class="btn btn-primary hidden" id="linkBtn" onclick="linkTicket()">Link Ticket</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Remove Ticket Modal -->
+    <div class="modal-overlay" id="removeTicketModal">
+        <div class="modal">
+            <div class="modal-title">Remove Jira Ticket</div>
+
+            <p style="margin-bottom: 15px; font-size: 12px;">
+                Are you sure you want to remove the link to <strong id="removeTicketKey"></strong>?
+            </p>
+
+            <div class="info-box">
+                <strong>INFO:</strong> This will only remove the link. The Jira ticket itself will not be affected.
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn" onclick="closeRemoveTicketModal()">Cancel</button>
+                <button class="btn btn-danger" onclick="confirmRemoveTicket()">Remove Link</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Configure Integration Modal -->
+    <div class="modal-overlay" id="configureIntegrationModal">
+        <div class="modal">
+            <div class="modal-title">Configure Jira Integration</div>
+
+            <div class="info-box">
+                <strong>STEP 1:</strong> Configure your Jira connection settings. You'll need your Jira base URL and API token.
+            </div>
+
+            <div class="form-group">
+                <label class="label">Jira Base URL *</label>
+                <input type="text" class="input" id="jiraBaseUrlInput" placeholder="https://your-company.atlassian.net">
+            </div>
+
+            <div class="form-group">
+                <label class="label">API Token *</label>
+                <input type="password" class="input" id="jiraApiTokenInput" placeholder="Enter your Jira API token">
+                <div style="margin-top: 8px; font-size: 11px; color: #666;">
+                    <a href="#" class="link" onclick="alert('Opens: https://id.atlassian.com/manage-profile/security/api-tokens'); return false;">How to generate an API token →</a>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn" onclick="closeConfigureIntegrationModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="testConnection()">Test Connection</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Remove Integration Modal -->
+    <div class="modal-overlay" id="removeIntegrationModal">
+        <div class="modal">
+            <div class="modal-title">Remove Jira Integration</div>
+
+            <div class="warning-message">
+                <strong>WARNING:</strong> This will disconnect your Jira integration and remove all settings.
+            </div>
+
+            <p style="margin: 15px 0; font-size: 12px;">
+                Are you sure you want to remove the Jira integration?
+            </p>
+
+            <ul class="info-list">
+                <li>• All configuration settings will be deleted</li>
+                <li>• Linked tickets will remain visible but won't sync</li>
+                <li>• You can reconfigure the integration at any time</li>
+            </ul>
+
+            <div class="modal-actions">
+                <button class="btn" onclick="closeRemoveIntegrationModal()">Cancel</button>
+                <button class="btn btn-danger" onclick="confirmRemoveIntegration()">Remove Integration</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Install Jira App Modal -->
+    <div class="modal-overlay" id="installJiraAppModal">
+        <div class="modal modal-large">
+            <div class="modal-title">Install Jira App</div>
+
+            <!-- Wizard Steps -->
+            <div class="wizard-steps">
+                <div class="wizard-step" id="installStep1">
+                    <div class="wizard-step-number">1</div>
+                    <div class="wizard-step-label">Download</div>
+                </div>
+                <div class="wizard-step" id="installStep2">
+                    <div class="wizard-step-number">2</div>
+                    <div class="wizard-step-label">Install</div>
+                </div>
+                <div class="wizard-step" id="installStep3">
+                    <div class="wizard-step-number">3</div>
+                    <div class="wizard-step-label">Configure</div>
+                </div>
+            </div>
+
+            <!-- Step Content -->
+            <div id="installStepContent">
+                <!-- Content will be dynamically rendered -->
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn" onclick="closeInstallJiraAppModal()">Cancel</button>
+                <button class="btn" id="installBackBtn" onclick="installPreviousStep()" style="display:none;">Back</button>
+                <button class="btn btn-primary" id="installNextBtn" onclick="installNextStep()">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Uninstall Jira App Modal -->
+    <div class="modal-overlay" id="uninstallJiraAppModal">
+        <div class="modal">
+            <div class="modal-title">Uninstall Jira App</div>
+
+            <div class="warning-message">
+                <strong>WARNING:</strong> This will uninstall the Feature Management app from your Jira instance.
+            </div>
+
+            <p style="margin: 15px 0; font-size: 12px;">
+                After uninstalling:
+            </p>
+
+            <ul class="info-list">
+                <li>• The app will be removed from Jira</li>
+                <li>• Flag details will no longer be visible in Jira tickets</li>
+                <li>• You won't be able to link flags from Jira</li>
+                <li>• Your integration configuration will remain</li>
+                <li>• You can reinstall the app at any time</li>
+            </ul>
+
+            <div class="modal-actions">
+                <button class="btn" onclick="closeUninstallJiraAppModal()">Cancel</button>
+                <button class="btn btn-danger" onclick="confirmUninstallJiraApp()">Uninstall App</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View in Jira Modal -->
+    <div class="modal-overlay" id="viewInJiraModal">
+        <div class="modal modal-large">
+            <div class="modal-title">Flag Details in Jira</div>
+
+            <div class="info-box">
+                <strong>PREVIEW:</strong> This is how the feature flag appears in Jira when viewing a linked ticket.
+            </div>
+
+            <div class="jira-mockup">
+                <div class="jira-mockup-header">[JIRA] Issue CBP-12345</div>
+
+                <div class="jira-field">
+                    <div class="jira-field-label">Summary</div>
+                    <div class="jira-field-value">Implement Feature X with new API</div>
+                </div>
+
+                <div class="jira-field">
+                    <div class="jira-field-label">Status</div>
+                    <div class="jira-field-value">In Progress</div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div style="background: #fff; border: 1px solid #000; padding: 15px; margin-top: 20px;">
+                    <div style="font-weight: bold; margin-bottom: 15px; font-size: 13px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+                        [📋] Feature Flags (1)
+                    </div>
+
+                    <div class="card" style="margin-bottom: 0;">
+                        <div class="card-row">
+                            <div class="card-label">Flag Name:</div>
+                            <div class="card-value">fm-test-flag-new</div>
+                        </div>
+                        <div class="card-row">
+                            <div class="card-label">Environment:</div>
+                            <div class="card-value">env-1, env-2, env3</div>
+                        </div>
+                        <div class="card-row">
+                            <div class="card-label">Status:</div>
+                            <div class="card-value"><span class="badge setup">Setup</span></div>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="card-row">
+                            <div class="card-label">View Flag:</div>
+                            <div class="card-value">
+                                <a href="#" class="link" onclick="alert('Opens flag in Feature Management'); return false;">View in Feature Management →</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-primary" onclick="closeViewInJiraModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Link from Jira Modal -->
+    <div class="modal-overlay" id="linkFromJiraModal">
+        <div class="modal modal-large">
+            <div class="modal-title">Link Flag from Jira</div>
+
+            <div class="info-box">
+                <strong>SIMULATION:</strong> This simulates linking a flag from within a Jira ticket.
+            </div>
+
+            <div class="jira-mockup">
+                <div class="jira-mockup-header">[JIRA] Issue CBP-12345</div>
+
+                <div class="jira-field">
+                    <div class="jira-field-label">Summary</div>
+                    <div class="jira-field-value">Implement Feature X with new API</div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div style="background: #fff; border: 1px solid #000; padding: 15px; margin-top: 20px;">
+                    <div style="font-weight: bold; margin-bottom: 15px; font-size: 13px; border-bottom: 1px solid #ccc; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <span>[📋] Feature Flags</span>
+                        <button class="btn btn-sm" onclick="showLinkFlagForm()">+ Link Flag</button>
+                    </div>
+
+                    <div id="linkFlagFormContainer" class="hidden">
+                        <div style="border: 1px solid #ccc; padding: 15px; background: #f9f9f9; margin-bottom: 15px;">
+                            <div class="form-group">
+                                <label class="label">Flag Name *</label>
+                                <select class="select" id="flagSelectDropdown">
+                                    <option value="">-- Select a flag --</option>
+                                    <option value="fm-test-flag-new">fm-test-flag-new</option>
+                                    <option value="feature-toggle-beta">feature-toggle-beta</option>
+                                    <option value="dark-mode-rollout">dark-mode-rollout</option>
+                                </select>
+                            </div>
+
+                            <div class="btn-group">
+                                <button class="btn" onclick="hideLinkFlagForm()">Cancel</button>
+                                <button class="btn btn-primary" onclick="confirmLinkFromJira()">Link Flag</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="linkedFlagsDisplay">
+                        <div class="empty-state" style="padding: 30px;">
+                            <div class="empty-text">No flags linked yet</div>
+                            <div class="empty-subtext">Click "+ Link Flag" to associate a feature flag</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn" onclick="closeLinkFromJiraModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock Jira API data
+        const mockJiraTickets = {
+            'CBP-12345': { summary: 'Implement Feature X with new API', status: 'In Progress' },
+            'CBP-12346': { summary: 'Add unit tests for Feature X', status: 'Done' },
+            'CBP-12347': { summary: 'Deploy Feature X to production', status: 'To Do' },
+            'PROJ-100': { summary: 'Update documentation', status: 'In Progress' },
+            'PROJ-101': { summary: 'Code review', status: 'To Do' }
+        };
+
+        // State
+        let linkedTickets = [];
+        let currentTicketToRemove = null;
+        let currentTicketData = null;
+        let integrationConfigured = false;
+        let jiraAppInstalled = false;
+        let jiraBaseUrl = '';
+        let jiraApiToken = '';
+        let installWizardStep = 1;
+
+        // Tab switching
+        function switchTab(tabName) {
+            // Update tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+
+            if (tabName === 'jira') {
+                document.getElementById('jira-content').classList.remove('hidden');
+                renderJiraContent();
+            } else if (tabName === 'flag-health') {
+                document.getElementById('flag-health-content').classList.remove('hidden');
+            }
+        }
+
+        // Render Jira content
+        function renderJiraContent() {
+            const content = document.getElementById('jiraMainContent');
+
+            // Navigation Guide
+            const guideHtml = `
+                <div class="info-box" style="background: #e8e8e8; border-color: #000;">
+                    <strong>📋 INTERACTIVE PROTOTYPE GUIDE</strong><br><br>
+                    <strong>Available Interactions:</strong><br>
+                    • Configure/Disconnect Integration | Install/Uninstall Jira App<br>
+                    • Add/Remove Ticket Links | View Flag in Jira | Link Flags from Jira<br><br>
+                    <strong>Navigation:</strong> Use buttons to explore different flows. Each modal includes Next/Back buttons where applicable.
+                </div>
+            `;
+
+            // Integration Status Section
+            let integrationStatusHtml = '';
+            if (!integrationConfigured) {
+                integrationStatusHtml = `
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-title">Integration Status</div>
+                        </div>
+
+                        <div class="empty-state">
+                            <div class="empty-icon">[⚙️]</div>
+                            <div class="empty-text">Jira integration not configured</div>
+                            <div class="empty-subtext">Connect to your Jira instance to start linking tickets</div>
+                        </div>
+
+                        <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
+                            <button class="btn btn-primary" onclick="openConfigureIntegrationModal()">Configure Integration</button>
+                        </div>
+
+                        <div class="info-box">
+                            <strong>SETUP REQUIRED:</strong> Configure your Jira base URL and API token to enable integration.<br>
+                            <strong>Next Steps:</strong> Configure → Install App → Link Tickets
+                        </div>
+                    </div>
+                `;
+            } else {
+                let appStatusHtml = '';
+                if (!jiraAppInstalled) {
+                    appStatusHtml = `
+                        <div class="warning-message">
+                            <strong>ACTION REQUIRED:</strong> Install the Feature Management app in Jira to enable full functionality.
+                            <button class="btn btn-sm" onclick="openInstallJiraAppModal()" style="margin-left: 10px;">Install App</button>
+                        </div>
+                    `;
+                } else {
+                    appStatusHtml = `
+                        <div class="success-message">
+                            <strong>✓ JIRA APP INSTALLED:</strong> Full integration active. You can link flags from Jira.
+                            <button class="btn btn-sm" onclick="openUninstallJiraAppModal()" style="margin-left: 10px;">Uninstall</button>
+                        </div>
+                    `;
+                }
+
+                integrationStatusHtml = `
+                    <div class="section">
+                        <div class="section-header">
+                            <div class="section-title">Integration Status</div>
+                            <button class="btn" onclick="openRemoveIntegrationModal()">Disconnect</button>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-row">
+                                <div class="card-label">Status:</div>
+                                <div class="card-value">
+                                    <span class="status-badge connected">
+                                        <span class="status-indicator active"></span>
+                                        Connected
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="card-row">
+                                <div class="card-label">Jira URL:</div>
+                                <div class="card-value">${jiraBaseUrl || 'https://your-company.atlassian.net'}</div>
+                            </div>
+                            <div class="card-row">
+                                <div class="card-label">API Token:</div>
+                                <div class="card-value">••••••••••••••••</div>
+                            </div>
+                        </div>
+
+                        ${appStatusHtml}
+
+                        <div style="margin-top: 15px; display: flex; gap: 10px;">
+                            <button class="btn" onclick="openViewInJiraModal()">👁 View Flag in Jira</button>
+                            <button class="btn" onclick="openLinkFromJiraModal()">🔗 Link from Jira</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Tickets Section (only show if configured)
+            let ticketsHtml = '';
+            if (integrationConfigured) {
+                if (linkedTickets.length === 0) {
+                    ticketsHtml = `
+                        <div class="section">
+                            <div class="section-header">
+                                <div class="section-title">Linked Tickets</div>
+                                <button class="btn btn-primary" onclick="openAddTicketModal()">+ Add Jira Ticket</button>
+                            </div>
+
+                            <div class="empty-state">
+                                <div class="empty-icon">[📋]</div>
+                                <div class="empty-text">No Jira tickets linked</div>
+                                <div class="empty-subtext">Link Jira tickets to track related work for this feature flag</div>
+                            </div>
+
+                            <div class="info-box">
+                                <strong>TRY:</strong> CBP-12345, CBP-12346, CBP-12347, PROJ-100, PROJ-101
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    let ticketCardsHtml = linkedTickets.map(ticket => `
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">${ticket.key}</div>
+                                <button class="btn btn-sm" onclick="openRemoveTicketModal('${ticket.key}')">✕ Remove</button>
+                            </div>
+                            <div class="card-row">
+                                <div class="card-label">Summary:</div>
+                                <div class="card-value">${ticket.summary}</div>
+                            </div>
+                            <div class="card-row">
+                                <div class="card-label">Status:</div>
+                                <div class="card-value"><span class="badge ${getStatusClass(ticket.status)}">${ticket.status}</span></div>
+                            </div>
+                            <div class="divider"></div>
+                            <div class="card-row">
+                                <div class="card-label">Jira Link:</div>
+                                <div class="card-value"><a href="#" class="link" onclick="alert('Opens: ${jiraBaseUrl || 'https://jira.company.com'}/browse/${ticket.key}'); return false;">View in Jira →</a></div>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    ticketsHtml = `
+                        <div class="section">
+                            <div class="section-header">
+                                <div class="section-title">Linked Tickets (${linkedTickets.length})</div>
+                                <button class="btn btn-primary" onclick="openAddTicketModal()">+ Add Jira Ticket</button>
+                            </div>
+
+                            ${ticketCardsHtml}
+                        </div>
+                    `;
+                }
+            }
+
+            content.innerHTML = guideHtml + integrationStatusHtml + ticketsHtml;
+        }
+
+        // Helper functions
+        function getStatusClass(status) {
+            if (status === 'Done') return 'done';
+            if (status === 'In Progress') return 'in-progress';
+            return 'todo';
+        }
+
+        function openAddTicketModal() {
+            if (!integrationConfigured) {
+                alert('Please configure the Jira integration first');
+                return;
+            }
+
+            document.getElementById('addTicketModal').classList.add('show');
+            document.getElementById('ticketKeyInput').value = '';
+            document.getElementById('ticketKeyInput').disabled = false;
+            document.getElementById('inputError').classList.add('hidden');
+            document.getElementById('loadingContainer').classList.add('hidden');
+            document.getElementById('ticketPreview').classList.add('hidden');
+            document.getElementById('validateBtn').classList.remove('hidden');
+            document.getElementById('linkBtn').classList.add('hidden');
+            currentTicketData = null;
+            setTimeout(() => document.getElementById('ticketKeyInput').focus(), 100);
+        }
+
+        function closeAddTicketModal() {
+            document.getElementById('addTicketModal').classList.remove('show');
+        }
+
+        function validateTicket() {
+            const key = document.getElementById('ticketKeyInput').value.trim().toUpperCase();
+            const errorDiv = document.getElementById('inputError');
+
+            if (!key) {
+                errorDiv.textContent = 'Please enter a Jira issue key';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            if (linkedTickets.find(t => t.key === key)) {
+                errorDiv.textContent = 'This ticket is already linked to this flag';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            errorDiv.classList.add('hidden');
+            document.getElementById('ticketKeyInput').disabled = true;
+            document.getElementById('validateBtn').disabled = true;
+            document.getElementById('loadingContainer').classList.remove('hidden');
+
+            // Simulate API call
+            setTimeout(() => {
+                if (mockJiraTickets[key]) {
+                    const ticket = mockJiraTickets[key];
+                    currentTicketData = { key, ...ticket };
+
+                    document.getElementById('previewKey').textContent = key;
+                    document.getElementById('previewSummary').textContent = ticket.summary;
+                    document.getElementById('previewStatus').textContent = ticket.status;
+                    document.getElementById('previewStatus').className = 'badge ' + getStatusClass(ticket.status);
+
+                    document.getElementById('loadingContainer').classList.add('hidden');
+                    document.getElementById('ticketPreview').classList.remove('hidden');
+                    document.getElementById('validateBtn').classList.add('hidden');
+                    document.getElementById('linkBtn').classList.remove('hidden');
+                } else {
+                    document.getElementById('loadingContainer').classList.add('hidden');
+                    document.getElementById('ticketKeyInput').disabled = false;
+                    document.getElementById('validateBtn').disabled = false;
+                    errorDiv.textContent = 'Ticket not found. Valid keys: CBP-12345, CBP-12346, CBP-12347, PROJ-100, PROJ-101';
+                    errorDiv.classList.remove('hidden');
+                }
+            }, 1500);
+        }
+
+        function linkTicket() {
+            if (currentTicketData) {
+                linkedTickets.push(currentTicketData);
+                renderJiraContent();
+                closeAddTicketModal();
+            }
+        }
+
+        function openRemoveTicketModal(key) {
+            currentTicketToRemove = key;
+            document.getElementById('removeTicketKey').textContent = key;
+            document.getElementById('removeTicketModal').classList.add('show');
+        }
+
+        function closeRemoveTicketModal() {
+            document.getElementById('removeTicketModal').classList.remove('show');
+            currentTicketToRemove = null;
+        }
+
+        function confirmRemoveTicket() {
+            if (currentTicketToRemove) {
+                linkedTickets = linkedTickets.filter(t => t.key !== currentTicketToRemove);
+                renderJiraContent();
+                closeRemoveTicketModal();
+            }
+        }
+
+        // ========== CONFIGURE INTEGRATION ==========
+        function openConfigureIntegrationModal() {
+            document.getElementById('configureIntegrationModal').classList.add('show');
+            document.getElementById('jiraBaseUrlInput').value = jiraBaseUrl || '';
+            document.getElementById('jiraApiTokenInput').value = '';
+            setTimeout(() => document.getElementById('jiraBaseUrlInput').focus(), 100);
+        }
+
+        function closeConfigureIntegrationModal() {
+            document.getElementById('configureIntegrationModal').classList.remove('show');
+        }
+
+        function testConnection() {
+            const baseUrl = document.getElementById('jiraBaseUrlInput').value.trim();
+            const apiToken = document.getElementById('jiraApiTokenInput').value.trim();
+
+            if (!baseUrl || !apiToken) {
+                alert('Please fill in both fields');
+                return;
+            }
+
+            // Simulate API call
+            alert('Testing connection...');
+            setTimeout(() => {
+                jiraBaseUrl = baseUrl;
+                jiraApiToken = apiToken;
+                integrationConfigured = true;
+                alert('✓ Connection successful! Jira integration configured.');
+                closeConfigureIntegrationModal();
+                renderJiraContent();
+            }, 1000);
+        }
+
+        // ========== REMOVE INTEGRATION ==========
+        function openRemoveIntegrationModal() {
+            document.getElementById('removeIntegrationModal').classList.add('show');
+        }
+
+        function closeRemoveIntegrationModal() {
+            document.getElementById('removeIntegrationModal').classList.remove('show');
+        }
+
+        function confirmRemoveIntegration() {
+            integrationConfigured = false;
+            jiraAppInstalled = false;
+            jiraBaseUrl = '';
+            jiraApiToken = '';
+            linkedTickets = [];
+            closeRemoveIntegrationModal();
+            renderJiraContent();
+            alert('✓ Jira integration has been disconnected');
+        }
+
+        // ========== INSTALL JIRA APP ==========
+        function openInstallJiraAppModal() {
+            installWizardStep = 1;
+            document.getElementById('installJiraAppModal').classList.add('show');
+            renderInstallStep();
+        }
+
+        function closeInstallJiraAppModal() {
+            document.getElementById('installJiraAppModal').classList.remove('show');
+        }
+
+        function renderInstallStep() {
+            // Update step indicators
+            for (let i = 1; i <= 3; i++) {
+                const stepEl = document.getElementById('installStep' + i);
+                stepEl.classList.remove('active', 'completed');
+                if (i < installWizardStep) {
+                    stepEl.classList.add('completed');
+                } else if (i === installWizardStep) {
+                    stepEl.classList.add('active');
+                }
+            }
+
+            const content = document.getElementById('installStepContent');
+            const backBtn = document.getElementById('installBackBtn');
+            const nextBtn = document.getElementById('installNextBtn');
+
+            backBtn.style.display = installWizardStep > 1 ? 'inline-block' : 'none';
+
+            if (installWizardStep === 1) {
+                content.innerHTML = `
+                    <div class="info-box">
+                        <strong>STEP 1 of 3:</strong> Download the Feature Management app for Jira
+                    </div>
+
+                    <p style="margin: 15px 0; font-size: 12px;">
+                        The Feature Management app allows you to view and link feature flags directly within Jira tickets.
+                    </p>
+
+                    <div class="code-block">
+                        App Name: Feature Management for Jira<br>
+                        Version: 2.4.1<br>
+                        Size: 3.2 MB<br>
+                        Compatible: Jira Cloud, Server, Data Center
+                    </div>
+
+                    <button class="btn" style="margin-top: 10px;" onclick="alert('Downloading app package...')">
+                        ⬇ Download App Package
+                    </button>
+                `;
+                nextBtn.textContent = 'Next';
+            } else if (installWizardStep === 2) {
+                content.innerHTML = `
+                    <div class="info-box">
+                        <strong>STEP 2 of 3:</strong> Install the app in your Jira instance
+                    </div>
+
+                    <p style="margin: 15px 0; font-size: 12px;">
+                        Upload and install the app in your Jira instance:
+                    </p>
+
+                    <ul class="info-list">
+                        <li>1. Go to Jira → Settings → Apps → Manage apps</li>
+                        <li>2. Click "Upload app"</li>
+                        <li>3. Select the downloaded app package</li>
+                        <li>4. Click "Upload" and wait for installation to complete</li>
+                    </ul>
+
+                    <div class="success-message">
+                        <strong>TIP:</strong> You need Jira administrator permissions to install apps.
+                    </div>
+                `;
+                nextBtn.textContent = 'Next';
+            } else if (installWizardStep === 3) {
+                content.innerHTML = `
+                    <div class="info-box">
+                        <strong>STEP 3 of 3:</strong> Configure the app connection
+                    </div>
+
+                    <p style="margin: 15px 0; font-size: 12px;">
+                        Enter your Feature Management connection details in the Jira app settings:
+                    </p>
+
+                    <div class="code-block">
+                        API Endpoint: https://api.feature-management.company.com<br>
+                        Auth Token: [Copy from your account settings]
+                    </div>
+
+                    <ul class="info-list">
+                        <li>1. In Jira, go to Settings → Apps → Feature Management</li>
+                        <li>2. Enter the API endpoint and auth token above</li>
+                        <li>3. Click "Test Connection" to verify</li>
+                        <li>4. Save the configuration</li>
+                    </ul>
+
+                    <div class="success-message">
+                        <strong>✓ READY:</strong> Once configured, the app will appear on all Jira issues.
+                    </div>
+                `;
+                nextBtn.textContent = 'Complete Installation';
+            }
+        }
+
+        function installNextStep() {
+            if (installWizardStep < 3) {
+                installWizardStep++;
+                renderInstallStep();
+            } else {
+                // Complete installation
+                jiraAppInstalled = true;
+                closeInstallJiraAppModal();
+                renderJiraContent();
+                alert('✓ Jira app installed successfully!');
+            }
+        }
+
+        function installPreviousStep() {
+            if (installWizardStep > 1) {
+                installWizardStep--;
+                renderInstallStep();
+            }
+        }
+
+        // ========== UNINSTALL JIRA APP ==========
+        function openUninstallJiraAppModal() {
+            document.getElementById('uninstallJiraAppModal').classList.add('show');
+        }
+
+        function closeUninstallJiraAppModal() {
+            document.getElementById('uninstallJiraAppModal').classList.remove('show');
+        }
+
+        function confirmUninstallJiraApp() {
+            jiraAppInstalled = false;
+            closeUninstallJiraAppModal();
+            renderJiraContent();
+            alert('✓ Jira app has been uninstalled');
+        }
+
+        // ========== VIEW IN JIRA ==========
+        function openViewInJiraModal() {
+            document.getElementById('viewInJiraModal').classList.add('show');
+        }
+
+        function closeViewInJiraModal() {
+            document.getElementById('viewInJiraModal').classList.remove('show');
+        }
+
+        // ========== LINK FROM JIRA ==========
+        function openLinkFromJiraModal() {
+            document.getElementById('linkFromJiraModal').classList.add('show');
+            document.getElementById('linkFlagFormContainer').classList.add('hidden');
+            document.getElementById('linkedFlagsDisplay').innerHTML = `
+                <div class="empty-state" style="padding: 30px;">
+                    <div class="empty-text">No flags linked yet</div>
+                    <div class="empty-subtext">Click "+ Link Flag" to associate a feature flag</div>
+                </div>
+            `;
+        }
+
+        function closeLinkFromJiraModal() {
+            document.getElementById('linkFromJiraModal').classList.remove('show');
+        }
+
+        function showLinkFlagForm() {
+            document.getElementById('linkFlagFormContainer').classList.remove('hidden');
+            document.getElementById('flagSelectDropdown').value = '';
+        }
+
+        function hideLinkFlagForm() {
+            document.getElementById('linkFlagFormContainer').classList.add('hidden');
+        }
+
+        function confirmLinkFromJira() {
+            const selectedFlag = document.getElementById('flagSelectDropdown').value;
+
+            if (!selectedFlag) {
+                alert('Please select a flag');
+                return;
+            }
+
+            // Simulate linking
+            document.getElementById('linkedFlagsDisplay').innerHTML = `
+                <div class="card" style="margin-bottom: 0;">
+                    <div class="card-row">
+                        <div class="card-label">Flag Name:</div>
+                        <div class="card-value">${selectedFlag}</div>
+                    </div>
+                    <div class="card-row">
+                        <div class="card-label">Environment:</div>
+                        <div class="card-value">env-1, env-2, env3</div>
+                    </div>
+                    <div class="card-row">
+                        <div class="card-label">Status:</div>
+                        <div class="card-value"><span class="badge setup">Setup</span></div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="card-row">
+                        <div class="card-label">View Flag:</div>
+                        <div class="card-value">
+                            <a href="#" class="link" onclick="alert('Opens flag in Feature Management'); return false;">View in Feature Management →</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            hideLinkFlagForm();
+            alert('✓ Flag linked successfully from Jira!');
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('ticketKeyInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !document.getElementById('validateBtn').classList.contains('hidden')) {
+                    validateTicket();
+                }
+            });
+        });
+
+        // Close modals on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    closeAddTicketModal();
+                    closeRemoveTicketModal();
+                    closeConfigureIntegrationModal();
+                    closeRemoveIntegrationModal();
+                    closeInstallJiraAppModal();
+                    closeUninstallJiraAppModal();
+                    closeViewInJiraModal();
+                    closeLinkFromJiraModal();
+                }
+            });
+        });
+
+        // Close modals on Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeAddTicketModal();
+                closeRemoveTicketModal();
+                closeConfigureIntegrationModal();
+                closeRemoveIntegrationModal();
+                closeInstallJiraAppModal();
+                closeUninstallJiraAppModal();
+                closeViewInJiraModal();
+                closeLinkFromJiraModal();
+            }
+        });
+    </script>
+</body>
+</html>
