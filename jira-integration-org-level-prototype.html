@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jira Integration Configuration - Organization Level</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: flex-end;
+            align-items: stretch;
+            min-height: 100vh;
+        }
+
+        .drawer {
+            width: 600px;
+            background: #1e1e1e;
+            color: #ffffff;
+            box-shadow: -8px 0 24px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        .drawer-header {
+            padding: 24px;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .drawer-header h1 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .drawer-header p {
+            font-size: 14px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .close-btn:hover {
+            background: #333;
+            color: #fff;
+        }
+
+        .progress-indicator {
+            height: 4px;
+            background: #333;
+            margin-bottom: 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2563eb, #3b82f6);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .drawer-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        .step {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .integration-card {
+            background: #2a2a2a;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .integration-icon {
+            width: 48px;
+            height: 48px;
+            background: #3b82f6;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .integration-info {
+            flex: 1;
+        }
+
+        .integration-info h3 {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .integration-info p {
+            font-size: 14px;
+            color: #999;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge-active {
+            background: #10b981;
+            color: white;
+        }
+
+        .badge-info {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #e5e7eb;
+        }
+
+        .form-group label .required {
+            color: #ef4444;
+            margin-left: 4px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #666;
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #999;
+            margin-top: 6px;
+        }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 3px solid #3b82f6;
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-bottom: 24px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .mapping-section {
+            margin-bottom: 32px;
+        }
+
+        .mapping-section h3 {
+            font-size: 16px;
+            margin-bottom: 16px;
+            color: #e5e7eb;
+        }
+
+        .mapping-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 16px;
+            align-items: start;
+        }
+
+        .mapping-column {
+            background: #2a2a2a;
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .mapping-column h4 {
+            font-size: 14px;
+            font-weight: 500;
+            color: #999;
+            margin-bottom: 12px;
+        }
+
+        .chip-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-height: 200px;
+        }
+
+        .chip {
+            padding: 10px 16px;
+            background: #333;
+            border: 2px solid #444;
+            border-radius: 24px;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: grab;
+            user-select: none;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .chip:hover {
+            background: #3a3a3a;
+            border-color: #555;
+        }
+
+        .chip.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+
+        .chip.drag-over {
+            border-color: #3b82f6;
+            border-style: dashed;
+            transform: scale(1.02);
+        }
+
+        .chip-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .chip-icon.severity-open { background: #10b981; }
+        .chip-icon.severity-in-progress { background: #f59e0b; }
+        .chip-icon.severity-resolved { background: #6b7280; }
+        .chip-icon.severity-false-positive { background: #8b5cf6; }
+        .chip-icon.severity-accepted-risk { background: #ef4444; }
+
+        .chip-icon.jira-reopened { background: #ef4444; }
+        .chip-icon.jira-backlog { background: #6b7280; }
+        .chip-icon.jira-selected { background: #3b82f6; }
+        .chip-icon.jira-in-progress { background: #f59e0b; }
+        .chip-icon.jira-false-positive { background: #8b5cf6; }
+        .chip-icon.jira-accepted-risk { background: #ec4899; }
+
+        .mapping-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 24px;
+            padding-top: 40px;
+        }
+
+        .drop-zone {
+            min-height: 60px;
+            border: 2px dashed #444;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 14px;
+            padding: 16px;
+            margin-top: 8px;
+            transition: all 0.2s;
+        }
+
+        .drop-zone.drag-over {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.05);
+            color: #3b82f6;
+        }
+
+        .connection-line {
+            position: relative;
+            padding: 12px 0;
+        }
+
+        .connection-line::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 2px;
+            background: #444;
+        }
+
+        .connection-badge {
+            position: relative;
+            background: #2a2a2a;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            display: inline-block;
+            border: 1px solid #444;
+        }
+
+        .drawer-footer {
+            padding: 24px;
+            border-top: 1px solid #333;
+            display: flex;
+            gap: 12px;
+            justify-content: space-between;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:disabled {
+            background: #444;
+            color: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #2a2a2a;
+            color: #e5e7eb;
+            border: 1px solid #444;
+        }
+
+        .btn-secondary:hover {
+            background: #333;
+        }
+
+        .btn-text {
+            background: none;
+            color: #999;
+            padding: 12px;
+        }
+
+        .btn-text:hover {
+            color: #e5e7eb;
+        }
+
+        .webhook-info {
+            background: #2a2a2a;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .webhook-info h4 {
+            font-size: 14px;
+            margin-bottom: 12px;
+            color: #e5e7eb;
+        }
+
+        .code-block {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #10b981;
+            overflow-x: auto;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            padding: 6px 12px;
+            background: #333;
+            border: none;
+            border-radius: 4px;
+            color: #999;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: #444;
+            color: #fff;
+        }
+
+        .summary-card {
+            background: #2a2a2a;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .summary-value {
+            color: #e5e7eb;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .success-icon {
+            width: 64px;
+            height: 64px;
+            background: #10b981;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 24px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .issue-type-section {
+            margin-top: 32px;
+        }
+
+        .drop-zone-with-chips {
+            min-height: 100px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-content: flex-start;
+        }
+
+        .drop-zone-with-chips.empty {
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chip-in-zone {
+            padding: 8px 16px;
+            background: #3b82f6;
+            border: 2px solid #2563eb;
+            border-radius: 20px;
+            font-size: 14px;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .remove-chip {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+
+        .remove-chip:hover {
+            color: white;
+            transform: scale(1.2);
+        }
+
+        .placeholder {
+            position: absolute;
+            background: rgba(59, 130, 246, 0.1);
+            border: 2px dashed #3b82f6;
+            border-radius: 24px;
+            pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+            .drawer {
+                width: 100%;
+            }
+
+            .mapping-container {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .mapping-arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="drawer">
+        <div class="drawer-header">
+            <div>
+                <h1>Configure application integration</h1>
+                <p>Configure the type of integration and how it integrates to the application</p>
+            </div>
+            <button class="close-btn" onclick="closeDrawer()">&times;</button>
+        </div>
+
+        <div class="progress-indicator">
+            <div class="progress-fill" id="progress-bar"></div>
+        </div>
+
+        <div class="drawer-content">
+            <!-- Step 1: Integration Type -->
+            <div class="step active" id="step-1">
+                <div class="integration-card">
+                    <div class="integration-icon">📋</div>
+                    <div class="integration-info">
+                        <h3>Atlassian Jira</h3>
+                        <p>Ticketing integration</p>
+                    </div>
+                    <span class="badge badge-active">Active</span>
+                </div>
+
+                <div class="form-group">
+                    <label>Domain<span class="required">*</span></label>
+                    <input type="text" value="https://imbrium01.atlassian.net" placeholder="https://your-domain.atlassian.net" />
+                    <p class="help-text">Your Jira cloud instance domain</p>
+                </div>
+
+                <div class="info-box">
+                    <strong>ℹ️ Organization Level Integration</strong><br>
+                    This integration will be available to all applications within your organization. Application teams can use this connection for their ticketing workflows.
+                </div>
+            </div>
+
+            <!-- Step 2: Choose Project -->
+            <div class="step" id="step-2">
+                <h2 style="margin-bottom: 24px; font-size: 18px;">Choose a Jira project to associate with this application</h2>
+
+                <div class="form-group">
+                    <label>Project Key<span class="required">*</span></label>
+                    <select id="project-select">
+                        <option value="">Select a project...</option>
+                        <option value="DEV" selected>DEV - dev</option>
+                        <option value="PROD">PROD - Production</option>
+                        <option value="CBP">CBP - CloudBees Platform</option>
+                    </select>
+                </div>
+
+                <div class="info-box">
+                    Feature flags and security findings from your application will be linked to issues in this Jira project. You can change this later in the integration settings.
+                </div>
+            </div>
+
+            <!-- Step 3: Status Mapping -->
+            <div class="step" id="step-3">
+                <h2 style="margin-bottom: 8px; font-size: 18px;">Configure Jira project statuses</h2>
+                <p style="color: #999; margin-bottom: 24px; font-size: 14px;">Map your security finding remediation statuses to Jira project statuses using drag & drop</p>
+
+                <div class="info-box">
+                    <strong>💡 How it works:</strong> Drag CBP remediation status chips to the corresponding Jira status on the right. Multiple CBP statuses can map to the same Jira status.
+                </div>
+
+                <div class="mapping-section">
+                    <h3>Severity Status Mapping</h3>
+                    <div class="mapping-container">
+                        <!-- CBP Statuses -->
+                        <div class="mapping-column">
+                            <h4>CBP Remediation Status</h4>
+                            <div class="chip-list" id="cbp-statuses">
+                                <div class="chip" draggable="true" data-id="open" data-type="cbp">
+                                    <div class="chip-icon severity-open">●</div>
+                                    <span>Open</span>
+                                </div>
+                                <div class="chip" draggable="true" data-id="in-progress" data-type="cbp">
+                                    <div class="chip-icon severity-in-progress">●</div>
+                                    <span>In progress</span>
+                                </div>
+                                <div class="chip" draggable="true" data-id="resolved" data-type="cbp">
+                                    <div class="chip-icon severity-resolved">●</div>
+                                    <span>Resolved</span>
+                                </div>
+                                <div class="chip" draggable="true" data-id="false-positive" data-type="cbp">
+                                    <div class="chip-icon severity-false-positive">●</div>
+                                    <span>False positive</span>
+                                </div>
+                                <div class="chip" draggable="true" data-id="accepted-risk" data-type="cbp">
+                                    <div class="chip-icon severity-accepted-risk">●</div>
+                                    <span>Accepted risk</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Arrow -->
+                        <div class="mapping-arrow">→</div>
+
+                        <!-- Jira Statuses -->
+                        <div class="mapping-column">
+                            <h4>Jira Project Statuses</h4>
+                            <div class="chip-list">
+                                <div class="drop-zone drop-zone-with-chips" data-jira-status="reopened" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                                    <div style="display: flex; align-items: center; gap: 8px; width: 100%;">
+                                        <div class="chip-icon jira-reopened">●</div>
+                                        <span style="flex: 1;">Reopened</span>
+                                    </div>
+                                </div>
+
+                                <div class="drop-zone drop-zone-with-chips" data-jira-status="backlog" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                                    <div style="display: flex; align-items: center; gap: 8px; width: 100%;">
+                                        <div class="chip-icon jira-backlog">●</div>
+                                        <span style="flex: 1;">Backlog</span>
+                                    </div>
+                                </div>
+
+                                <div class="drop-zone drop-zone-with-chips" data-jira-status="selected" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                                    <div style="display: flex; align-items: center; gap: 8px; width: 100%;">
+                                        <div class="chip-icon jira-selected">●</div>
+                                        <span style="flex: 1;">Selected for development</span>
+                                    </div>
+                                </div>
+
+                                <div class="drop-zone drop-zone-with-chips" data-jira-status="in-progress" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                                    <div style="display: flex; align-items: center; gap: 8px; width: 100%;">
+                                        <div class="chip-icon jira-in-progress">●</div>
+                                        <span style="flex: 1;">In progress</span>
+                                    </div>
+                                </div>
+
+                                <div class="drop-zone drop-zone-with-chips" data-jira-status="false-positive" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                                    <div style="display: flex; align-items: center; gap: 8px; width: 100%;">
+                                        <div class="chip-icon jira-false-positive">●</div>
+                                        <span style="flex: 1;">False positive</span>
+                                    </div>
+                                </div>
+
+                                <div class="drop-zone drop-zone-with-chips" data-jira-status="accepted-risk" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                                    <div style="display: flex; align-items: center; gap: 8px; width: 100%;">
+                                        <div class="chip-icon jira-accepted-risk">●</div>
+                                        <span style="flex: 1;">Accepted risk</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-secondary" onclick="resetMappings()" style="margin-top: 16px;">
+                    ↺ Reset Mappings
+                </button>
+            </div>
+
+            <!-- Step 4: Issue Type Mapping -->
+            <div class="step" id="step-4">
+                <h2 style="margin-bottom: 8px; font-size: 18px;">Configure Jira project issues</h2>
+                <p style="color: #999; margin-bottom: 24px; font-size: 14px;">Map security finding severities to Jira issue types</p>
+
+                <div class="info-box">
+                    <strong>💡 Drag and drop:</strong> Drop "Very high" severity findings into one or more Jira issue types below. This determines which type of Jira issue will be created for critical security findings.
+                </div>
+
+                <div class="issue-type-section">
+                    <h3 style="margin-bottom: 16px; font-size: 16px;">CBP Findings</h3>
+                    <div class="chip-list" style="flex-direction: row; flex-wrap: wrap;">
+                        <div class="chip" draggable="true" data-id="very-high" data-type="severity">
+                            <div class="chip-icon severity-open">⚠</div>
+                            <span>Very high</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="issue-type-section">
+                    <h3 style="margin-bottom: 16px; font-size: 16px;">Jira Project Issue Types</h3>
+
+                    <div style="display: grid; gap: 16px;">
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <div class="chip-icon" style="background: #8b5cf6;">📄</div>
+                                <strong style="font-size: 14px;">Epic</strong>
+                            </div>
+                            <div class="drop-zone drop-zone-with-chips empty" data-issue-type="epic" ondrop="dropIssueType(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                                Drag and drop a project issue type here to map to this status
+                            </div>
+                        </div>
+
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <div class="chip-icon" style="background: #3b82f6;">✓</div>
+                                <strong style="font-size: 14px;">Task</strong>
+                            </div>
+                            <div class="drop-zone drop-zone-with-chips empty" data-issue-type="task" ondrop="dropIssueType(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                                Drag and drop a project issue type here to map to this status
+                            </div>
+                        </div>
+
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <div class="chip-icon" style="background: #ef4444;">🐛</div>
+                                <strong style="font-size: 14px;">Bug</strong>
+                            </div>
+                            <div class="drop-zone drop-zone-with-chips empty" data-issue-type="bug" ondrop="dropIssueType(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                                Drag and drop a project issue type here to map to this status
+                            </div>
+                        </div>
+
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <div class="chip-icon" style="background: #f59e0b;">📖</div>
+                                <strong style="font-size: 14px;">Story</strong>
+                            </div>
+                            <div class="drop-zone drop-zone-with-chips empty" data-issue-type="story" ondrop="dropIssueType(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                                Drag and drop a project issue type here to map to this status
+                            </div>
+                        </div>
+
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <div class="chip-icon" style="background: #10b981;">🔒</div>
+                                <strong style="font-size: 14px;">Security issue</strong>
+                            </div>
+                            <div class="drop-zone drop-zone-with-chips empty" data-issue-type="security" ondrop="dropIssueType(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                                Drag and drop a project issue type here to map to this status
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5: Webhook Configuration -->
+            <div class="step" id="step-5">
+                <h2 style="margin-bottom: 24px; font-size: 18px;">Set up webhook & Secret</h2>
+
+                <div class="webhook-info">
+                    <h4>Webhook URL</h4>
+                    <div class="code-block">
+                        https://api.cloudbees.com/webhooks/jira/imbrium01
+                        <button class="copy-btn" onclick="copyToClipboard('webhook-url')">Copy</button>
+                    </div>
+                    <p class="help-text">Add this URL to your Jira webhook configuration to receive real-time updates.</p>
+                </div>
+
+                <div class="webhook-info">
+                    <h4>Webhook Secret</h4>
+                    <div class="code-block">
+                        sk_live_51234567890abcdef1234567890abcdef
+                        <button class="copy-btn" onclick="copyToClipboard('webhook-secret')">Copy</button>
+                    </div>
+                    <p class="help-text">Use this secret to verify webhook authenticity. Store it securely.</p>
+                </div>
+
+                <div class="info-box">
+                    <strong>🔐 Security Note:</strong> The webhook secret ensures that only CloudBees can send authenticated requests to your Jira instance. Never share this secret publicly or commit it to version control.
+                </div>
+
+                <div class="form-group">
+                    <h4 style="margin-bottom: 12px;">Webhook Events</h4>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" checked />
+                            <span>Issue created</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" checked />
+                            <span>Issue updated</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" checked />
+                            <span>Issue status changed</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" />
+                            <span>Comment added</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6: Review & Create -->
+            <div class="step" id="step-6">
+                <h2 style="margin-bottom: 24px; font-size: 18px;">Review integration configuration</h2>
+
+                <div class="summary-card">
+                    <div class="summary-item">
+                        <span class="summary-label">Integration Type</span>
+                        <span class="summary-value">Atlassian Jira</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Domain</span>
+                        <span class="summary-value">https://imbrium01.atlassian.net</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Project</span>
+                        <span class="summary-value">DEV - dev</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Status Mappings</span>
+                        <span class="summary-value" id="status-mapping-count">5 configured</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Issue Type Mappings</span>
+                        <span class="summary-value" id="issue-type-count">0 configured</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Webhook Events</span>
+                        <span class="summary-value">3 events enabled</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Scope</span>
+                        <span class="summary-value">
+                            <span class="badge badge-info">Organization Level</span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <strong>✓ Ready to create:</strong> This integration will be available to all applications in your organization. Teams can link their feature flags and security findings to Jira issues in the DEV project.
+                </div>
+            </div>
+
+            <!-- Step 7: Success -->
+            <div class="step" id="step-7">
+                <div class="success-icon">✓</div>
+                <div class="text-center">
+                    <h2 style="margin-bottom: 12px; font-size: 20px;">Integration created successfully!</h2>
+                    <p style="color: #999; margin-bottom: 32px;">Your Jira integration is now active and available to all applications.</p>
+                </div>
+
+                <div class="summary-card">
+                    <h3 style="margin-bottom: 16px; font-size: 16px;">Next Steps</h3>
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        <div style="display: flex; gap: 12px;">
+                            <div style="color: #3b82f6; font-size: 20px;">1</div>
+                            <div>
+                                <strong style="display: block; margin-bottom: 4px;">Configure webhook in Jira</strong>
+                                <p style="color: #999; font-size: 14px;">Add the webhook URL and secret to your Jira project settings</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 12px;">
+                            <div style="color: #3b82f6; font-size: 20px;">2</div>
+                            <div>
+                                <strong style="display: block; margin-bottom: 4px;">Link feature flags</strong>
+                                <p style="color: #999; font-size: 14px;">Start linking your feature flags to Jira tickets for traceability</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 12px;">
+                            <div style="color: #3b82f6; font-size: 20px;">3</div>
+                            <div>
+                                <strong style="display: block; margin-bottom: 4px;">Monitor integration health</strong>
+                                <p style="color: #999; font-size: 14px;">Check the integration status page to ensure everything is working correctly</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="drawer-footer">
+            <button class="btn btn-text" id="back-btn" onclick="previousStep()" style="display: none;">← Back</button>
+            <div style="flex: 1;"></div>
+            <button class="btn btn-secondary" onclick="closeDrawer()">Cancel</button>
+            <button class="btn btn-primary" id="next-btn" onclick="nextStep()">Next →</button>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 7;
+        let draggedElement = null;
+        let sourceContainer = null;
+
+        // Initialize
+        updateProgress();
+        updateButtons();
+
+        // Navigation
+        function nextStep() {
+            if (currentStep === totalSteps - 1) {
+                // Create integration
+                createIntegration();
+                return;
+            }
+
+            if (currentStep < totalSteps) {
+                document.getElementById(`step-${currentStep}`).classList.remove('active');
+                currentStep++;
+                document.getElementById(`step-${currentStep}`).classList.add('active');
+                updateProgress();
+                updateButtons();
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 1) {
+                document.getElementById(`step-${currentStep}`).classList.remove('active');
+                currentStep--;
+                document.getElementById(`step-${currentStep}`).classList.add('active');
+                updateProgress();
+                updateButtons();
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+        }
+
+        function updateButtons() {
+            const backBtn = document.getElementById('back-btn');
+            const nextBtn = document.getElementById('next-btn');
+
+            backBtn.style.display = currentStep === 1 ? 'none' : 'inline-flex';
+
+            if (currentStep === totalSteps - 1) {
+                nextBtn.textContent = 'Create Integration';
+                nextBtn.innerHTML = '✓ Create Integration';
+            } else if (currentStep === totalSteps) {
+                nextBtn.textContent = 'Done';
+                nextBtn.innerHTML = '✓ Done';
+            } else {
+                nextBtn.innerHTML = 'Next →';
+            }
+        }
+
+        function createIntegration() {
+            // Simulate API call
+            nextBtn = document.getElementById('next-btn');
+            nextBtn.disabled = true;
+            nextBtn.innerHTML = '<span style="animation: spin 1s linear infinite; display: inline-block;">⟳</span> Creating...';
+
+            setTimeout(() => {
+                nextBtn.disabled = false;
+                nextStep();
+            }, 2000);
+        }
+
+        function closeDrawer() {
+            document.querySelector('.drawer').style.animation = 'slideOut 0.3s ease-out';
+            setTimeout(() => {
+                alert('Drawer closed. In a real application, this would return to the previous view.');
+            }, 300);
+        }
+
+        // Drag and Drop functionality
+        document.addEventListener('dragstart', function(e) {
+            if (e.target.classList.contains('chip')) {
+                draggedElement = e.target;
+                sourceContainer = e.target.parentElement;
+                e.target.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+            }
+        });
+
+        document.addEventListener('dragend', function(e) {
+            if (e.target.classList.contains('chip')) {
+                e.target.classList.remove('dragging');
+                draggedElement = null;
+                sourceContainer = null;
+            }
+        });
+
+        function allowDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drag-over');
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        function dragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+
+        function drop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+
+            if (!draggedElement) return;
+
+            const dropZone = e.currentTarget;
+            const jiraStatus = dropZone.getAttribute('data-jira-status');
+
+            // Clone the chip
+            const chipClone = draggedElement.cloneNode(true);
+            chipClone.classList.remove('dragging');
+            chipClone.setAttribute('draggable', 'false');
+
+            // Add remove button
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'remove-chip';
+            removeBtn.innerHTML = '×';
+            removeBtn.onclick = function() {
+                chipClone.remove();
+                if (dropZone.children.length === 1) {
+                    dropZone.classList.add('empty');
+                    dropZone.innerHTML = 'Drag and drop a project issue type here to map to this status';
+                }
+            };
+            chipClone.appendChild(removeBtn);
+
+            // Remove empty state
+            if (dropZone.classList.contains('empty')) {
+                dropZone.classList.remove('empty');
+                dropZone.innerHTML = '';
+            }
+
+            dropZone.appendChild(chipClone);
+
+            // Update status mapping count
+            updateMappingCounts();
+        }
+
+        function dropIssueType(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+
+            if (!draggedElement) return;
+
+            const dropZone = e.currentTarget;
+
+            // Clone the chip
+            const chipClone = draggedElement.cloneNode(true);
+            chipClone.classList.remove('dragging');
+            chipClone.classList.add('chip-in-zone');
+            chipClone.setAttribute('draggable', 'false');
+
+            // Add remove button
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'remove-chip';
+            removeBtn.innerHTML = '×';
+            removeBtn.onclick = function() {
+                chipClone.remove();
+                if (dropZone.children.length === 0) {
+                    dropZone.classList.add('empty');
+                    dropZone.innerHTML = 'Drag and drop a project issue type here to map to this status';
+                }
+                updateIssueMappingCount();
+            };
+            chipClone.appendChild(removeBtn);
+
+            // Remove empty state
+            if (dropZone.classList.contains('empty')) {
+                dropZone.classList.remove('empty');
+                dropZone.innerHTML = '';
+            }
+
+            dropZone.appendChild(chipClone);
+            updateIssueMappingCount();
+        }
+
+        function resetMappings() {
+            const dropZones = document.querySelectorAll('.drop-zone-with-chips');
+            dropZones.forEach(zone => {
+                const chips = zone.querySelectorAll('.chip');
+                chips.forEach(chip => chip.remove());
+
+                if (zone.children.length === 1) {
+                    zone.classList.add('empty');
+                    zone.innerHTML = 'Drag and drop a project issue type here to map to this status';
+                }
+            });
+            updateMappingCounts();
+        }
+
+        function updateMappingCounts() {
+            const mappedChips = document.querySelectorAll('#step-3 .drop-zone-with-chips .chip').length;
+            document.getElementById('status-mapping-count').textContent = `${mappedChips} configured`;
+        }
+
+        function updateIssueMappingCount() {
+            const mappedIssues = document.querySelectorAll('#step-4 .drop-zone-with-chips .chip-in-zone').length;
+            document.getElementById('issue-type-count').textContent = `${mappedIssues} configured`;
+        }
+
+        function copyToClipboard(type) {
+            const text = type === 'webhook-url'
+                ? 'https://api.cloudbees.com/webhooks/jira/imbrium01'
+                : 'sk_live_51234567890abcdef1234567890abcdef';
+
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copied to clipboard!');
+            });
+        }
+
+        // Keyboard support for accessibility
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeDrawer();
+            }
+        });
+    </script>
+</body>
+</html>
