@@ -3,9 +3,136 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smart Tests — CloudBees Unify</title>
+<title>Smart Tests — CloudBees</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,sans-serif;height:100vh;overflow:hidden;background:#0B0C18}
+
+/* ── SCREEN SYSTEM ── */
+.scr{position:fixed;inset:0;z-index:500;transition:opacity 0.35s ease}
+.scr.show{opacity:1;pointer-events:auto}
+.scr.hide{opacity:0;pointer-events:none}
+#app{position:fixed;inset:0;z-index:100;display:flex;opacity:0;pointer-events:none;transition:opacity 0.5s ease;height:100vh;overflow:hidden}
+#app.show{opacity:1;pointer-events:auto}
+
+/* ══════════════════════════════════════════════════
+   SCREEN 1 — LANDING PAGE
+══════════════════════════════════════════════════ */
+#s1{background:#0B0C18;display:flex;flex-direction:column;color:#fff}
+.l-banner{background:#111220;border-bottom:1px solid #1D1F38;padding:8px 28px;font-size:12px;color:#808898;display:flex;align-items:center;gap:8px;flex-shrink:0}
+.l-banner-pill{background:#1D4ED8;color:#fff;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:800;letter-spacing:.05em}
+.l-banner-link{color:#6090F8;cursor:pointer;text-decoration:none}
+.l-banner-link:hover{text-decoration:underline}
+.l-nav{height:52px;background:#111220;border-bottom:1px solid #1D1F38;display:flex;align-items:center;padding:0 28px;gap:0;flex-shrink:0}
+.l-logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;color:#fff;margin-right:20px;cursor:pointer}
+.l-logo-mark{width:28px;height:28px;background:#D44800;border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:#fff;flex-shrink:0}
+.l-nl{padding:0 13px;height:52px;display:flex;align-items:center;font-size:13px;color:#8A90B0;cursor:pointer;gap:4px;white-space:nowrap;user-select:none}
+.l-nl:hover{color:#fff}
+.l-demo-btn{margin-left:auto;padding:7px 18px;background:#1D4ED8;color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.l-demo-btn:hover{background:#1B46C8}
+.l-hero{flex:1;display:flex;align-items:center;padding:0 60px 0 64px;gap:48px;position:relative;overflow:hidden}
+.l-purple{position:absolute;bottom:-220px;left:-180px;width:820px;height:620px;background:radial-gradient(ellipse at 28% 62%,rgba(100,55,220,.23) 0%,rgba(50,18,120,.09) 44%,transparent 65%);pointer-events:none}
+.l-left{flex:1;z-index:1;min-width:0}
+.l-eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;color:#606888;text-transform:uppercase;margin-bottom:14px}
+.l-h1{font-size:50px;font-weight:800;line-height:1.1;color:#fff;margin-bottom:18px;letter-spacing:-.02em}
+.l-sub{font-size:16px;color:#7A80A2;line-height:1.7;max-width:490px;margin-bottom:28px}
+.l-btns{display:flex;gap:12px}
+.l-btn-p{padding:12px 26px;background:#1D4ED8;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+.l-btn-p:hover{background:#1B46C8}
+.l-btn-s{padding:11px 26px;background:transparent;color:#fff;border:2px solid #353858;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit}
+.l-btn-s:hover{border-color:#5060A0;background:rgba(255,255,255,.04)}
+.l-right{width:460px;min-width:460px;z-index:1}
+.l-card{background:#181929;border:1px solid #222440;border-radius:14px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.l-card-hd{padding:10px 14px;border-bottom:1px solid #222440;display:flex;align-items:center;gap:8px}
+.l-card-badge{background:#111A40;color:#7A9AFF;border:1px solid #1E2E55;padding:4px 12px;border-radius:5px;font-size:11px;font-weight:600;display:flex;align-items:center;gap:5px}
+.l-chart-wrap{padding:14px 16px 6px}
+.l-chart-title{font-size:14px;font-weight:600;color:#E4E6F4;margin-bottom:8px}
+.l-metrics{display:grid;grid-template-columns:1fr 1fr}
+.l-met{background:#1E1F38;padding:13px 16px;border-top:1px solid #222440;border-right:1px solid #222440}
+.l-met:nth-child(2){border-right:none}
+.l-met:nth-child(3){border-right:1px solid #222440}
+.l-met:nth-child(4){border-right:none}
+.l-m-num{font-size:22px;font-weight:800;color:#fff}
+.l-m-label{font-size:10px;color:#606888;margin-top:2px}
+.l-m-trend{font-size:11px;margin-top:3px}
+.t-up{color:#52C878}.t-dn{color:#E05555}
+
+/* ══════════════════════════════════════════════════
+   SCREEN 2 — SIGN IN / SIGN UP
+══════════════════════════════════════════════════ */
+#s2{background:#fff;display:flex}
+.a-left{width:50%;display:flex;flex-direction:column;padding:38px 60px;background:#fff;overflow-y:auto}
+.a-right{flex:1;background:linear-gradient(150deg,#EDE7F8 0%,#F4EFF9 55%,#EBE5F5 100%);display:flex;flex-direction:column;padding:38px 48px;position:relative;overflow:hidden}
+.a-logo{display:flex;align-items:center;gap:9px;margin-bottom:6px}
+.a-logo-mark{width:26px;height:26px;background:#D44800;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:#fff;flex-shrink:0}
+.a-logo-text{font-size:17px;font-weight:700;color:#1A1A2E}
+.a-tagline{font-size:13px;color:#7080A0;margin-bottom:36px}
+.a-tabs{display:flex;border-bottom:1.5px solid #E5E7EB;margin-bottom:24px}
+.a-tab{padding:10px 20px;font-size:14px;font-weight:500;color:#6B7280;cursor:pointer;border-bottom:2.5px solid transparent;margin-bottom:-1.5px;user-select:none}
+.a-tab.active{color:#1D4ED8;border-bottom-color:#1D4ED8}
+.a-sec-label{font-size:10px;font-weight:700;letter-spacing:.1em;color:#9CA3AF;text-transform:uppercase;margin-bottom:12px;text-align:center}
+.a-oauth-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.a-oauth-btn{padding:10px;border:1px solid #E5E7EB;border-radius:6px;background:#F9FAFB;display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:500;color:#374151;cursor:pointer;font-family:inherit}
+.a-oauth-btn:hover{background:#F3F4F6;border-color:#D1D5DB}
+.a-divider{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.a-divider-line{flex:1;height:1px;background:#E5E7EB}
+.a-divider-txt{font-size:10px;font-weight:700;color:#9CA3AF;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.a-label{font-size:12px;font-weight:500;color:#374151;margin-bottom:5px;display:block}
+.a-input{width:100%;padding:10px 12px;border:1px solid #E5E7EB;border-radius:6px;font-size:14px;color:#1F2937;font-family:inherit;margin-bottom:13px}
+.a-input:focus{outline:none;border-color:#1D4ED8;box-shadow:0 0 0 3px rgba(29,78,216,.1)}
+.a-submit{width:100%;padding:11px;background:#1D4ED8;color:#fff;border:none;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-bottom:14px}
+.a-submit:hover{background:#1B46C8}
+.a-disclaimer{font-size:11px;color:#9CA3AF;line-height:1.5;text-align:center}
+.a-disclaimer a{color:#1D4ED8;text-decoration:none}
+/* right panel */
+.a-r-cta{background:#1D4ED8;color:#fff;padding:6px 16px;border-radius:6px;font-size:12px;font-weight:600;border:none;cursor:pointer;margin-bottom:22px;font-family:inherit;align-self:flex-start}
+.a-r-h1{font-size:32px;font-weight:800;color:#1A1A2E;line-height:1.2;margin-bottom:12px;letter-spacing:-.02em}
+.a-r-sub{font-size:14px;color:#4A5068;line-height:1.65;margin-bottom:24px;max-width:360px}
+.a-r-h2{font-size:14px;font-weight:700;color:#1A1A2E;margin-bottom:5px}
+.a-r-p{font-size:13px;color:#6A7090;line-height:1.6;max-width:360px;margin-bottom:20px}
+/* mini dash */
+.mdash{background:#181929;border:1px solid #252840;border-radius:10px;overflow:hidden;max-width:400px;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.mdash-bar{background:#111220;padding:6px 12px;display:flex;align-items:center;gap:6px;border-bottom:1px solid #1D1F38}
+.mdash-crumb{font-size:9px;color:#6A70A0}
+.mdash-crumb-sep{color:#3A4060;margin:0 3px}
+.mdash-body{padding:10px 12px}
+.mdash-title{font-size:11px;font-weight:600;color:#E4E6F4;margin-bottom:6px}
+.mdash-tabs{display:flex;gap:0;border-bottom:1px solid #1D1F38;margin-bottom:8px}
+.mdash-tab{padding:3px 8px;font-size:9px;color:#6A70A0;border-bottom:2px solid transparent}
+.mdash-tab.active{color:#7A9AFF;border-bottom-color:#5B7EFF}
+.mdash-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px}
+.mdash-card{background:#222440;border-radius:5px;padding:7px}
+.mdash-card-title{font-size:8px;color:#606888;margin-bottom:5px}
+.mdash-donut{width:36px;height:36px;margin:0 auto 4px}
+.mdash-num{font-size:13px;font-weight:700;color:#fff;text-align:center}
+.mdash-sub{font-size:8px;color:#606888;text-align:center}
+
+/* ══════════════════════════════════════════════════
+   SCREEN 3 — VERIFICATION EMAIL
+══════════════════════════════════════════════════ */
+#s3{background:#fff;display:flex}
+.v-left{width:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px;background:#fff}
+.v-content{max-width:380px;width:100%;text-align:center}
+.v-logo{display:flex;align-items:center;gap:8px;justify-content:flex-start;margin-bottom:36px}
+.v-logo-mark{width:24px;height:24px;background:#D44800;border-radius:5px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:10px;color:#fff}
+.v-logo-text{font-size:16px;font-weight:700;color:#1A1A2E}
+.v-h1{font-size:24px;font-weight:700;color:#1A1A2E;margin-bottom:14px}
+.v-p{font-size:14px;color:#6B7280;line-height:1.65;margin-bottom:10px}
+.v-email{color:#1D4ED8;font-weight:500}
+.v-btn-p{width:100%;padding:11px;background:#1D4ED8;color:#fff;border:none;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-bottom:10px}
+.v-btn-p:hover{background:#1B46C8}
+.v-btn-s{width:100%;padding:10px;background:#F3F4F6;color:#374151;border:none;border-radius:6px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:18px}
+.v-btn-s:hover{background:#E5E7EB}
+.v-help{font-size:12px;color:#9CA3AF;line-height:1.5}
+.v-help a{color:#1D4ED8;text-decoration:none}
+.v-continue{width:100%;padding:12px;background:#059669;color:#fff;border:none;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:20px;display:none;align-items:center;justify-content:center;gap:8px}
+.v-continue.visible{display:flex}
+.v-continue:hover{background:#047857}
+
+/* ══════════════════════════════════════════════════
+   APP — CLOUDBEES UNIFY SHELL
+══════════════════════════════════════════════════ */
 :root{
   --bg-page:#0C0D1A;--bg-sidebar:#111220;--bg-bar:#111220;--bg-card:#181A2C;
   --bg-input:#1C1E30;--bg-tag:#1E2240;--bg-active:#1A1D30;
@@ -16,125 +143,69 @@
   --orange:#F09050;--orange-bg:#2A1A08;--purple:#A78BFA;--purple-bg:#1C1640;
   --yellow:#F0C040;--yellow-bg:#252010;
 }
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,sans-serif;
-  background:var(--bg-page);color:var(--text-hi);font-size:13px;height:100vh;
-  display:flex;overflow:hidden;line-height:1.5}
-a{color:var(--blue-lt);text-decoration:none}
-a:hover{text-decoration:underline}
-
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar{width:6px;height:6px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border-md);border-radius:3px}
-
-/* ── SIDEBAR ── */
-.sidebar{width:204px;min-width:204px;background:var(--bg-sidebar);
-  border-right:1px solid var(--border);display:flex;flex-direction:column;
-  height:100vh;overflow-y:auto;flex-shrink:0}
-.sb-org{padding:12px 12px 10px;display:flex;align-items:center;gap:9px;
-  border-bottom:1px solid var(--border)}
-.cb-logo{width:30px;height:30px;background:#D44800;border-radius:7px;
-  display:flex;align-items:center;justify-content:center;
-  font-weight:800;font-size:12px;color:#fff;flex-shrink:0;letter-spacing:-0.5px}
+#app *{box-sizing:border-box}
+#app{color:var(--text-hi);font-size:13px;line-height:1.5;background:var(--bg-page)}
+#app ::-webkit-scrollbar{width:6px;height:6px}
+#app ::-webkit-scrollbar-track{background:transparent}
+#app ::-webkit-scrollbar-thumb{background:var(--border-md);border-radius:3px}
+.sidebar{width:204px;min-width:204px;background:var(--bg-sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;height:100vh;overflow-y:auto;flex-shrink:0}
+.sb-org{padding:12px 12px 10px;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--border)}
+.cb-logo{width:30px;height:30px;background:#D44800;border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:#fff;flex-shrink:0;letter-spacing:-.5px}
 .org-name{font-size:12px;font-weight:600;color:var(--text-hi)}
 .org-sub{font-size:10px;color:var(--text-mid);cursor:pointer}
-.org-sub:hover{color:var(--text-hi)}
 .nav-group{padding:8px 6px 4px}
-.nav-label{padding:4px 8px;font-size:10px;font-weight:600;color:var(--text-lo);
-  letter-spacing:0.08em;text-transform:uppercase;margin-bottom:2px}
-.nav-item{display:flex;align-items:center;gap:8px;padding:7px 9px;
-  border-radius:6px;color:var(--text-mid);cursor:pointer;font-size:12px;
-  transition:background 0.12s,color 0.12s;position:relative;user-select:none}
+.nav-item{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:6px;color:var(--text-mid);cursor:pointer;font-size:12px;transition:background .12s,color .12s;position:relative;user-select:none}
 .nav-item:hover{background:var(--bg-active);color:var(--text-hi)}
 .nav-item.active{background:var(--blue-bg);color:var(--blue-lt)}
-.nav-icon{width:16px;height:16px;flex-shrink:0;opacity:0.8}
+.nav-icon{width:16px;height:16px;flex-shrink:0;opacity:.8}
 .nav-item.active .nav-icon{opacity:1}
-.nav-badge{margin-left:auto;padding:1px 6px;border-radius:8px;font-size:9px;
-  font-weight:700;letter-spacing:0.03em}
+.nav-badge{margin-left:auto;padding:1px 6px;border-radius:8px;font-size:9px;font-weight:700;letter-spacing:.03em}
 .badge-new{background:var(--green-bg);color:var(--green);border:1px solid #1A4030}
-.badge-setup{background:var(--orange-bg);color:var(--orange);border:1px solid #3A2810;
-  animation:pulse-badge 2s ease-in-out infinite}
-@keyframes pulse-badge{0%,100%{opacity:1}50%{opacity:0.6}}
-
-/* ── MAIN ── */
+.badge-setup{background:var(--orange-bg);color:var(--orange);border:1px solid #3A2810;animation:pulse-badge 2s ease-in-out infinite}
+@keyframes pulse-badge{0%,100%{opacity:1}50%{opacity:.6}}
 .main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;min-width:0}
-
-/* ── TOP BAR ── */
-.topbar{height:46px;background:var(--bg-bar);border-bottom:1px solid var(--border);
-  display:flex;align-items:center;padding:0 14px;gap:8px;flex-shrink:0}
-.breadcrumb{display:flex;align-items:center;gap:5px;font-size:12px;
-  color:var(--text-mid);flex:1;min-width:0}
+.topbar{height:46px;background:var(--bg-bar);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 14px;gap:8px;flex-shrink:0}
+.breadcrumb{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-mid);flex:1;min-width:0}
 .bc-sep{color:var(--text-lo);font-size:10px}
 .bc-active{color:var(--text-hi)}
 .status-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0}
-.tb-btn{padding:4px 10px;border-radius:5px;border:1px solid var(--border-md);
-  background:var(--bg-input);color:var(--text-mid);font-size:11px;cursor:pointer;
-  display:flex;align-items:center;gap:5px;white-space:nowrap;font-family:inherit}
+.tb-btn{padding:4px 10px;border-radius:5px;border:1px solid var(--border-md);background:var(--bg-input);color:var(--text-mid);font-size:11px;cursor:pointer;display:flex;align-items:center;gap:5px;white-space:nowrap;font-family:inherit}
 .tb-btn:hover{background:var(--bg-active);color:var(--text-hi)}
-.ai-btn{background:linear-gradient(135deg,#322AA0,#5030C8);border:none;color:#D0C8FF;
-  padding:4px 12px;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;
-  display:flex;align-items:center;gap:5px;font-family:inherit;white-space:nowrap}
+.ai-btn{background:linear-gradient(135deg,#322AA0,#5030C8);border:none;color:#D0C8FF;padding:4px 12px;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:inherit;white-space:nowrap}
 .ai-btn:hover{background:linear-gradient(135deg,#3E36B8,#6040D8)}
-.avatar{width:28px;height:28px;border-radius:50%;background:#2A3870;
-  display:flex;align-items:center;justify-content:center;
-  font-size:10px;font-weight:700;color:#9AB0F5;cursor:pointer;flex-shrink:0}
-
-/* ── CONTENT ── */
+.avatar{width:28px;height:28px;border-radius:50%;background:#2A3870;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#9AB0F5;cursor:pointer;flex-shrink:0}
 .content{flex:1;overflow:hidden;display:flex;flex-direction:column}
-
-/* ── SMART TESTS HEADER ── */
 .st-header{padding:14px 18px 0;border-bottom:1px solid var(--border);flex-shrink:0}
 .st-title-row{display:flex;align-items:center;gap:10px;margin-bottom:13px}
-.st-rocket{width:28px;height:28px;background:var(--blue-bg);border-radius:7px;
-  display:flex;align-items:center;justify-content:center;font-size:16px}
+.st-rocket{width:28px;height:28px;background:var(--blue-bg);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px}
 .st-title-row h1{font-size:15px;font-weight:600;color:var(--text-hi)}
-.setup-badge{margin-left:auto;background:var(--orange-bg);color:var(--orange);
-  border:1px solid #3A2810;padding:3px 10px;border-radius:5px;
-  font-size:10px;font-weight:600;cursor:pointer;white-space:nowrap}
+.setup-badge{margin-left:auto;background:var(--orange-bg);color:var(--orange);border:1px solid #3A2810;padding:3px 10px;border-radius:5px;font-size:10px;font-weight:600;cursor:pointer;white-space:nowrap}
 .setup-badge.done{background:var(--green-bg);color:var(--green);border-color:#1A4030;cursor:default}
-
-/* ── TABS ── */
 .tab-bar{display:flex;overflow-x:auto}
 .tab-bar::-webkit-scrollbar{display:none}
-.tab{padding:8px 13px;font-size:12px;color:var(--text-mid);cursor:pointer;
-  border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.12s;
-  user-select:none}
+.tab{padding:8px 13px;font-size:12px;color:var(--text-mid);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color .12s;user-select:none}
 .tab:hover{color:var(--text-hi)}
 .tab.active{color:var(--blue-lt);border-bottom-color:var(--blue)}
-
-/* ── BODY AREA ── */
 .body-area{flex:1;overflow-y:auto;position:relative}
-
-/* ── BACKGROUND CONTENT ── */
-.bg-content{padding:16px 18px;transition:filter 0.4s,opacity 0.4s}
-.bg-content.blurred{filter:blur(3px);opacity:0.25;pointer-events:none}
-
-/* Summary cards */
+.bg-content{padding:16px 18px;transition:filter .4s,opacity .4s}
+.bg-content.blurred{filter:blur(3px);opacity:.25;pointer-events:none}
 .sum-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
 .sum-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:14px 16px}
 .sum-card .s-label{font-size:11px;color:var(--text-mid);margin-bottom:6px}
 .sum-card .s-val{font-size:22px;font-weight:700}
 .sum-card .s-sub{font-size:10px;color:var(--text-mid);margin-top:3px}
 .val-red{color:var(--red)}.val-orange{color:var(--orange)}.val-blue{color:var(--blue-lt)}.val-green{color:var(--green)}
-
-/* Data table */
 .data-wrap{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;overflow:hidden}
-.filter-bar{display:flex;align-items:center;gap:8px;padding:10px 12px;
-  border-bottom:1px solid var(--border)}
-.fi{background:var(--bg-input);border:1px solid var(--border);border-radius:5px;
-  padding:5px 10px;color:var(--text-hi);font-size:11px;font-family:inherit;width:180px}
+.filter-bar{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--border)}
+.fi{background:var(--bg-input);border:1px solid var(--border);border-radius:5px;padding:5px 10px;color:var(--text-hi);font-size:11px;font-family:inherit;width:180px}
 .fi::placeholder{color:var(--text-lo)}
 .fi:focus{outline:none;border-color:var(--border-md)}
-.fb{padding:5px 10px;border-radius:5px;border:1px solid var(--border);background:var(--bg-input);
-  color:var(--text-mid);font-size:11px;cursor:pointer;font-family:inherit}
+.fb{padding:5px 10px;border-radius:5px;border:1px solid var(--border);background:var(--bg-input);color:var(--text-mid);font-size:11px;cursor:pointer;font-family:inherit}
 .fb:hover{color:var(--text-hi);background:var(--bg-active)}
 .t-wrap{overflow-x:auto}
 table.dt{width:100%;border-collapse:collapse}
-table.dt th{text-align:left;padding:8px 12px;font-size:10px;font-weight:600;
-  color:var(--text-lo);border-bottom:1px solid var(--border);
-  text-transform:uppercase;letter-spacing:0.06em;white-space:nowrap}
-table.dt td{padding:9px 12px;font-size:12px;border-bottom:1px solid var(--border);
-  vertical-align:middle}
+table.dt th{text-align:left;padding:8px 12px;font-size:10px;font-weight:600;color:var(--text-lo);border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+table.dt td{padding:9px 12px;font-size:12px;border-bottom:1px solid var(--border);vertical-align:middle}
 table.dt tr:last-child td{border-bottom:none}
 table.dt tbody tr:hover td{background:var(--bg-active)}
 .tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;white-space:nowrap}
@@ -148,932 +219,839 @@ table.dt tbody tr:hover td{background:var(--bg-active)}
 .pb-wrap{background:var(--bg-input);border-radius:3px;height:5px;width:70px;display:inline-block;vertical-align:middle}
 .pb-fill{height:100%;border-radius:3px;background:var(--blue)}
 .pb-fill.red{background:var(--red)}.pb-fill.orange{background:var(--orange)}
-
-/* ── ONBOARDING OVERLAY ── */
-.ob-overlay{position:absolute;inset:0;background:rgba(8,9,20,0.65);
-  backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;
-  z-index:100;padding:16px}
-.ob-card{background:var(--bg-card);border:1px solid var(--border-md);border-radius:12px;
-  width:580px;max-width:100%;padding:28px 30px;max-height:90vh;overflow-y:auto}
+.setup-progress{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.setup-progress:hover{border-color:var(--border-md)}
+.sp-icon{width:32px;height:32px;border-radius:6px;background:var(--orange-bg);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.sp-bar-wrap{flex:1;background:var(--bg-input);border-radius:3px;height:4px;margin-top:5px}
+.sp-bar-fill{height:100%;border-radius:3px;background:var(--orange);transition:width .6s}
+.sp-title{font-size:12px;font-weight:600;color:var(--text-hi)}
+.sp-sub{font-size:11px;color:var(--text-mid)}
+.sp-pct{font-size:11px;font-weight:700;color:var(--orange);margin-left:auto;flex-shrink:0}
+/* onboarding */
+.ob-overlay{position:absolute;inset:0;background:rgba(8,9,20,.65);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;z-index:100;padding:16px}
+.ob-card{background:var(--bg-card);border:1px solid var(--border-md);border-radius:12px;width:580px;max-width:100%;padding:28px 30px;max-height:90vh;overflow-y:auto}
 .ob-card::-webkit-scrollbar{width:4px}
-
-/* Steps indicator */
 .steps-row{display:flex;align-items:center;gap:0;margin-bottom:26px}
-.s-dot{width:26px;height:26px;border-radius:50%;border:2px solid var(--border-md);
-  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;
-  color:var(--text-lo);background:var(--bg-page);flex-shrink:0;position:relative;z-index:1}
+.s-dot{width:26px;height:26px;border-radius:50%;border:2px solid var(--border-md);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text-lo);background:var(--bg-page);flex-shrink:0;position:relative;z-index:1}
 .s-dot.active{border-color:var(--blue);color:var(--blue);background:var(--blue-bg)}
 .s-dot.done{border-color:var(--green);background:var(--green-bg);color:var(--green)}
 .s-line{flex:1;height:2px;background:var(--border)}
 .s-line.done{background:var(--green)}
-
-/* Step panels */
 .sp{display:none}.sp.active{display:block}
 .ob-h{font-size:17px;font-weight:600;color:var(--text-hi);margin-bottom:6px}
 .ob-sub{font-size:13px;color:var(--text-mid);line-height:1.6;margin-bottom:4px}
-
-/* Value grid */
 .val-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}
-.val-card{background:var(--bg-page);border:1px solid var(--border);border-radius:8px;
-  padding:14px;text-align:center}
+.val-card{background:var(--bg-page);border:1px solid var(--border);border-radius:8px;padding:14px;text-align:center}
 .vc-num{font-size:22px;font-weight:800;color:var(--blue-lt);margin-bottom:4px}
 .vc-label{font-size:11px;color:var(--text-mid);line-height:1.4}
-
-/* CI grid */
 .ci-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:18px 0}
-.ci-card{background:var(--bg-page);border:2px solid var(--border);border-radius:8px;
-  padding:14px 10px;text-align:center;cursor:pointer;transition:all 0.13s;user-select:none}
+.ci-card{background:var(--bg-page);border:2px solid var(--border);border-radius:8px;padding:14px 10px;text-align:center;cursor:pointer;transition:all .13s;user-select:none}
 .ci-card:hover{border-color:var(--border-strong);background:var(--bg-active)}
 .ci-card.sel{border-color:var(--blue);background:var(--blue-bg)}
-.ci-logo{width:40px;height:40px;border-radius:10px;margin:0 auto 9px;
-  display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800}
+.ci-logo{width:40px;height:40px;border-radius:10px;margin:0 auto 9px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800}
 .ci-name{font-size:12px;font-weight:500;color:var(--text-hi)}
 .ci-sub{font-size:10px;color:var(--text-mid);margin-top:2px}
-
-/* Code block */
-.code-block{background:#07081200;border:1px solid var(--border-md);border-radius:8px;
-  padding:13px 14px;font-family:'SF Mono',Monaco,Consolas,'Courier New',monospace;
-  font-size:11.5px;line-height:1.65;color:#C8D3F5;margin:11px 0;
-  position:relative;overflow-x:auto;background:#080912}
-.cc{color:#4E5A80}.ck{color:#CBA6F7}.cv{color:#FAB387}.cs{color:#A6E3A1}
-.cmd{color:#89DCFF}.ci-c{color:#F38BA8}
-.copy-btn{position:absolute;top:8px;right:8px;background:var(--bg-active);
-  border:1px solid var(--border-md);color:var(--text-mid);font-size:10px;
-  padding:2px 8px;border-radius:4px;cursor:pointer;font-family:inherit;
-  transition:color 0.1s}
+.code-block{background:#080912;border:1px solid var(--border-md);border-radius:8px;padding:13px 14px;font-family:'SF Mono',Monaco,Consolas,'Courier New',monospace;font-size:11.5px;line-height:1.65;color:#C8D3F5;margin:11px 0;position:relative;overflow-x:auto}
+.cc{color:#4E5A80}.ck{color:#CBA6F7}.cv{color:#FAB387}.cs{color:#A6E3A1}.cmd{color:#89DCFF}
+.copy-btn{position:absolute;top:8px;right:8px;background:var(--bg-active);border:1px solid var(--border-md);color:var(--text-mid);font-size:10px;padding:2px 8px;border-radius:4px;cursor:pointer;font-family:inherit;transition:color .1s}
 .copy-btn:hover{color:var(--text-hi)}
-
-/* Step labels */
-.step-label{display:inline-flex;align-items:center;gap:6px;font-size:11px;
-  color:var(--text-mid);background:var(--bg-input);border:1px solid var(--border);
-  border-radius:5px;padding:3px 10px;margin-bottom:14px}
-.step-num{width:18px;height:18px;border-radius:50%;background:var(--bg-active);
-  border:1px solid var(--border-md);display:flex;align-items:center;justify-content:center;
-  font-size:10px;font-weight:700;color:var(--blue-lt);flex-shrink:0}
-
-/* Token row */
+.step-label{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--text-mid);background:var(--bg-input);border:1px solid var(--border);border-radius:5px;padding:3px 10px;margin-bottom:14px}
+.step-num{width:18px;height:18px;border-radius:50%;background:var(--bg-active);border:1px solid var(--border-md);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--blue-lt);flex-shrink:0}
 .token-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin:10px 0}
-.token-input{background:var(--bg-input);border:1px solid var(--border-md);border-radius:6px;
-  padding:7px 12px;color:var(--text-hi);font-size:12px;font-family:monospace;width:100%}
-.token-input::placeholder{color:var(--text-lo)}
+.token-input{background:var(--bg-input);border:1px solid var(--border-md);border-radius:6px;padding:7px 12px;color:var(--text-hi);font-size:12px;font-family:monospace;width:100%}
 .token-input:focus{outline:none;border-color:var(--blue)}
-.token-copy{padding:7px 12px;border-radius:6px;border:1px solid var(--border-md);
-  background:var(--bg-active);color:var(--text-mid);font-size:11px;cursor:pointer;
-  font-family:inherit;white-space:nowrap}
-.token-copy:hover{color:var(--text-hi)}
-
-/* Info note */
-.info-note{background:var(--blue-bg);border:1px solid #1E2E5A;border-radius:7px;
-  padding:10px 14px;font-size:12px;color:var(--text-mid);margin:10px 0;
-  display:flex;gap:9px;align-items:flex-start;line-height:1.5}
+.info-note{background:var(--blue-bg);border:1px solid #1E2E5A;border-radius:7px;padding:10px 14px;font-size:12px;color:var(--text-mid);margin:10px 0;display:flex;gap:9px;align-items:flex-start;line-height:1.5}
 .info-icon{color:var(--blue-lt);flex-shrink:0;font-size:14px;margin-top:1px}
-
-/* Share banner */
-.share-banner{background:var(--purple-bg);border:1px solid #2E2560;border-radius:8px;
-  padding:11px 14px;display:flex;align-items:center;gap:10px;margin-top:14px;cursor:pointer;
-  transition:border-color 0.13s}
+.share-banner{background:var(--purple-bg);border:1px solid #2E2560;border-radius:8px;padding:11px 14px;display:flex;align-items:center;gap:10px;margin-top:14px;cursor:pointer;transition:border-color .13s}
 .share-banner:hover{border-color:#3E3580}
-.share-icon-wrap{width:32px;height:32px;border-radius:6px;background:#221E50;
-  display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.share-icon-wrap{width:32px;height:32px;border-radius:6px;background:#221E50;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .share-text .st-main{font-size:12px;font-weight:600;color:var(--text-hi)}
 .share-text .st-sub{font-size:11px;color:var(--text-mid);margin-top:1px}
 .share-arrow{margin-left:auto;color:var(--purple);font-size:16px;flex-shrink:0}
-
-/* Share modal inline */
-.share-form{background:var(--bg-page);border:1px solid var(--border-md);border-radius:8px;
-  padding:14px;margin-top:10px;display:none}
+.share-form{background:var(--bg-page);border:1px solid var(--border-md);border-radius:8px;padding:14px;margin-top:10px;display:none}
 .share-form.open{display:block}
 .share-form label{font-size:11px;color:var(--text-mid);display:block;margin-bottom:5px}
-.share-form input{width:100%;background:var(--bg-input);border:1px solid var(--border-md);
-  border-radius:5px;padding:7px 10px;color:var(--text-hi);font-size:12px;font-family:inherit}
+.share-form input{width:100%;background:var(--bg-input);border:1px solid var(--border-md);border-radius:5px;padding:7px 10px;color:var(--text-hi);font-size:12px;font-family:inherit}
 .share-form input:focus{outline:none;border-color:var(--blue)}
-.share-sent{display:none;align-items:center;gap:8px;font-size:12px;color:var(--green);
-  padding:8px 0}
-
-/* Waiting */
+.share-sent{display:none;align-items:center;gap:8px;font-size:12px;color:var(--green);padding:8px 0}
 .waiting-wrap{text-align:center;padding:32px 0 16px}
-.spinner{width:52px;height:52px;border:3px solid var(--border-md);
-  border-top-color:var(--blue);border-radius:50%;animation:spin 0.9s linear infinite;
-  margin:0 auto 18px}
+.spinner{width:52px;height:52px;border:3px solid var(--border-md);border-top-color:var(--blue);border-radius:50%;animation:spin .9s linear infinite;margin:0 auto 18px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .w-title{font-size:16px;font-weight:600;color:var(--text-hi);margin-bottom:8px}
 .w-sub{font-size:13px;color:var(--text-mid);max-width:380px;margin:0 auto;line-height:1.6}
-.w-log{background:var(--bg-page);border:1px solid var(--border);border-radius:8px;
-  padding:12px 14px;margin:18px 0;font-family:monospace;font-size:11px;
-  color:var(--text-mid);text-align:left;line-height:2}
-.w-log .w-ok{color:var(--green)}.w-log .w-pending{color:var(--blue-lt);
-  animation:blink 1.2s ease-in-out infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0.4}}
-
-/* Success */
-.success-wrap{text-align:center;padding:8px 0 8px}
-.success-icon{width:64px;height:64px;border-radius:50%;background:var(--green-bg);
-  border:2px solid var(--green);display:flex;align-items:center;justify-content:center;
-  margin:0 auto 16px;font-size:28px}
+.w-log{background:var(--bg-page);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin:18px 0;font-family:monospace;font-size:11px;color:var(--text-mid);text-align:left;line-height:2}
+.w-log .w-ok{color:var(--green)}.w-log .w-pending{color:var(--blue-lt);animation:blink 1.2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+.success-wrap{text-align:center;padding:8px 0}
+.success-icon{width:64px;height:64px;border-radius:50%;background:var(--green-bg);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:28px}
 .suc-title{font-size:17px;font-weight:700;color:var(--text-hi);margin-bottom:8px}
 .suc-sub{font-size:13px;color:var(--text-mid);line-height:1.6;max-width:420px;margin:0 auto 18px}
 .metrics-row{display:flex;gap:10px;margin:16px 0}
 .mp{flex:1;background:var(--bg-page);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
 .mp .m-num{font-size:18px;font-weight:800;color:var(--blue-lt);margin-bottom:3px}
 .mp .m-label{font-size:10px;color:var(--text-mid);line-height:1.4}
-
-/* Buttons */
 .btn-row{display:flex;align-items:center;gap:10px;justify-content:flex-end;margin-top:22px}
-.btn-p{padding:8px 20px;border-radius:6px;border:none;background:var(--blue);
-  color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;
-  display:flex;align-items:center;gap:6px;transition:background 0.12s}
+.btn-p{padding:8px 20px;border-radius:6px;border:none;background:var(--blue);color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;transition:background .12s}
 .btn-p:hover{background:var(--blue-dk)}
-.btn-p:disabled{opacity:0.4;cursor:not-allowed}
-.btn-s{padding:8px 16px;border-radius:6px;border:1px solid var(--border-md);
-  background:transparent;color:var(--text-mid);font-size:12px;cursor:pointer;
-  font-family:inherit;transition:all 0.12s}
+.btn-p:disabled{opacity:.4;cursor:not-allowed}
+.btn-s{padding:8px 16px;border-radius:6px;border:1px solid var(--border-md);background:transparent;color:var(--text-mid);font-size:12px;cursor:pointer;font-family:inherit;transition:all .12s}
 .btn-s:hover{background:var(--bg-active);color:var(--text-hi)}
-.btn-ghost{background:none;border:none;color:var(--blue-lt);font-size:12px;
-  cursor:pointer;font-family:inherit;padding:4px;display:flex;align-items:center;gap:4px}
+.btn-ghost{background:none;border:none;color:var(--blue-lt);font-size:12px;cursor:pointer;font-family:inherit;padding:4px;display:flex;align-items:center;gap:4px}
 .btn-ghost:hover{color:var(--blue)}
-.btn-full{width:100%;padding:10px;border-radius:6px;border:none;
-  background:var(--blue);color:#fff;font-size:13px;font-weight:600;
-  cursor:pointer;font-family:inherit;margin-top:8px;transition:background 0.12s}
+.btn-full{width:100%;padding:10px;border-radius:6px;border:none;background:var(--blue);color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:8px;transition:background .12s}
 .btn-full:hover{background:var(--blue-dk)}
-
-/* Restart */
-.restart-fab{position:fixed;bottom:18px;right:18px;background:var(--bg-card);
-  border:1px solid var(--border-md);color:var(--text-mid);padding:7px 14px;
-  border-radius:8px;font-size:11px;cursor:pointer;font-family:inherit;
-  display:none;align-items:center;gap:6px;z-index:200;transition:all 0.12s}
+.restart-fab{position:fixed;bottom:18px;right:18px;background:var(--bg-card);border:1px solid var(--border-md);color:var(--text-mid);padding:7px 14px;border-radius:8px;font-size:11px;cursor:pointer;font-family:inherit;display:none;align-items:center;gap:6px;z-index:600;transition:all .12s}
 .restart-fab:hover{color:var(--text-hi);background:var(--bg-active)}
-.setup-progress{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;
-  padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;cursor:pointer}
-.setup-progress:hover{border-color:var(--border-md)}
-.sp-icon{width:32px;height:32px;border-radius:6px;background:var(--orange-bg);
-  display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.sp-bar-wrap{flex:1;background:var(--bg-input);border-radius:3px;height:4px;margin-top:5px}
-.sp-bar-fill{height:100%;border-radius:3px;background:var(--orange);transition:width 0.6s}
-.sp-title{font-size:12px;font-weight:600;color:var(--text-hi)}
-.sp-sub{font-size:11px;color:var(--text-mid)}
-.sp-pct{font-size:11px;font-weight:700;color:var(--orange);margin-left:auto;flex-shrink:0}
 </style>
 </head>
 <body>
 
-<!-- ═══ SIDEBAR ═══ -->
-<nav class="sidebar" aria-label="Main navigation">
-  <div class="sb-org">
-    <div class="cb-logo">CB</div>
-    <div>
-      <div class="org-name">CloudBees, Inc.</div>
-      <div class="org-sub">Production ▾</div>
-    </div>
+<!-- ══════════════════════════════════════
+     SCREEN 1: SMART TESTS LANDING PAGE
+══════════════════════════════════════ -->
+<div id="s1" class="scr show">
+  <div class="l-banner">
+    <span class="l-banner-pill">NEW</span>
+    A note from our new CEO Moritz Plassnig &nbsp;
+    <a class="l-banner-link" href="#">Read the announcement →</a>
+    <span style="margin-left:auto;cursor:pointer;color:#555870" onclick="">✕</span>
   </div>
+  <nav class="l-nav">
+    <div class="l-logo">
+      <div class="l-logo-mark">CB</div>
+      CloudBees
+    </div>
+    <div class="l-nl">Product <span style="font-size:10px;opacity:.6">▾</span></div>
+    <div class="l-nl">Solutions <span style="font-size:10px;opacity:.6">▾</span></div>
+    <div class="l-nl">Resources <span style="font-size:10px;opacity:.6">▾</span></div>
+    <div class="l-nl">About <span style="font-size:10px;opacity:.6">▾</span></div>
+    <button class="l-demo-btn" style="margin-left:auto" onclick="showScreen('s2','signup')">Book a demo</button>
+  </nav>
 
-  <div class="nav-group">
-    <div class="nav-item" onclick="void(0)">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5"/></svg>
-      Home
-    </div>
-    <div class="nav-item">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 1L14 4.5v7L8 15 2 11.5v-7L8 1z"/><circle cx="8" cy="8" r="2"/></svg>
-      Components
-    </div>
-    <div class="nav-item">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="7"/><polyline points="8,4 8,8 11,10"/></svg>
-      Runs
-    </div>
-    <div class="nav-item">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="3" width="12" height="10" rx="1.5"/><path d="M5 7h6M5 10h4"/></svg>
-      Applications
-    </div>
-    <div class="nav-item">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2l1.6 4.8H15l-4 3 1.6 4.8L8 11.6l-4.6 3 1.6-4.8-4-3h5.4z"/></svg>
-      Releases
-    </div>
-    <div class="nav-item">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 1v14M1 8h14"/><circle cx="8" cy="8" r="3"/></svg>
-      Feature management
-    </div>
-    <div class="nav-item">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2L2 5v4.5C2 12.5 5 14.8 8 15c3-0.2 6-2.5 6-5.5V5L8 2z"/></svg>
-      Security
-      <span class="nav-badge badge-new">NEW</span>
-    </div>
-    <div class="nav-item">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M14 11h-4V5h4v6zM6 14H2V8h4v6zM10 7H6V2h4v5z"/></svg>
-      Analytics
-    </div>
-    <div class="nav-item">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="7"/><circle cx="8" cy="8" r="2.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2"/></svg>
-      Configurations
-    </div>
-    <div class="nav-item">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="4" width="14" height="9" rx="1.5"/><path d="M4 4V3a1 1 0 011-1h6a1 1 0 011 1v1M6 9h4M8 7v4"/></svg>
-      Jenkins® mgmt
-    </div>
-    <div class="nav-item active" id="st-nav">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 1L9.5 3.5h3l-2 2.5 1 3-3.5-1.5L4.5 9l1-3-2-2.5h3z"/><path d="M8 7v8"/><path d="M5 12l3 3 3-3"/></svg>
-      Smart tests
-      <span class="nav-badge badge-setup" id="setup-badge">SETUP</span>
-    </div>
-  </div>
-</nav>
-
-<!-- ═══ MAIN ═══ -->
-<div class="main">
-
-  <!-- TOP BAR -->
-  <header class="topbar">
-    <div class="breadcrumb">
-      <span>CloudBees, Inc.</span>
-      <span class="bc-sep">›</span>
-      <span>Smart tests</span>
-      <span class="bc-sep">›</span>
-      <span class="bc-active">Issues</span>
-    </div>
-    <div class="status-dot" title="All systems operational"></div>
-    <div class="topbar-actions" style="display:flex;align-items:center;gap:8px">
-      <button class="tb-btn">
-        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="7"/><path d="M8 5v4M8 11v1"/></svg>
-        Help
-      </button>
-      <button class="tb-btn">
-        Admin settings
-        <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4,6 8,10 12,6"/></svg>
-      </button>
-      <div class="avatar" title="Begoña Repiso Fernández">BR</div>
-      <button class="ai-btn">
-        <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2a5 5 0 110 10A5 5 0 018 3zm0 7a1 1 0 100 2 1 1 0 000-2zm-.5-6v5h1V4H7.5z"/></svg>
-        AI Assistant
-      </button>
-    </div>
-  </header>
-
-  <!-- CONTENT -->
-  <div class="content">
-
-    <!-- SMART TESTS HEADER + TABS -->
-    <div class="st-header">
-      <div class="st-title-row">
-        <div class="st-rocket">🚀</div>
-        <h1>Smart tests</h1>
-        <span class="setup-badge" id="setup-badge-main" onclick="showOnboarding()">⚙ Setup required</span>
-      </div>
-      <div class="tab-bar" role="tablist">
-        <div class="tab active" role="tab">Issues</div>
-        <div class="tab">Test Sessions</div>
-        <div class="tab">Builds</div>
-        <div class="tab">Test Cases</div>
-        <div class="tab">Trends</div>
-        <div class="tab">Unhealthy Tests</div>
-        <div class="tab">High Failure Rate</div>
-        <div class="tab">Predictive Test Selection</div>
-        <div class="tab">Log Search</div>
-        <div class="tab">Notifications</div>
-        <div class="tab">Settings</div>
+  <div class="l-hero">
+    <div class="l-purple"></div>
+    <div class="l-left">
+      <div class="l-eyebrow">Launchable is now CloudBees Smart Tests</div>
+      <h1 class="l-h1">Stop waiting for tests<br>that don't matter.</h1>
+      <p class="l-sub">CloudBees Smart Tests uses AI to run the tests most relevant to each code change, so teams get faster feedback, less flaky-test noise, and lower CI waste across the tools and pipelines they already use.</p>
+      <div class="l-btns">
+        <button class="l-btn-p" onclick="showScreen('s2','signup')">Book a demo</button>
+        <button class="l-btn-s" onclick="showScreen('s2','signup')">Try for free</button>
       </div>
     </div>
 
-    <!-- BODY -->
-    <div class="body-area">
+    <div class="l-right">
+      <div class="l-card">
+        <div class="l-card-hd">
+          <div class="l-card-badge">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#7A9AFF" stroke-width="1.5"><polyline points="2,12 6,7 9,10 14,4"/></svg>
+            Predictive Test Selection
+          </div>
+        </div>
+        <div class="l-chart-wrap">
+          <div class="l-chart-title">Confidence curve</div>
+          <!-- Confidence curve SVG -->
+          <svg viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:130px">
+            <defs>
+              <linearGradient id="cfill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#4B70FF" stop-opacity="0.25"/>
+                <stop offset="100%" stop-color="#4B70FF" stop-opacity="0.02"/>
+              </linearGradient>
+            </defs>
+            <!-- grid lines -->
+            <line x1="36" y1="10" x2="390" y2="10" stroke="#252840" stroke-width="0.5" stroke-dasharray="3,3"/>
+            <line x1="36" y1="40" x2="390" y2="40" stroke="#252840" stroke-width="0.5" stroke-dasharray="3,3"/>
+            <line x1="36" y1="70" x2="390" y2="70" stroke="#252840" stroke-width="0.5" stroke-dasharray="3,3"/>
+            <line x1="36" y1="100" x2="390" y2="100" stroke="#252840" stroke-width="0.5" stroke-dasharray="3,3"/>
+            <line x1="36" y1="130" x2="390" y2="130" stroke="#252840" stroke-width="0.5" stroke-dasharray="3,3"/>
+            <line x1="36" y1="155" x2="390" y2="155" stroke="#252840" stroke-width="0.5"/>
+            <!-- y-axis labels -->
+            <text x="30" y="13" text-anchor="end" font-size="9" fill="#4E5878">100%</text>
+            <text x="30" y="43" text-anchor="end" font-size="9" fill="#4E5878">80%</text>
+            <text x="30" y="73" text-anchor="end" font-size="9" fill="#4E5878">60%</text>
+            <text x="30" y="103" text-anchor="end" font-size="9" fill="#4E5878">40%</text>
+            <text x="30" y="133" text-anchor="end" font-size="9" fill="#4E5878">20%</text>
+            <!-- x-axis labels -->
+            <text x="36" y="167" text-anchor="middle" font-size="9" fill="#4E5878">0</text>
+            <text x="125" y="167" text-anchor="middle" font-size="9" fill="#4E5878">5</text>
+            <text x="214" y="167" text-anchor="middle" font-size="9" fill="#4E5878">10</text>
+            <text x="303" y="167" text-anchor="middle" font-size="9" fill="#4E5878">15</text>
+            <text x="390" y="167" text-anchor="middle" font-size="9" fill="#4E5878">20</text>
+            <!-- fill under curve -->
+            <path d="M 36,155 C 55,155 65,90 84,58 C 100,30 118,16 140,13 C 175,9 210,9 390,8 L 390,155 Z" fill="url(#cfill)"/>
+            <!-- curve line -->
+            <path d="M 36,155 C 55,155 65,90 84,58 C 100,30 118,16 140,13 C 175,9 210,9 390,8" fill="none" stroke="#4B70FF" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+            <!-- CloudBees Model label -->
+            <rect x="258" y="22" width="112" height="18" rx="4" fill="#1A1F38" stroke="#252840" stroke-width="0.5"/>
+            <line x1="265" y1="31" x2="280" y2="31" stroke="#4B70FF" stroke-width="2"/>
+            <text x="284" y="34" font-size="9" fill="#8A90B8">CloudBees Model</text>
+          </svg>
+          <div style="font-size:10px;color:#606888;text-align:center;margin-top:-2px;margin-bottom:4px">Test execution time (min)</div>
+        </div>
+        <div class="l-metrics">
+          <div class="l-met">
+            <div class="l-m-num">128 min</div>
+            <div class="l-m-label">Total Duration</div>
+            <div class="l-m-trend t-up">↑ 23%</div>
+          </div>
+          <div class="l-met">
+            <div class="l-m-num">18 min</div>
+            <div class="l-m-label">Average Duration</div>
+            <div class="l-m-trend t-dn">↓ 5.4%</div>
+          </div>
+          <div class="l-met" style="border-bottom:none">
+            <div class="l-m-num">94</div>
+            <div class="l-m-label">Test Sessions</div>
+            <div class="l-m-trend t-up">↑ 16%</div>
+          </div>
+          <div class="l-met" style="border-bottom:none">
+            <div class="l-m-num">1.1%</div>
+            <div class="l-m-label">Session Failure Rate</div>
+            <div class="l-m-trend t-up">↑ 92%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-      <!-- BACKGROUND CONTENT (blurred until onboarding done) -->
-      <div class="bg-content blurred" id="bg-content">
+<!-- ══════════════════════════════════════
+     SCREEN 2: SIGN IN / SIGN UP
+══════════════════════════════════════ -->
+<div id="s2" class="scr hide">
+  <!-- LEFT: Auth form -->
+  <div class="a-left">
+    <div class="a-logo">
+      <div class="a-logo-mark">CB</div>
+      <span class="a-logo-text">CloudBees</span>
+    </div>
+    <div class="a-tagline">Your DevSecOps Control Plane</div>
 
-        <!-- Setup progress banner (shown before fully complete) -->
-        <div class="setup-progress" id="setup-progress-bar" onclick="showOnboarding()">
-          <div class="sp-icon">⚙</div>
-          <div style="flex:1">
-            <div class="sp-title">Complete Smart Tests setup</div>
-            <div class="sp-sub">Connect your CI pipeline to start detecting test issues</div>
-            <div class="sp-bar-wrap" style="margin-top:6px">
-              <div class="sp-bar-fill" id="sp-fill" style="width:0%"></div>
+    <div class="a-tabs">
+      <div class="a-tab active" id="tab-signin" onclick="switchAuthTab('signin')">Sign in</div>
+      <div class="a-tab" id="tab-signup" onclick="switchAuthTab('signup')">Sign up</div>
+    </div>
+
+    <div class="a-sec-label">Sign in with:</div>
+    <div class="a-oauth-row">
+      <button class="a-oauth-btn" onclick="showScreen('s3')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#1F2937"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7C6.73 19.91 6.14 18 6.14 18c-.46-1.16-1.12-1.47-1.12-1.47-.91-.63.07-.61.07-.61 1.01.07 1.54 1.03 1.54 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.64-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.58 9.58 0 0112 7.8c.85 0 1.71.11 2.51.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
+        GitHub
+      </button>
+      <button class="a-oauth-btn" onclick="showScreen('s3')">
+        <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Google
+      </button>
+    </div>
+
+    <div class="a-divider">
+      <div class="a-divider-line"></div>
+      <div class="a-divider-txt">Or sign in with email</div>
+      <div class="a-divider-line"></div>
+    </div>
+
+    <label class="a-label">Email</label>
+    <input class="a-input" type="email" id="auth-email" placeholder="you@company.com">
+    <button class="a-submit" onclick="handleAuthSubmit()">Sign in</button>
+    <div class="a-disclaimer">
+      By signing in, you agree to abide by CloudBees <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+    </div>
+  </div>
+
+  <!-- RIGHT: Marketing panel -->
+  <div class="a-right">
+    <button class="a-r-cta" onclick="showScreen('s2','signup')">Get started for free</button>
+    <div class="a-r-h1">Ship faster. Stay secure. Let AI handle the toil.</div>
+    <div class="a-r-h2">Unify your software delivery without replatforming</div>
+    <div class="a-r-p">CloudBees Unify connects all your DevOps tools into one intelligent control and context plane, giving you security, visibility, and speed without changing how you work.</div>
+
+    <!-- Mini dashboard preview -->
+    <div class="mdash">
+      <div class="mdash-bar">
+        <span class="mdash-crumb" style="color:#9AA0C0">⊞</span>
+        <span class="mdash-crumb">CloudBees</span><span class="mdash-crumb mdash-crumb-sep">›</span>
+        <span class="mdash-crumb">Analytics</span><span class="mdash-crumb mdash-crumb-sep">›</span>
+        <span class="mdash-crumb" style="color:#C0C8E8">Software delivery activity</span>
+        <span style="margin-left:auto;width:7px;height:7px;border-radius:50%;background:#4FCA7A;display:inline-block"></span>
+      </div>
+      <div class="mdash-body">
+        <div class="mdash-title">Analytics</div>
+        <div class="mdash-tabs">
+          <div class="mdash-tab active">Software delivery activity</div>
+          <div class="mdash-tab">Security insights</div>
+          <div class="mdash-tab">Flow metrics</div>
+          <div class="mdash-tab">Dora metrics</div>
+        </div>
+        <div class="mdash-grid">
+          <div class="mdash-card">
+            <div class="mdash-card-title">Components</div>
+            <svg class="mdash-donut" viewBox="0 0 36 36">
+              <circle cx="18" cy="18" r="14" fill="none" stroke="#2A2E50" stroke-width="5"/>
+              <circle cx="18" cy="18" r="14" fill="none" stroke="#5B7EFF" stroke-width="5" stroke-dasharray="88 100" stroke-dashoffset="25" transform="rotate(-90 18 18)"/>
+              <text x="18" y="21" text-anchor="middle" font-size="8" fill="#E4E6F4" font-weight="700">2,074</text>
+            </svg>
+            <div class="mdash-sub" style="color:#52C878">97% Active</div>
+          </div>
+          <div class="mdash-card">
+            <div class="mdash-card-title">Workflows</div>
+            <svg class="mdash-donut" viewBox="0 0 36 36">
+              <circle cx="18" cy="18" r="14" fill="none" stroke="#2A2E50" stroke-width="5"/>
+              <circle cx="18" cy="18" r="14" fill="none" stroke="#A78BFA" stroke-width="5" stroke-dasharray="97 100" stroke-dashoffset="25" transform="rotate(-90 18 18)"/>
+              <text x="18" y="21" text-anchor="middle" font-size="7" fill="#E4E6F4" font-weight="700">21,160</text>
+            </svg>
+            <div class="mdash-sub" style="color:#A78BFA">97% Active</div>
+          </div>
+          <div class="mdash-card">
+            <div class="mdash-card-title">Workflow runs</div>
+            <div style="display:flex;align-items:flex-end;gap:2px;height:28px;justify-content:center;margin:4px 0">
+              <div style="width:5px;background:#E05555;border-radius:2px 2px 0 0" title="Fail" style="height:60%"></div>
+              <div style="width:5px;height:75%;background:#5B7EFF;border-radius:2px 2px 0 0"></div>
+              <div style="width:5px;height:85%;background:#5B7EFF;border-radius:2px 2px 0 0"></div>
+              <div style="width:5px;height:100%;background:#52C878;border-radius:2px 2px 0 0"></div>
+              <div style="width:5px;height:90%;background:#52C878;border-radius:2px 2px 0 0"></div>
+              <div style="width:5px;height:70%;background:#5B7EFF;border-radius:2px 2px 0 0"></div>
             </div>
-          </div>
-          <div class="sp-pct" id="sp-pct">0%</div>
-        </div>
-
-        <!-- Summary cards -->
-        <div class="sum-grid">
-          <div class="sum-card">
-            <div class="s-label">Critical Issues</div>
-            <div class="s-val val-red">7</div>
-            <div class="s-sub">↑ 2 vs last week</div>
-          </div>
-          <div class="sum-card">
-            <div class="s-label">Tests Affected</div>
-            <div class="s-val val-orange">43</div>
-            <div class="s-sub">across 12 services</div>
-          </div>
-          <div class="sum-card">
-            <div class="s-label">CI Time at Risk</div>
-            <div class="s-val val-blue">14.2h</div>
-            <div class="s-sub">per build cycle</div>
-          </div>
-          <div class="sum-card">
-            <div class="s-label">Time Saved (30d)</div>
-            <div class="s-val val-green">68%</div>
-            <div class="s-sub">via predictive selection</div>
+            <div class="mdash-num" style="font-size:11px">10,344</div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-        <!-- Issues table -->
-        <div class="data-wrap">
-          <div class="filter-bar">
-            <input class="fi" type="text" placeholder="🔍  Search issues...">
-            <button class="fb">Severity ▾</button>
-            <button class="fb">Service ▾</button>
-            <button class="fb">Assignee ▾</button>
-            <button class="fb" style="margin-left:auto">Export</button>
+<!-- ══════════════════════════════════════
+     SCREEN 3: VERIFICATION EMAIL SENT
+══════════════════════════════════════ -->
+<div id="s3" class="scr hide">
+  <div class="v-left">
+    <div class="v-content">
+      <div class="v-logo">
+        <div class="v-logo-mark">CB</div>
+        <span class="v-logo-text">CloudBees</span>
+      </div>
+
+      <h1 class="v-h1">Verification email sent!</h1>
+      <p class="v-p">We've sent a verification email to<br><span class="v-email" id="v-email-display">your@company.com</span>.</p>
+      <p class="v-p">Please check your inbox and follow the link to verify your account and start using CloudBees products and services.</p>
+      <p class="v-p">If you did not receive a verification email, or if the link has expired, you may request a new verification email below.</p>
+
+      <button class="v-btn-p">Resend verification email</button>
+      <button class="v-btn-s" onclick="showScreen('s2')">← Back to sign in</button>
+      <div class="v-help">Problems signing up? Contact us at <a href="#">support@cloudbees.com</a> for further help.</div>
+
+      <button class="v-continue" id="v-continue-btn" onclick="enterApp()">
+        ✓ &nbsp;Continue to Smart Tests →
+      </button>
+    </div>
+  </div>
+
+  <!-- Right panel: same lavender marketing -->
+  <div class="a-right" style="flex:1">
+    <button class="a-r-cta">Get started for free</button>
+    <div class="a-r-h1">Ship faster. Stay secure. Let AI handle the toil.</div>
+    <div class="a-r-h2">Unify your software delivery without replatforming</div>
+    <div class="a-r-p">CloudBees Unify connects all your DevOps tools into one intelligent control and context plane, giving you security, visibility, and speed without changing how you work.</div>
+    <div class="mdash">
+      <div class="mdash-bar">
+        <span class="mdash-crumb" style="color:#9AA0C0">⊞</span>
+        <span class="mdash-crumb">CloudBees</span><span class="mdash-crumb mdash-crumb-sep">›</span>
+        <span class="mdash-crumb" style="color:#C0C8E8">Analytics</span>
+        <span style="margin-left:auto;width:7px;height:7px;border-radius:50%;background:#4FCA7A;display:inline-block"></span>
+      </div>
+      <div class="mdash-body">
+        <div class="mdash-title">Analytics</div>
+        <div class="mdash-tabs">
+          <div class="mdash-tab active">Software delivery activity</div>
+          <div class="mdash-tab">Security insights</div>
+          <div class="mdash-tab">Flow metrics</div>
+        </div>
+        <div class="mdash-grid">
+          <div class="mdash-card">
+            <div class="mdash-card-title">Components</div>
+            <svg class="mdash-donut" viewBox="0 0 36 36">
+              <circle cx="18" cy="18" r="14" fill="none" stroke="#2A2E50" stroke-width="5"/>
+              <circle cx="18" cy="18" r="14" fill="none" stroke="#5B7EFF" stroke-width="5" stroke-dasharray="88 100" stroke-dashoffset="25" transform="rotate(-90 18 18)"/>
+              <text x="18" y="21" text-anchor="middle" font-size="8" fill="#E4E6F4" font-weight="700">2,074</text>
+            </svg>
+            <div class="mdash-sub" style="color:#52C878">97% Active</div>
           </div>
-          <div class="t-wrap">
-            <table class="dt">
-              <thead>
-                <tr>
+          <div class="mdash-card">
+            <div class="mdash-card-title">Workflows</div>
+            <svg class="mdash-donut" viewBox="0 0 36 36">
+              <circle cx="18" cy="18" r="14" fill="none" stroke="#2A2E50" stroke-width="5"/>
+              <circle cx="18" cy="18" r="14" fill="none" stroke="#A78BFA" stroke-width="5" stroke-dasharray="97 100" stroke-dashoffset="25" transform="rotate(-90 18 18)"/>
+              <text x="18" y="21" text-anchor="middle" font-size="7" fill="#E4E6F4" font-weight="700">21,160</text>
+            </svg>
+            <div class="mdash-sub" style="color:#A78BFA">97% Active</div>
+          </div>
+          <div class="mdash-card">
+            <div class="mdash-card-title">Builds today</div>
+            <div class="mdash-num" style="margin-top:8px">488</div>
+            <div class="mdash-sub" style="color:#52C878;margin-top:2px">↑ 12%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     APP: CLOUDBEES UNIFY + SMART TESTS
+══════════════════════════════════════ -->
+<div id="app">
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sb-org">
+      <div class="cb-logo">CB</div>
+      <div>
+        <div class="org-name">CloudBees, Inc.</div>
+        <div class="org-sub">Production ▾</div>
+      </div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5"/></svg>Home
+      </div>
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 1L14 4.5v7L8 15 2 11.5v-7L8 1z"/><circle cx="8" cy="8" r="2"/></svg>Components
+      </div>
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="7"/><polyline points="8,4 8,8 11,10"/></svg>Runs
+      </div>
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="3" width="12" height="10" rx="1.5"/><path d="M5 7h6M5 10h4"/></svg>Applications
+      </div>
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2l1.6 4.8H15l-4 3 1.6 4.8L8 11.6l-4.6 3 1.6-4.8-4-3h5.4z"/></svg>Releases
+      </div>
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 1v14M1 8h14"/><circle cx="8" cy="8" r="3"/></svg>Feature management
+      </div>
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2L2 5v4.5C2 12.5 5 14.8 8 15c3-.2 6-2.5 6-5.5V5L8 2z"/></svg>Security
+        <span class="nav-badge badge-new">NEW</span>
+      </div>
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M14 11h-4V5h4v6zM6 14H2V8h4v6zM10 7H6V2h4v5z"/></svg>Analytics
+      </div>
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="7"/><circle cx="8" cy="8" r="2.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2"/></svg>Configurations
+      </div>
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="4" width="14" height="9" rx="1.5"/><path d="M4 4V3a1 1 0 011-1h6a1 1 0 011 1v1M6 9h4M8 7v4"/></svg>Jenkins® mgmt
+      </div>
+      <div class="nav-item active" id="st-nav">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 1L9.5 3.5h3l-2 2.5 1 3-3.5-1.5L4.5 9l1-3-2-2.5h3z"/><path d="M8 7v8"/><path d="M5 12l3 3 3-3"/></svg>Smart tests
+        <span class="nav-badge badge-setup" id="setup-badge">SETUP</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>CloudBees, Inc.</span><span class="bc-sep">›</span>
+        <span>Smart tests</span><span class="bc-sep">›</span>
+        <span class="bc-active">Issues</span>
+      </div>
+      <div class="status-dot"></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button class="tb-btn">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="7"/><path d="M8 5v4M8 11v1"/></svg>Help
+        </button>
+        <button class="tb-btn">Admin settings <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4,6 8,10 12,6"/></svg></button>
+        <div class="avatar">BR</div>
+        <button class="ai-btn">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2a5 5 0 110 10A5 5 0 018 3zm0 7a1 1 0 100 2 1 1 0 000-2zm-.5-6v5h1V4H7.5z"/></svg>AI Assistant
+        </button>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="st-header">
+        <div class="st-title-row">
+          <div class="st-rocket">🚀</div>
+          <h1>Smart tests</h1>
+          <span class="setup-badge" id="setup-badge-main" onclick="showOnboarding()">⚙ Setup required</span>
+        </div>
+        <div class="tab-bar">
+          <div class="tab active">Issues</div>
+          <div class="tab">Test Sessions</div>
+          <div class="tab">Builds</div>
+          <div class="tab">Test Cases</div>
+          <div class="tab">Trends</div>
+          <div class="tab">Unhealthy Tests</div>
+          <div class="tab">High Failure Rate</div>
+          <div class="tab">Predictive Test Selection</div>
+          <div class="tab">Log Search</div>
+          <div class="tab">Notifications</div>
+          <div class="tab">Settings</div>
+        </div>
+      </div>
+
+      <div class="body-area">
+        <div class="bg-content blurred" id="bg-content">
+          <div class="setup-progress" id="setup-progress-bar" onclick="showOnboarding()">
+            <div class="sp-icon">⚙</div>
+            <div style="flex:1">
+              <div class="sp-title">Complete Smart Tests setup</div>
+              <div class="sp-sub">Connect your CI pipeline to start detecting test issues</div>
+              <div class="sp-bar-wrap" style="margin-top:6px"><div class="sp-bar-fill" id="sp-fill" style="width:0%"></div></div>
+            </div>
+            <div class="sp-pct" id="sp-pct">0%</div>
+          </div>
+
+          <div class="sum-grid">
+            <div class="sum-card"><div class="s-label">Critical Issues</div><div class="s-val val-red">7</div><div class="s-sub">↑ 2 vs last week</div></div>
+            <div class="sum-card"><div class="s-label">Tests Affected</div><div class="s-val val-orange">43</div><div class="s-sub">across 12 services</div></div>
+            <div class="sum-card"><div class="s-label">CI Time at Risk</div><div class="s-val val-blue">14.2h</div><div class="s-sub">per build cycle</div></div>
+            <div class="sum-card"><div class="s-label">Time Saved (30d)</div><div class="s-val val-green">68%</div><div class="s-sub">via predictive selection</div></div>
+          </div>
+
+          <div class="data-wrap">
+            <div class="filter-bar">
+              <input class="fi" type="text" placeholder="🔍  Search issues...">
+              <button class="fb">Severity ▾</button>
+              <button class="fb">Service ▾</button>
+              <button class="fb">Assignee ▾</button>
+              <button class="fb" style="margin-left:auto">Export</button>
+            </div>
+            <div class="t-wrap">
+              <table class="dt">
+                <thead><tr>
                   <th style="width:36%">Test / Class</th>
-                  <th>Severity</th>
-                  <th>Type</th>
-                  <th>Affected</th>
-                  <th>Failure rate</th>
-                  <th>CI impact</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><div class="test-name">AuthService::testTokenExpiry</div><div class="test-class">com.cloudbees.auth.AuthServiceTest</div></td>
-                  <td><span class="tag t-crit">Critical</span></td>
-                  <td><span class="tag t-low">Flaky</span></td>
-                  <td>12 tests</td>
-                  <td>
-                    <div style="display:flex;align-items:center;gap:6px">
-                      <div class="pb-wrap"><div class="pb-fill red" style="width:82%"></div></div>
-                      <span style="font-size:11px;color:var(--red)">82%</span>
-                    </div>
-                  </td>
-                  <td style="color:var(--red)">+3.5h</td>
-                  <td><span class="tag t-new">Open</span></td>
-                </tr>
-                <tr>
-                  <td><div class="test-name">PaymentProcessor::testNullPayload</div><div class="test-class">com.cloudbees.payments.PaymentTest</div></td>
-                  <td><span class="tag t-crit">Critical</span></td>
-                  <td><span class="tag" style="background:var(--red-bg);color:var(--red);border:1px solid #3A1818">Error</span></td>
-                  <td>8 tests</td>
-                  <td>
-                    <div style="display:flex;align-items:center;gap:6px">
-                      <div class="pb-wrap"><div class="pb-fill red" style="width:100%"></div></div>
-                      <span style="font-size:11px;color:var(--red)">100%</span>
-                    </div>
-                  </td>
-                  <td style="color:var(--red)">+2.1h</td>
-                  <td><span class="tag t-new">Open</span></td>
-                </tr>
-                <tr>
-                  <td><div class="test-name">OrderService::testConcurrentWrite</div><div class="test-class">com.cloudbees.orders.OrderServiceIT</div></td>
-                  <td><span class="tag t-crit">Critical</span></td>
-                  <td><span class="tag t-low">Flaky</span></td>
-                  <td>15 tests</td>
-                  <td>
-                    <div style="display:flex;align-items:center;gap:6px">
-                      <div class="pb-wrap"><div class="pb-fill orange" style="width:65%"></div></div>
-                      <span style="font-size:11px;color:var(--orange)">65%</span>
-                    </div>
-                  </td>
-                  <td style="color:var(--red)">+4.2h</td>
-                  <td><span class="tag t-new">Open</span></td>
-                </tr>
-                <tr>
-                  <td><div class="test-name">UserService::testEmailValidation</div><div class="test-class">com.cloudbees.users.UserServiceTest</div></td>
-                  <td><span class="tag t-high">High</span></td>
-                  <td><span class="tag t-low">Flaky</span></td>
-                  <td>5 tests</td>
-                  <td>
-                    <div style="display:flex;align-items:center;gap:6px">
-                      <div class="pb-wrap"><div class="pb-fill orange" style="width:44%"></div></div>
-                      <span style="font-size:11px;color:var(--orange)">44%</span>
-                    </div>
-                  </td>
-                  <td style="color:var(--orange)">+45m</td>
-                  <td><span class="tag t-new">Open</span></td>
-                </tr>
-                <tr>
-                  <td><div class="test-name">CacheManager::testTtlDrift</div><div class="test-class">com.cloudbees.cache.CacheManagerTest</div></td>
-                  <td><span class="tag t-med">Medium</span></td>
-                  <td><span class="tag t-low">Slow</span></td>
-                  <td>3 tests</td>
-                  <td>
-                    <div style="display:flex;align-items:center;gap:6px">
-                      <div class="pb-wrap"><div class="pb-fill" style="width:28%"></div></div>
-                      <span style="font-size:11px;color:var(--blue-lt)">28%</span>
-                    </div>
-                  </td>
-                  <td style="color:var(--text-mid)">+20m</td>
-                  <td><span class="tag" style="background:#1A2018;color:#8AAA70;border:1px solid #2A3828">In review</span></td>
-                </tr>
-                <tr>
-                  <td><div class="test-name">NotificationService::testEmailRetry</div><div class="test-class">com.cloudbees.notify.NotificationTest</div></td>
-                  <td><span class="tag t-low" style="background:var(--blue-bg);color:var(--blue-lt);border:1px solid #1A2850">Low</span></td>
-                  <td><span class="tag t-low">Flaky</span></td>
-                  <td>2 tests</td>
-                  <td>
-                    <div style="display:flex;align-items:center;gap:6px">
-                      <div class="pb-wrap"><div class="pb-fill" style="width:18%"></div></div>
-                      <span style="font-size:11px;color:var(--blue-lt)">18%</span>
-                    </div>
-                  </td>
-                  <td style="color:var(--text-mid)">+8m</td>
-                  <td><span class="tag" style="background:#1A2830;color:#6899BB;border:1px solid #1E3048">Resolved</span></td>
-                </tr>
-              </tbody>
-            </table>
+                  <th>Severity</th><th>Type</th><th>Affected</th><th>Failure rate</th><th>CI impact</th><th>Status</th>
+                </tr></thead>
+                <tbody>
+                  <tr><td><div class="test-name">AuthService::testTokenExpiry</div><div class="test-class">com.cloudbees.auth.AuthServiceTest</div></td><td><span class="tag t-crit">Critical</span></td><td><span class="tag t-low">Flaky</span></td><td>12 tests</td><td><div style="display:flex;align-items:center;gap:6px"><div class="pb-wrap"><div class="pb-fill red" style="width:82%"></div></div><span style="font-size:11px;color:var(--red)">82%</span></div></td><td style="color:var(--red)">+3.5h</td><td><span class="tag t-new">Open</span></td></tr>
+                  <tr><td><div class="test-name">PaymentProcessor::testNullPayload</div><div class="test-class">com.cloudbees.payments.PaymentTest</div></td><td><span class="tag t-crit">Critical</span></td><td><span class="tag" style="background:var(--red-bg);color:var(--red);border:1px solid #3A1818">Error</span></td><td>8 tests</td><td><div style="display:flex;align-items:center;gap:6px"><div class="pb-wrap"><div class="pb-fill red" style="width:100%"></div></div><span style="font-size:11px;color:var(--red)">100%</span></div></td><td style="color:var(--red)">+2.1h</td><td><span class="tag t-new">Open</span></td></tr>
+                  <tr><td><div class="test-name">OrderService::testConcurrentWrite</div><div class="test-class">com.cloudbees.orders.OrderServiceIT</div></td><td><span class="tag t-crit">Critical</span></td><td><span class="tag t-low">Flaky</span></td><td>15 tests</td><td><div style="display:flex;align-items:center;gap:6px"><div class="pb-wrap"><div class="pb-fill orange" style="width:65%"></div></div><span style="font-size:11px;color:var(--orange)">65%</span></div></td><td style="color:var(--red)">+4.2h</td><td><span class="tag t-new">Open</span></td></tr>
+                  <tr><td><div class="test-name">UserService::testEmailValidation</div><div class="test-class">com.cloudbees.users.UserServiceTest</div></td><td><span class="tag t-high">High</span></td><td><span class="tag t-low">Flaky</span></td><td>5 tests</td><td><div style="display:flex;align-items:center;gap:6px"><div class="pb-wrap"><div class="pb-fill orange" style="width:44%"></div></div><span style="font-size:11px;color:var(--orange)">44%</span></div></td><td style="color:var(--orange)">+45m</td><td><span class="tag t-new">Open</span></td></tr>
+                  <tr><td><div class="test-name">CacheManager::testTtlDrift</div><div class="test-class">com.cloudbees.cache.CacheManagerTest</div></td><td><span class="tag t-med">Medium</span></td><td><span class="tag t-low">Slow</span></td><td>3 tests</td><td><div style="display:flex;align-items:center;gap:6px"><div class="pb-wrap"><div class="pb-fill" style="width:28%"></div></div><span style="font-size:11px;color:var(--blue-lt)">28%</span></div></td><td style="color:var(--text-mid)">+20m</td><td><span class="tag" style="background:#1A2018;color:#8AAA70;border:1px solid #2A3828">In review</span></td></tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-      </div><!-- /bg-content -->
 
-      <!-- ═══ ONBOARDING OVERLAY ═══ -->
-      <div class="ob-overlay" id="ob-overlay" role="dialog" aria-modal="true" aria-label="Smart Tests setup wizard">
-        <div class="ob-card">
-
-          <!-- Steps indicator -->
-          <div class="steps-row" id="steps-indicator">
-            <div class="s-dot active" id="sd1">1</div>
-            <div class="s-line" id="sl1"></div>
-            <div class="s-dot" id="sd2">2</div>
-            <div class="s-line" id="sl2"></div>
-            <div class="s-dot" id="sd3">3</div>
-            <div class="s-line" id="sl3"></div>
-            <div class="s-dot" id="sd4">4</div>
-            <div class="s-line" id="sl4"></div>
-            <div class="s-dot" id="sd5">✓</div>
-          </div>
-
-          <!-- ── STEP 1: WELCOME ── -->
-          <div class="sp active" id="step1">
-            <div class="ob-h">Save up to 70% of CI test time</div>
-            <div class="ob-sub">Smart Tests learns which tests are affected by each code change — and only runs those. No skipped coverage, no configuration per-test.</div>
-
-            <div class="val-grid">
-              <div class="val-card">
-                <div class="vc-num">70%</div>
-                <div class="vc-label">Average CI time<br>saved per build</div>
-              </div>
-              <div class="val-card">
-                <div class="vc-num">0</div>
-                <div class="vc-label">Coverage risk —<br>safe subset selection</div>
-              </div>
-              <div class="val-card">
-                <div class="vc-num">Any CI</div>
-                <div class="vc-label">GitHub, Jenkins,<br>GitLab, CircleCI…</div>
-              </div>
+        <!-- ONBOARDING OVERLAY -->
+        <div class="ob-overlay" id="ob-overlay">
+          <div class="ob-card">
+            <div class="steps-row">
+              <div class="s-dot active" id="sd1">1</div><div class="s-line" id="sl1"></div>
+              <div class="s-dot" id="sd2">2</div><div class="s-line" id="sl2"></div>
+              <div class="s-dot" id="sd3">3</div><div class="s-line" id="sl3"></div>
+              <div class="s-dot" id="sd4">4</div><div class="s-line" id="sl4"></div>
+              <div class="s-dot" id="sd5">✓</div>
             </div>
 
-            <div class="info-note">
-              <span class="info-icon">ℹ</span>
-              <span>Setup takes about <strong style="color:var(--text-hi)">10 minutes</strong> and requires adding 2 lines to your CI pipeline. Your developer can do this if you're not the one managing CI.</span>
-            </div>
-
-            <div class="share-banner" onclick="toggleShareForm('share1')">
-              <div class="share-icon-wrap">👩‍💻</div>
-              <div class="share-text">
-                <div class="st-main">Not the one managing CI? Share setup with your developer</div>
-                <div class="st-sub">We'll send them step-by-step instructions via email</div>
+            <!-- Step 1: Welcome -->
+            <div class="sp active" id="step1">
+              <div class="ob-h">Save up to 70% of CI test time</div>
+              <div class="ob-sub">Smart Tests learns which tests are affected by each code change — and only runs those. No skipped coverage, no per-test configuration.</div>
+              <div class="val-grid">
+                <div class="val-card"><div class="vc-num">70%</div><div class="vc-label">Average CI time<br>saved per build</div></div>
+                <div class="val-card"><div class="vc-num">0</div><div class="vc-label">Coverage risk —<br>safe subset selection</div></div>
+                <div class="val-card"><div class="vc-num">Any CI</div><div class="vc-label">GitHub, Jenkins,<br>GitLab, CircleCI…</div></div>
               </div>
-              <span class="share-arrow">›</span>
-            </div>
-
-            <div class="share-form" id="share1">
-              <label>Developer's email address</label>
-              <input type="email" id="share1-email" placeholder="dev@yourcompany.com" style="margin-bottom:8px">
-              <div style="display:flex;gap:8px;margin-top:8px">
-                <button class="btn-p" onclick="sendShare('share1')">Send instructions</button>
-                <button class="btn-s" onclick="toggleShareForm('share1')">Cancel</button>
+              <div class="info-note"><span class="info-icon">ℹ</span><span>Setup takes about <strong style="color:var(--text-hi)">10 minutes</strong> and requires adding 2 lines to your CI pipeline. Your developer can do this if you're not managing CI.</span></div>
+              <div class="share-banner" onclick="toggleShareForm('share1')">
+                <div class="share-icon-wrap">👩‍💻</div>
+                <div class="share-text"><div class="st-main">Not managing CI? Share setup with your developer</div><div class="st-sub">We'll send them step-by-step instructions via email</div></div>
+                <span class="share-arrow">›</span>
               </div>
-              <div class="share-sent" id="share1-sent">
-                <span style="color:var(--green)">✓</span> Instructions sent! They'll get an email with the setup guide.
+              <div class="share-form" id="share1">
+                <label>Developer's email address</label>
+                <input type="email" id="share1-email" placeholder="dev@yourcompany.com" style="margin-bottom:8px">
+                <div style="display:flex;gap:8px;margin-top:8px"><button class="btn-p" onclick="sendShare('share1')">Send instructions</button><button class="btn-s" onclick="toggleShareForm('share1')">Cancel</button></div>
+                <div class="share-sent" id="share1-sent"><span style="color:var(--green)">✓</span> Instructions sent!</div>
               </div>
+              <div class="btn-row"><button class="btn-p" onclick="goTo(2)">Start Setup &nbsp;→</button></div>
             </div>
 
-            <div class="btn-row">
-              <button class="btn-p" onclick="goTo(2)">Start Setup &nbsp;→</button>
+            <!-- Step 2: Choose CI -->
+            <div class="sp" id="step2">
+              <div class="step-label"><div class="step-num">2</div>Step 2 of 5</div>
+              <div class="ob-h">Which CI system do you use?</div>
+              <div class="ob-sub">We'll generate the exact config snippet for your pipeline.</div>
+              <div class="ci-grid" id="ci-grid">
+                <div class="ci-card" onclick="selectCI('github')" data-ci="github"><div class="ci-logo" style="background:#1C2030"><svg width="22" height="22" viewBox="0 0 24 24" fill="#E4E6F4"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7C6.73 19.91 6.14 18 6.14 18c-.46-1.16-1.12-1.47-1.12-1.47-.91-.63.07-.61.07-.61 1.01.07 1.54 1.03 1.54 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.64-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.58 9.58 0 0112 7.8c.85 0 1.71.11 2.51.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg></div><div class="ci-name">GitHub Actions</div><div class="ci-sub">YAML workflow</div></div>
+                <div class="ci-card" onclick="selectCI('jenkins')" data-ci="jenkins"><div class="ci-logo" style="background:#2A1A10"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="#F09050" stroke-width="1.3"><rect x="2" y="1" width="12" height="14" rx="1.5"/><path d="M5 5h6M5 8h5M5 11h3"/></svg></div><div class="ci-name">Jenkins</div><div class="ci-sub">Jenkinsfile / Groovy</div></div>
+                <div class="ci-card" onclick="selectCI('gitlab')" data-ci="gitlab"><div class="ci-logo" style="background:#1E1030"><svg width="22" height="22" viewBox="0 0 24 24" fill="#FC6D26"><path d="M22.65 14.39L12 22.13 1.35 14.39a.84.84 0 01-.3-.94l1.22-3.78 2.44-7.51a.42.42 0 01.82 0l2.44 7.51H15.3l2.44-7.51a.42.42 0 01.82 0l2.44 7.51 1.22 3.78a.84.84 0 01-.3.94z"/></svg></div><div class="ci-name">GitLab CI</div><div class="ci-sub">.gitlab-ci.yml</div></div>
+                <div class="ci-card" onclick="selectCI('circle')" data-ci="circle"><div class="ci-logo" style="background:#0D1A10"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3" fill="#4CAF50" stroke="none"/></svg></div><div class="ci-name">CircleCI</div><div class="ci-sub">config.yml</div></div>
+                <div class="ci-card" onclick="selectCI('bitbucket')" data-ci="bitbucket"><div class="ci-logo" style="background:#10182A"><svg width="22" height="22" viewBox="0 0 24 24" fill="#2684FF"><path d="M3 3l2.2 14.1 6.8 4 6.8-4L21 3H3zm13.9 5H15l-.7 4.5H9.7L9 8H7.1l1.2 7.4 3.7 2.1 3.7-2.1L16.9 8z"/></svg></div><div class="ci-name">Bitbucket</div><div class="ci-sub">Pipelines YAML</div></div>
+                <div class="ci-card" onclick="selectCI('other')" data-ci="other"><div class="ci-logo" style="background:#181825"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8A8FA8" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg></div><div class="ci-name">Other / Custom</div><div class="ci-sub">Shell / any runner</div></div>
+              </div>
+              <div class="btn-row"><button class="btn-s" onclick="goTo(1)">← Back</button><button class="btn-p" id="btn-step2-next" onclick="goTo(3)" disabled>Next →</button></div>
             </div>
-          </div>
 
-          <!-- ── STEP 2: CHOOSE CI ── -->
-          <div class="sp" id="step2">
-            <div class="step-label">
-              <div class="step-num">2</div>
-              Step 2 of 5
+            <!-- Step 3: Install CLI -->
+            <div class="sp" id="step3">
+              <div class="step-label"><div class="step-num">3</div>Step 3 of 5</div>
+              <div class="ob-h">Install Smart Tests CLI</div>
+              <div class="ob-sub">Run this once to install the CLI. Requires Python 3.7+.</div>
+              <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><span class="cc"># Install the CLI</span><br><span class="cmd">pip3</span> install launchable<br><br><span class="cc"># Verify installation</span><br><span class="cmd">launchable</span> verify</div>
+              <div class="ob-sub" style="margin-top:14px;font-weight:600;color:var(--text-hi);font-size:12px">Add your API token to CI secrets</div>
+              <div class="ob-sub" style="margin-bottom:8px">Your pipeline needs this environment variable:</div>
+              <div class="token-row"><input class="token-input" type="text" value="LAUNCHABLE_TOKEN" readonly><div class="code-block" style="margin:0;padding:7px 12px;font-size:12px;display:flex;align-items:center;flex:1"><span style="color:var(--text-lo)">sk_live_</span><span style="color:var(--blue-lt);letter-spacing:.05em">••••••••••••••••</span></div></div>
+              <div class="info-note"><span class="info-icon">🔒</span><span>Add <code style="background:var(--bg-input);padding:1px 5px;border-radius:3px;font-size:11px">LAUNCHABLE_TOKEN</code> to your CI secrets store — not directly in the YAML. <a href="#" onclick="return false" style="color:var(--blue-lt)">View your API token in Settings →</a></span></div>
+              <div class="share-banner" onclick="toggleShareForm('share3')">
+                <div class="share-icon-wrap">📨</div>
+                <div class="share-text"><div class="st-main">Share install instructions with your developer</div><div class="st-sub">One email with everything they need</div></div>
+                <span class="share-arrow">›</span>
+              </div>
+              <div class="share-form" id="share3">
+                <label>Developer's email address</label>
+                <input type="email" id="share3-email" placeholder="dev@yourcompany.com" style="margin-bottom:8px">
+                <div style="display:flex;gap:8px;margin-top:8px"><button class="btn-p" onclick="sendShare('share3')">Send instructions</button><button class="btn-s" onclick="toggleShareForm('share3')">Cancel</button></div>
+                <div class="share-sent" id="share3-sent"><span style="color:var(--green)">✓</span> Instructions sent successfully!</div>
+              </div>
+              <div class="btn-row"><button class="btn-s" onclick="goTo(2)">← Back</button><button class="btn-p" onclick="goTo(4)">Next: Add to pipeline →</button></div>
             </div>
-            <div class="ob-h">Which CI system do you use?</div>
-            <div class="ob-sub">We'll generate the exact config snippet for your pipeline.</div>
 
-            <div class="ci-grid" id="ci-grid">
-              <div class="ci-card" onclick="selectCI('github')" data-ci="github">
-                <div class="ci-logo" style="background:#1C2030">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="#E4E6F4"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7C6.73 19.91 6.14 18 6.14 18c-.46-1.16-1.12-1.47-1.12-1.47-.91-.63.07-.61.07-.61 1.01.07 1.54 1.03 1.54 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.64-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.58 9.58 0 0112 7.8c.85 0 1.71.11 2.51.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
+            <!-- Step 4: Add to pipeline -->
+            <div class="sp" id="step4">
+              <div class="step-label"><div class="step-num">4</div>Step 4 of 5</div>
+              <div class="ob-h">Add 2 steps to your <span id="ci-label">CI</span> pipeline</div>
+              <div class="ob-sub">These commands tell Smart Tests what was built and what results came out.</div>
+              <div style="margin-top:16px;font-size:12px;font-weight:600;color:var(--text-hi);margin-bottom:4px">Step 1 — Record your build</div>
+              <div style="font-size:12px;color:var(--text-mid);margin-bottom:6px">Add this <em>before</em> running tests:</div>
+              <div class="code-block" id="snippet-build"><button class="copy-btn" onclick="copyCode(this)">Copy</button><span class="cc"># Before test step</span><br><span class="cmd">launchable</span> record build \<br>&nbsp;&nbsp;--name <span class="cv">$BUILD_ID</span> \<br>&nbsp;&nbsp;--source .</div>
+              <div style="margin-top:14px;font-size:12px;font-weight:600;color:var(--text-hi);margin-bottom:4px">Step 2 — Record test results</div>
+              <div style="font-size:12px;color:var(--text-mid);margin-bottom:6px">Add this <em>after</em> your test runner:</div>
+              <div class="code-block" id="snippet-tests"><button class="copy-btn" onclick="copyCode(this)">Copy</button><span class="cc"># After tests run</span><br><span class="cmd">launchable</span> record tests <span class="ck">pytest</span> \<br>&nbsp;&nbsp;<span class="cs">./test-results/*.xml</span></div>
+              <div class="info-note"><span class="info-icon">📋</span><span>Supports <strong style="color:var(--text-hi)">pytest, Maven, Gradle, Jest, Cypress, RSpec, GoogleTest</strong> and more.</span></div>
+              <div class="btn-row"><button class="btn-s" onclick="goTo(3)">← Back</button><button class="btn-p" onclick="goTo(5)">Done — verify connection →</button></div>
+            </div>
+
+            <!-- Step 5: Waiting -->
+            <div class="sp" id="step5">
+              <div class="waiting-wrap">
+                <div class="spinner"></div>
+                <div class="w-title">Waiting for your first build...</div>
+                <div class="w-sub">Once your CI pipeline runs with the CLI steps added, Smart Tests will automatically detect the connection.</div>
+                <div class="w-log">
+                  <div><span class="w-ok">✓</span> CLI installed and verified</div>
+                  <div><span class="w-ok">✓</span> API token configured</div>
+                  <div><span class="w-ok">✓</span> Pipeline steps added</div>
+                  <div><span class="w-pending">⟳</span> Detecting first build…</div>
                 </div>
-                <div class="ci-name">GitHub Actions</div>
-                <div class="ci-sub">YAML workflow</div>
+                <div style="font-size:12px;color:var(--text-mid)">This usually happens within minutes of your next CI run.</div>
               </div>
-              <div class="ci-card" onclick="selectCI('jenkins')" data-ci="jenkins">
-                <div class="ci-logo" style="background:#2A1A10">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F09050" stroke-width="1.5"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h6M8 16h4"/></svg>
+              <div class="btn-row" style="justify-content:center">
+                <button class="btn-s" onclick="goTo(4)">← Back</button>
+                <button class="btn-ghost" onclick="goTo(6)">Skip — explore demo data →</button>
+              </div>
+            </div>
+
+            <!-- Step 6: Success -->
+            <div class="sp" id="step6">
+              <div class="success-wrap">
+                <div class="success-icon">✓</div>
+                <div class="suc-title">You're connected!</div>
+                <div class="suc-sub">Your first build was recorded. Smart Tests is now learning your test suite and will start optimising test selection within a few builds.</div>
+                <div class="metrics-row">
+                  <div class="mp"><div class="m-num">438</div><div class="m-label">Tests analyzed</div></div>
+                  <div class="mp"><div class="m-num">1</div><div class="m-label">Session recorded</div></div>
+                  <div class="mp"><div class="m-num">42min</div><div class="m-label">First runtime</div></div>
+                  <div class="mp"><div class="m-num" style="color:var(--green)">↓18%</div><div class="m-label">Projected savings</div></div>
                 </div>
-                <div class="ci-name">Jenkins</div>
-                <div class="ci-sub">Jenkinsfile / Groovy</div>
-              </div>
-              <div class="ci-card" onclick="selectCI('gitlab')" data-ci="gitlab">
-                <div class="ci-logo" style="background:#1E1030">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="#FC6D26"><path d="M22.65 14.39L12 22.13 1.35 14.39a.84.84 0 01-.3-.94l1.22-3.78 2.44-7.51a.42.42 0 01.82 0l2.44 7.51H15.3l2.44-7.51a.42.42 0 01.82 0l2.44 7.51 1.22 3.78a.84.84 0 01-.3.94z"/></svg>
-                </div>
-                <div class="ci-name">GitLab CI</div>
-                <div class="ci-sub">.gitlab-ci.yml</div>
-              </div>
-              <div class="ci-card" onclick="selectCI('circle')" data-ci="circle">
-                <div class="ci-logo" style="background:#0D1A10">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3" fill="#4CAF50" stroke="none"/></svg>
-                </div>
-                <div class="ci-name">CircleCI</div>
-                <div class="ci-sub">config.yml</div>
-              </div>
-              <div class="ci-card" onclick="selectCI('bitbucket')" data-ci="bitbucket">
-                <div class="ci-logo" style="background:#10182A">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="#2684FF"><path d="M3 3l2.2 14.1 6.8 4 6.8-4L21 3H3zm13.9 5H15l-.7 4.5H9.7L9 8H7.1l1.2 7.4 3.7 2.1 3.7-2.1L16.9 8z"/></svg>
-                </div>
-                <div class="ci-name">Bitbucket</div>
-                <div class="ci-sub">bitbucket-pipelines.yml</div>
-              </div>
-              <div class="ci-card" onclick="selectCI('other')" data-ci="other">
-                <div class="ci-logo" style="background:#181825">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8A8FA8" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
-                </div>
-                <div class="ci-name">Other / Custom</div>
-                <div class="ci-sub">Shell / any runner</div>
+                <div class="info-note"><span class="info-icon">💡</span><span>Smart Tests needs <strong style="color:var(--text-hi)">~10–15 builds</strong> to build a confident model. Savings grow as it learns your codebase.</span></div>
+                <button class="btn-full" onclick="completeOnboarding()">View Smart Tests dashboard →</button>
               </div>
             </div>
 
-            <div class="btn-row">
-              <button class="btn-s" onclick="goTo(1)">← Back</button>
-              <button class="btn-p" id="btn-step2-next" onclick="goTo(3)" disabled>Next →</button>
-            </div>
-          </div>
+          </div><!-- /ob-card -->
+        </div><!-- /ob-overlay -->
+      </div><!-- /body-area -->
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app -->
 
-          <!-- ── STEP 3: INSTALL CLI ── -->
-          <div class="sp" id="step3">
-            <div class="step-label">
-              <div class="step-num">3</div>
-              Step 3 of 5
-            </div>
-            <div class="ob-h">Install Smart Tests CLI</div>
-            <div class="ob-sub">Run this once to install the CLI. Requires Python 3.7+.</div>
-
-            <div class="code-block">
-              <button class="copy-btn" onclick="copyCode(this,'pip3 install launchable\nlaunchable verify')">Copy</button>
-              <div><span class="cc"># Install the CLI</span></div>
-              <div><span class="cmd">pip3</span> install launchable</div>
-              <div style="margin-top:4px"><span class="cc"># Verify installation</span></div>
-              <div><span class="cmd">launchable</span> verify</div>
-            </div>
-
-            <div class="ob-sub" style="margin-top:16px;margin-bottom:6px;font-weight:600;color:var(--text-hi);font-size:12px">Add your API token to CI secrets</div>
-            <div class="ob-sub" style="margin-bottom:8px">Your pipeline needs this environment variable to authenticate:</div>
-
-            <div class="token-row">
-              <input class="token-input" type="text" value="LAUNCHABLE_TOKEN" readonly>
-              <div class="code-block" style="margin:0;padding:7px 12px;font-size:12px;flex:1;display:flex;align-items:center">
-                <span style="color:var(--text-lo)">sk_live_</span><span style="color:var(--blue-lt);letter-spacing:0.05em">••••••••••••••••</span>
-              </div>
-            </div>
-
-            <div class="info-note" style="margin-top:12px">
-              <span class="info-icon">🔒</span>
-              <span>Add <code style="background:var(--bg-input);padding:1px 5px;border-radius:3px;font-size:11px">LAUNCHABLE_TOKEN</code> to your CI secrets store — not directly in the pipeline file. <a href="#" onclick="return false">View your API token in Settings →</a></span>
-            </div>
-
-            <div class="share-banner" onclick="toggleShareForm('share3')">
-              <div class="share-icon-wrap">📨</div>
-              <div class="share-text">
-                <div class="st-main">Share install instructions with your developer</div>
-                <div class="st-sub">One email with everything they need</div>
-              </div>
-              <span class="share-arrow">›</span>
-            </div>
-
-            <div class="share-form" id="share3">
-              <label>Developer's email address</label>
-              <input type="email" id="share3-email" placeholder="dev@yourcompany.com" style="margin-bottom:8px">
-              <div style="display:flex;gap:8px;margin-top:8px">
-                <button class="btn-p" onclick="sendShare('share3')">Send instructions</button>
-                <button class="btn-s" onclick="toggleShareForm('share3')">Cancel</button>
-              </div>
-              <div class="share-sent" id="share3-sent">
-                <span style="color:var(--green)">✓</span> Instructions sent successfully!
-              </div>
-            </div>
-
-            <div class="btn-row">
-              <button class="btn-s" onclick="goTo(2)">← Back</button>
-              <button class="btn-p" onclick="goTo(4)">Next: Add to pipeline →</button>
-            </div>
-          </div>
-
-          <!-- ── STEP 4: ADD TO PIPELINE ── -->
-          <div class="sp" id="step4">
-            <div class="step-label">
-              <div class="step-num">4</div>
-              Step 4 of 5
-            </div>
-            <div class="ob-h">Add 2 steps to your <span id="ci-label">CI</span> pipeline</div>
-            <div class="ob-sub">These two commands tell Smart Tests what was built and what test results came out.</div>
-
-            <div style="margin-top:16px;font-size:12px;font-weight:600;color:var(--text-hi);margin-bottom:4px">
-              Step 1 — Record your build
-            </div>
-            <div style="font-size:12px;color:var(--text-mid);margin-bottom:6px">Add this <em>before</em> running tests:</div>
-            <div class="code-block" id="snippet-build">
-              <button class="copy-btn" onclick="copyCode(this, document.getElementById('snippet-build').innerText.replace('Copy','').trim())">Copy</button>
-              <span class="cc"># Add to your CI config — before test step</span>
-              <br><span class="cmd">launchable</span> record build \<br>
-              &nbsp;&nbsp;--name <span class="cv">$BUILD_ID</span> \<br>
-              &nbsp;&nbsp;--source .
-            </div>
-
-            <div style="margin-top:14px;font-size:12px;font-weight:600;color:var(--text-hi);margin-bottom:4px">
-              Step 2 — Record test results
-            </div>
-            <div style="font-size:12px;color:var(--text-mid);margin-bottom:6px">Add this <em>after</em> your test runner, pointing to your results:</div>
-            <div class="code-block" id="snippet-tests">
-              <button class="copy-btn" onclick="copyCode(this, document.getElementById('snippet-tests').innerText.replace('Copy','').trim())">Copy</button>
-              <span class="cc"># After your tests run</span>
-              <br><span class="cmd">launchable</span> record tests <span class="ck">pytest</span> \<br>
-              &nbsp;&nbsp;<span class="cs">./test-results/*.xml</span>
-            </div>
-
-            <div class="info-note">
-              <span class="info-icon">📋</span>
-              <span>Supports <strong style="color:var(--text-hi)">pytest, Maven, Gradle, Jest, Cypress, RSpec, GoogleTest</strong> and more. <a href="#" onclick="return false">Full runner list →</a></span>
-            </div>
-
-            <div class="btn-row">
-              <button class="btn-s" onclick="goTo(3)">← Back</button>
-              <button class="btn-p" onclick="goTo(5)">Done — verify connection →</button>
-            </div>
-          </div>
-
-          <!-- ── STEP 5: WAITING ── -->
-          <div class="sp" id="step5">
-            <div class="waiting-wrap">
-              <div class="spinner" id="ob-spinner"></div>
-              <div class="w-title">Waiting for your first build...</div>
-              <div class="w-sub">Once your CI pipeline runs with the CLI steps added, Smart Tests will automatically detect the connection.</div>
-
-              <div class="w-log">
-                <div><span class="w-ok">✓</span> CLI installed and verified</div>
-                <div><span class="w-ok">✓</span> API token configured</div>
-                <div><span class="w-ok">✓</span> Pipeline steps added</div>
-                <div id="w-detecting"><span class="w-pending">⟳</span> Detecting first build…</div>
-              </div>
-
-              <div style="font-size:12px;color:var(--text-mid);margin-top:4px">
-                This usually happens within minutes of your next CI run.<br>
-                Leave this page open or come back later — we'll notify you.
-              </div>
-            </div>
-            <div class="btn-row" style="justify-content:center">
-              <button class="btn-s" onclick="goTo(4)">← Back</button>
-              <button class="btn-ghost" onclick="goTo(6)">Skip and explore demo data →</button>
-            </div>
-          </div>
-
-          <!-- ── STEP 6: SUCCESS ── -->
-          <div class="sp" id="step6">
-            <div class="success-wrap">
-              <div class="success-icon">✓</div>
-              <div class="suc-title">You're connected!</div>
-              <div class="suc-sub">Your first build was recorded. Smart Tests is now learning your test suite and will start optimising test selection within a few builds.</div>
-
-              <div class="metrics-row">
-                <div class="mp">
-                  <div class="m-num">438</div>
-                  <div class="m-label">Tests<br>analyzed</div>
-                </div>
-                <div class="mp">
-                  <div class="m-num">1</div>
-                  <div class="m-label">Session<br>recorded</div>
-                </div>
-                <div class="mp">
-                  <div class="m-num">42min</div>
-                  <div class="m-label">First<br>runtime</div>
-                </div>
-                <div class="mp">
-                  <div class="m-num" style="color:var(--green)">↓18%</div>
-                  <div class="m-label">Projected<br>savings today</div>
-                </div>
-              </div>
-
-              <div class="info-note" style="text-align:left">
-                <span class="info-icon">💡</span>
-                <span>Smart Tests needs <strong style="color:var(--text-hi)">~10–15 builds</strong> to build a confident model. Savings increase as it learns your codebase. Check <strong style="color:var(--text-hi)">Trends</strong> to track progress.</span>
-              </div>
-
-              <button class="btn-full" onclick="completeOnboarding()">View Smart Tests dashboard →</button>
-            </div>
-          </div>
-
-        </div><!-- /ob-card -->
-      </div><!-- /ob-overlay -->
-
-    </div><!-- /body-area -->
-  </div><!-- /content -->
-</div><!-- /main -->
-
-<!-- FAB: restart demo -->
-<button class="restart-fab" id="restart-fab" onclick="restartOnboarding()">
-  ↺ Restart onboarding demo
-</button>
+<button class="restart-fab" id="restart-fab" onclick="restartAll()">↺ Restart full demo</button>
 
 <script>
-var currentStep = 1;
-var chosenCI = null;
-var shareFormOpen = {};
+// ── SCREEN NAVIGATION ──
+var currentScreen = 's1';
+var signupMode = false;
 var autoTimer = null;
 
-var ciLabels = {
-  github:'GitHub Actions', jenkins:'Jenkins', gitlab:'GitLab CI',
-  circle:'CircleCI', bitbucket:'Bitbucket', other:'your'
-};
+function showScreen(id, mode) {
+  document.getElementById(currentScreen).classList.replace('show','hide');
+  currentScreen = id;
+  document.getElementById(id).classList.replace('hide','show');
+  if (id === 's2') {
+    if (mode === 'signup') switchAuthTab('signup');
+    else switchAuthTab('signin');
+  }
+  if (id === 's3') {
+    var email = document.getElementById('auth-email').value || 'you@company.com';
+    document.getElementById('v-email-display').textContent = '<' + email + '>';
+    setTimeout(function(){ document.getElementById('v-continue-btn').classList.add('visible'); }, 2500);
+  }
+}
 
+function switchAuthTab(tab) {
+  document.getElementById('tab-signin').classList.toggle('active', tab === 'signin');
+  document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+  var lbl = document.querySelector('.a-divider-txt');
+  var btn = document.querySelector('.a-submit');
+  if (tab === 'signup') { if(lbl)lbl.textContent='Or sign up with email'; if(btn)btn.textContent='Create account'; }
+  else { if(lbl)lbl.textContent='Or sign in with email'; if(btn)btn.textContent='Sign in'; }
+}
+
+function handleAuthSubmit() {
+  showScreen('s3');
+}
+
+function enterApp() {
+  document.querySelectorAll('.scr').forEach(function(s){ s.classList.replace('show','hide'); });
+  var app = document.getElementById('app');
+  app.style.display = 'flex';
+  requestAnimationFrame(function(){ app.classList.add('show'); });
+}
+
+// ── ONBOARDING WIZARD ──
+var currentStep = 1;
+var chosenCI = null;
+
+var ciLabels = {github:'GitHub Actions',jenkins:'Jenkins',gitlab:'GitLab CI',circle:'CircleCI',bitbucket:'Bitbucket',other:'your'};
 var ciSnippetBuild = {
-  github: '<span class="cc"># In your .github/workflows/*.yml</span>\n- <span class="ck">name</span>: Record build\n  <span class="ck">run</span>: <span class="cmd">launchable</span> record build --name <span class="cv">${{ github.run_id }}</span> --source .',
-  jenkins: '<span class="cc">// In your Jenkinsfile</span>\nstage(<span class="cs">\'Record build\'</span>) {\n  sh <span class="cs">\'launchable record build --name ${BUILD_ID} --source .\'</span>\n}',
-  gitlab: '<span class="cc"># In .gitlab-ci.yml</span>\nrecord_build:\n  <span class="ck">script</span>:\n    - <span class="cmd">launchable</span> record build --name <span class="cv">$CI_PIPELINE_ID</span> --source .',
-  circle: '<span class="cc"># In .circleci/config.yml</span>\n- <span class="ck">run</span>:\n    <span class="ck">name</span>: Record build\n    <span class="ck">command</span>: <span class="cmd">launchable</span> record build --name <span class="cv">${CIRCLE_BUILD_NUM}</span> --source .',
-  bitbucket: '<span class="cc"># In bitbucket-pipelines.yml</span>\n- <span class="cmd">launchable</span> record build --name <span class="cv">$BITBUCKET_BUILD_NUMBER</span> --source .',
-  other: '<span class="cc"># In your CI config (before test step)</span>\n<span class="cmd">launchable</span> record build --name <span class="cv">$BUILD_ID</span> --source .'
+  github:'<span class="cc"># .github/workflows/*.yml</span>\n- <span class="ck">name</span>: Record build\n  <span class="ck">run</span>: <span class="cmd">launchable</span> record build --name <span class="cv">${{ github.run_id }}</span> --source .',
+  jenkins:'<span class="cc">// Jenkinsfile</span>\nstage(<span class="cs">\'Record build\'</span>) {\n  sh <span class="cs">\'launchable record build --name ${BUILD_ID} --source .\'</span>\n}',
+  gitlab:'<span class="cc"># .gitlab-ci.yml</span>\nrecord_build:\n  <span class="ck">script</span>:\n    - <span class="cmd">launchable</span> record build --name <span class="cv">$CI_PIPELINE_ID</span> --source .',
+  circle:'<span class="cc"># .circleci/config.yml</span>\n- <span class="ck">run</span>:\n    <span class="ck">name</span>: Record build\n    <span class="ck">command</span>: <span class="cmd">launchable</span> record build --name <span class="cv">${CIRCLE_BUILD_NUM}</span> --source .',
+  bitbucket:'<span class="cc"># bitbucket-pipelines.yml</span>\n- <span class="cmd">launchable</span> record build --name <span class="cv">$BITBUCKET_BUILD_NUMBER</span> --source .',
+  other:'<span class="cc"># Before test step</span>\n<span class="cmd">launchable</span> record build --name <span class="cv">$BUILD_ID</span> --source .'
 };
-
 var ciSnippetTests = {
-  github: '- <span class="ck">name</span>: Record test results\n  <span class="ck">run</span>: <span class="cmd">launchable</span> record tests <span class="ck">pytest</span> <span class="cs">./test-results/*.xml</span>',
-  jenkins: 'stage(<span class="cs">\'Record tests\'</span>) {\n  sh <span class="cs">\'launchable record tests pytest ./test-results/*.xml\'</span>\n}',
-  gitlab: 'record_tests:\n  <span class="ck">script</span>:\n    - <span class="cmd">launchable</span> record tests <span class="ck">pytest</span> <span class="cs">./test-results/*.xml</span>',
-  circle: '- <span class="ck">run</span>:\n    <span class="ck">name</span>: Record test results\n    <span class="ck">command</span>: <span class="cmd">launchable</span> record tests <span class="ck">pytest</span> <span class="cs">./test-results/*.xml</span>',
-  bitbucket: '- <span class="cmd">launchable</span> record tests <span class="ck">pytest</span> <span class="cs">./test-results/*.xml</span>',
-  other: '<span class="cc"># After tests run</span>\n<span class="cmd">launchable</span> record tests <span class="ck">pytest</span> <span class="cs">./test-results/*.xml</span>'
+  github:'- <span class="ck">name</span>: Record test results\n  <span class="ck">run</span>: <span class="cmd">launchable</span> record tests <span class="ck">pytest</span> <span class="cs">./test-results/*.xml</span>',
+  jenkins:'stage(<span class="cs">\'Record tests\'</span>) {\n  sh <span class="cs">\'launchable record tests pytest ./test-results/*.xml\'</span>\n}',
+  gitlab:'record_tests:\n  <span class="ck">script</span>:\n    - <span class="cmd">launchable</span> record tests <span class="ck">pytest</span> <span class="cs">./test-results/*.xml</span>',
+  circle:'- <span class="ck">run</span>:\n    <span class="ck">name</span>: Record tests\n    <span class="ck">command</span>: <span class="cmd">launchable</span> record tests <span class="ck">pytest</span> <span class="cs">./test-results/*.xml</span>',
+  bitbucket:'- <span class="cmd">launchable</span> record tests <span class="ck">pytest</span> <span class="cs">./test-results/*.xml</span>',
+  other:'<span class="cc"># After tests run</span>\n<span class="cmd">launchable</span> record tests <span class="ck">pytest</span> <span class="cs">./test-results/*.xml</span>'
 };
 
 function updateStepIndicator(n) {
-  for (var i = 1; i <= 5; i++) {
-    var dot = document.getElementById('sd'+i);
-    var line = document.getElementById('sl'+i);
-    if (i < n) {
-      dot.className = 's-dot done';
-      dot.textContent = '✓';
-      if (line) line.className = 's-line done';
-    } else if (i === n) {
-      dot.className = 's-dot active';
-      dot.textContent = i < 5 ? i : '✓';
-      if (line) line.className = 's-line';
-    } else {
-      dot.className = 's-dot';
-      dot.textContent = i < 5 ? i : '✓';
-      if (line) line.className = 's-line';
-    }
+  for (var i=1;i<=5;i++) {
+    var dot=document.getElementById('sd'+i), line=document.getElementById('sl'+i);
+    if(i<n){ dot.className='s-dot done'; dot.textContent='✓'; if(line)line.className='s-line done'; }
+    else if(i===n){ dot.className='s-dot active'; dot.textContent=i<5?i:'✓'; if(line)line.className='s-line'; }
+    else{ dot.className='s-dot'; dot.textContent=i<5?i:'✓'; if(line)line.className='s-line'; }
   }
-  var pct = Math.round(((n-1)/4)*100);
-  var fill = document.getElementById('sp-fill');
-  var pctEl = document.getElementById('sp-pct');
-  if(fill) fill.style.width = pct+'%';
-  if(pctEl) pctEl.textContent = pct+'%';
+  var pct=Math.round(((n-1)/4)*100);
+  var fill=document.getElementById('sp-fill'), pctEl=document.getElementById('sp-pct');
+  if(fill)fill.style.width=pct+'%';
+  if(pctEl)pctEl.textContent=pct+'%';
 }
 
 function goTo(n) {
   clearTimeout(autoTimer);
   document.getElementById('step'+currentStep).classList.remove('active');
-  currentStep = n;
+  currentStep=n;
   document.getElementById('step'+n).classList.add('active');
   updateStepIndicator(n);
-  if (n === 5) {
-    autoTimer = setTimeout(function(){ goTo(6); }, 4000);
-  }
+  if(n===5) autoTimer=setTimeout(function(){goTo(6);},4000);
 }
 
 function selectCI(ci) {
-  chosenCI = ci;
-  document.querySelectorAll('.ci-card').forEach(function(c){
-    c.classList.toggle('sel', c.dataset.ci === ci);
-  });
-  document.getElementById('btn-step2-next').disabled = false;
-  var lbl = document.getElementById('ci-label');
-  if(lbl) lbl.textContent = ciLabels[ci]||'CI';
-  var bld = document.getElementById('snippet-build');
-  var tst = document.getElementById('snippet-tests');
-  if(bld && ciSnippetBuild[ci]) {
-    var copyBtnB = bld.querySelector('.copy-btn');
-    bld.innerHTML = '';
-    bld.appendChild(copyBtnB);
-    var div = document.createElement('div');
-    div.innerHTML = ciSnippetBuild[ci];
-    bld.appendChild(div);
+  chosenCI=ci;
+  document.querySelectorAll('.ci-card').forEach(function(c){ c.classList.toggle('sel',c.dataset.ci===ci); });
+  document.getElementById('btn-step2-next').disabled=false;
+  var lbl=document.getElementById('ci-label');
+  if(lbl)lbl.textContent=ciLabels[ci]||'CI';
+  var bld=document.getElementById('snippet-build');
+  var tst=document.getElementById('snippet-tests');
+  if(bld&&ciSnippetBuild[ci]){
+    var cb=bld.querySelector('.copy-btn');
+    bld.innerHTML='';
+    bld.appendChild(cb);
+    var d=document.createElement('div');
+    d.innerHTML=ciSnippetBuild[ci];
+    bld.appendChild(d);
   }
-  if(tst && ciSnippetTests[ci]) {
-    var copyBtnT = tst.querySelector('.copy-btn');
-    tst.innerHTML = '';
-    tst.appendChild(copyBtnT);
-    var div2 = document.createElement('div');
-    div2.innerHTML = ciSnippetTests[ci];
-    tst.appendChild(div2);
+  if(tst&&ciSnippetTests[ci]){
+    var ct=tst.querySelector('.copy-btn');
+    tst.innerHTML='';
+    tst.appendChild(ct);
+    var d2=document.createElement('div');
+    d2.innerHTML=ciSnippetTests[ci];
+    tst.appendChild(d2);
   }
 }
 
-function copyCode(btn, text) {
-  var orig = btn.textContent;
-  var fallback = btn.closest('.code-block').innerText.replace(orig,'').trim();
-  var target = text || fallback;
-  try {
-    navigator.clipboard.writeText(target).then(function(){
-      btn.textContent = 'Copied!';
-      setTimeout(function(){ btn.textContent = 'Copy'; }, 1800);
-    });
-  } catch(e) {
-    btn.textContent = 'Copied!';
-    setTimeout(function(){ btn.textContent = 'Copy'; }, 1800);
-  }
+function copyCode(btn) {
+  var block=btn.closest('.code-block');
+  var text=block.innerText.replace(/^Copy\n?/,'').trim();
+  try{navigator.clipboard.writeText(text);}catch(e){}
+  btn.textContent='Copied!';
+  setTimeout(function(){btn.textContent='Copy';},1800);
 }
 
 function toggleShareForm(id) {
-  var form = document.getElementById(id);
-  if(!form) return;
-  var isOpen = form.classList.contains('open');
-  form.classList.toggle('open', !isOpen);
+  document.getElementById(id).classList.toggle('open');
 }
 
 function sendShare(id) {
-  var emailEl = document.getElementById(id+'-email');
-  var sentEl = document.getElementById(id+'-sent');
-  if(!emailEl || !emailEl.value) {
-    emailEl.style.borderColor = 'var(--red)';
-    return;
+  var emailEl=document.getElementById(id+'-email');
+  if(!emailEl||!emailEl.value){emailEl.style.borderColor='var(--red)';return;}
+  var sentEl=document.getElementById(id+'-sent');
+  if(sentEl){
+    sentEl.style.display='flex';
+    emailEl.style.display='none';
+    document.getElementById(id).querySelectorAll('button,label').forEach(function(e){e.style.display='none';});
   }
-  if(sentEl) {
-    sentEl.style.display = 'flex';
-    if(emailEl) emailEl.style.display = 'none';
-    var form = document.getElementById(id);
-    var btns = form.querySelectorAll('button');
-    btns.forEach(function(b){ b.style.display='none'; });
-    var label = form.querySelector('label');
-    if(label) label.style.display='none';
-  }
+}
+
+function showOnboarding() {
+  document.getElementById('ob-overlay').style.display='flex';
+  document.getElementById('bg-content').classList.add('blurred');
 }
 
 function completeOnboarding() {
   clearTimeout(autoTimer);
-  var overlay = document.getElementById('ob-overlay');
-  if(overlay) overlay.style.display = 'none';
-  var bgContent = document.getElementById('bg-content');
-  if(bgContent) bgContent.classList.remove('blurred');
-  var progressBar = document.getElementById('setup-progress-bar');
-  if(progressBar) progressBar.style.display = 'none';
-  var badge = document.getElementById('setup-badge-main');
-  if(badge){ badge.textContent = '✓ Connected'; badge.className = 'setup-badge done'; }
-  var navBadge = document.getElementById('setup-badge');
-  if(navBadge) navBadge.style.display = 'none';
-  var fab = document.getElementById('restart-fab');
-  if(fab) fab.style.display = 'flex';
+  document.getElementById('ob-overlay').style.display='none';
+  document.getElementById('bg-content').classList.remove('blurred');
+  document.getElementById('setup-progress-bar').style.display='none';
+  var b=document.getElementById('setup-badge-main');
+  if(b){b.textContent='✓ Connected';b.className='setup-badge done';}
+  var nb=document.getElementById('setup-badge');
+  if(nb)nb.style.display='none';
+  document.getElementById('restart-fab').style.display='flex';
 }
 
-function showOnboarding() {
-  var overlay = document.getElementById('ob-overlay');
-  if(overlay) overlay.style.display = 'flex';
-  var bgContent = document.getElementById('bg-content');
-  if(bgContent) bgContent.classList.add('blurred');
-}
-
-function restartOnboarding() {
+function restartAll() {
+  // Reset to screen 1
   clearTimeout(autoTimer);
-  currentStep = 1;
-  chosenCI = null;
-  document.querySelectorAll('.sp').forEach(function(p){ p.classList.remove('active'); });
-  document.getElementById('step1').classList.add('active');
-  updateStepIndicator(1);
-  document.querySelectorAll('.ci-card').forEach(function(c){ c.classList.remove('sel'); });
-  document.getElementById('btn-step2-next').disabled = true;
-  var ci = document.getElementById('ci-label');
-  if(ci) ci.textContent = 'CI';
-  document.querySelectorAll('.share-form').forEach(function(f){ f.classList.remove('open'); });
-  document.querySelectorAll('.share-sent').forEach(function(s){ s.style.display='none'; });
-  var overlay = document.getElementById('ob-overlay');
-  if(overlay) overlay.style.display = 'flex';
-  var bg = document.getElementById('bg-content');
-  if(bg) bg.classList.add('blurred');
-  var badge = document.getElementById('setup-badge-main');
-  if(badge){ badge.textContent = '⚙ Setup required'; badge.className = 'setup-badge'; }
-  var navBadge = document.getElementById('setup-badge');
-  if(navBadge) navBadge.style.display = '';
-  var pb = document.getElementById('setup-progress-bar');
-  if(pb) pb.style.display = 'flex';
-  var fab = document.getElementById('restart-fab');
-  if(fab) fab.style.display = 'none';
-  var fill = document.getElementById('sp-fill');
-  if(fill) fill.style.width = '0%';
-  var pct = document.getElementById('sp-pct');
-  if(pct) pct.textContent = '0%';
+  document.getElementById('app').classList.remove('show');
+  setTimeout(function(){
+    document.getElementById('app').style.display='none';
+    document.getElementById('s1').classList.replace('hide','show');
+    currentScreen='s1';
+    ['s2','s3'].forEach(function(id){document.getElementById(id).classList.replace('show','hide');});
+    // Reset onboarding state
+    currentStep=1; chosenCI=null;
+    document.querySelectorAll('.sp').forEach(function(p){p.classList.remove('active');});
+    document.getElementById('step1').classList.add('active');
+    updateStepIndicator(1);
+    document.querySelectorAll('.ci-card').forEach(function(c){c.classList.remove('sel');});
+    document.getElementById('btn-step2-next').disabled=true;
+    document.getElementById('ci-label').textContent='CI';
+    document.getElementById('ob-overlay').style.display='flex';
+    document.getElementById('bg-content').classList.add('blurred');
+    var b=document.getElementById('setup-badge-main');
+    if(b){b.textContent='⚙ Setup required';b.className='setup-badge';}
+    var nb=document.getElementById('setup-badge');
+    if(nb)nb.style.display='';
+    document.getElementById('setup-progress-bar').style.display='flex';
+    document.getElementById('sp-fill').style.width='0%';
+    document.getElementById('sp-pct').textContent='0%';
+    document.getElementById('restart-fab').style.display='none';
+    document.getElementById('v-continue-btn').classList.remove('visible');
+    document.getElementById('auth-email').value='';
+  }, 400);
 }
 </script>
 </body>
