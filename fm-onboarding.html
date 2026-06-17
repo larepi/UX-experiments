@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CloudBees Feature Management — Interactive Onboarding</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍉</text></svg>"/>
 <style>
 /* ═══════════════════════════════════════════════════
    DESIGN TOKENS — Light (default) & Dark
@@ -747,9 +748,389 @@ a { text-decoration: none; }
   .ob-banner { flex-direction: column; }
   .upgrade-cta { flex-direction: column; }
 }
+/* ═══════════════════════════════════════════════════
+   PRE-APP SCREENS  (screenshot simulation flow)
+═══════════════════════════════════════════════════ */
+#pre-screens{position:fixed;inset:0;z-index:9999;font-family:Arial,sans-serif;}
+.ps{position:absolute;inset:0;display:none;overflow-y:auto;}
+.ps.ps-on{display:flex;}
+
+/* ── Screen 1: landing page ── */
+#ps-land{flex-direction:column;background:#0B0B10;color:#fff;}
+.ps-topnav{height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 36px;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0;position:relative;z-index:2;}
+.ps-cb-logo{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;color:#fff;}
+.ps-cb-logo svg{width:28px;height:28px;}
+.ps-nav-links{display:flex;gap:0;}
+.ps-nl{padding:6px 14px;font-size:13px;color:rgba(255,255,255,.7);cursor:pointer;display:flex;align-items:center;gap:3px;}
+.ps-nl:hover{color:#fff;}
+.ps-nl-chev{font-size:9px;opacity:.5;}
+.ps-btn-demo{padding:10px 22px;border-radius:24px;background:#0069FF;border:none;color:#fff;font-size:13px;font-weight:600;cursor:pointer;}
+.ps-btn-demo:hover{background:#0052CC;}
+
+.ps-hero{flex:1;display:flex;position:relative;min-height:600px;}
+.ps-hero::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 28% 110%,rgba(110,45,215,.7) 0%,rgba(55,28,155,.35) 40%,transparent 62%),
+             radial-gradient(ellipse 55% 48% at 65% 110%,rgba(22,48,210,.55) 0%,transparent 52%);
+  pointer-events:none;z-index:0;}
+.ps-hl{flex:0 0 52%;padding:70px 0 70px 72px;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:1;}
+.ps-hr{flex:1;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;padding:40px 64px 40px 0;}
+.ps-eyebrow{font-size:10px;font-weight:700;letter-spacing:.12em;color:rgba(255,255,255,.38);text-transform:uppercase;margin-bottom:18px;}
+.ps-h1{font-size:52px;font-weight:800;line-height:1.09;color:#fff;margin-bottom:22px;max-width:530px;}
+.ps-body{font-size:14.5px;line-height:1.75;color:rgba(255,255,255,.58);max-width:470px;margin-bottom:34px;}
+.ps-ctas{display:flex;gap:12px;}
+.ps-cta-demo{padding:13px 30px;border-radius:30px;background:#0069FF;border:none;color:#fff;font-size:14px;font-weight:700;cursor:pointer;}
+.ps-cta-demo:hover{background:#0052CC;}
+.ps-cta-free{padding:13px 30px;border-radius:30px;background:transparent;border:1.5px solid rgba(255,255,255,.35);color:#fff;font-size:14px;font-weight:600;cursor:pointer;}
+.ps-cta-free:hover{background:rgba(255,255,255,.07);}
+
+/* Control Tower + Coverage cards */
+.ct-stack{position:relative;width:340px;height:260px;}
+.ct-card{position:absolute;top:0;left:0;width:310px;background:#1B1C2B;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:20px;z-index:2;box-shadow:0 24px 64px rgba(0,0,0,.55);}
+.ct-card-hd{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:700;color:#fff;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:14px;}
+.ct-card-icon{width:28px;height:28px;border-radius:7px;background:rgba(0,105,255,.15);border:1px solid rgba(0,105,255,.28);display:flex;align-items:center;justify-content:center;font-size:13px;}
+.ct-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05);}
+.ct-row:last-of-type{border-bottom:none;}
+.ct-lbl{font-size:13px;color:rgba(255,255,255,.75);}
+.ct-tog{width:38px;height:21px;border-radius:11px;background:#22C55E;position:relative;flex-shrink:0;}
+.ct-tog::after{content:'';position:absolute;top:2.5px;right:2.5px;width:16px;height:16px;border-radius:50%;background:#fff;}
+.ct-slider-row{flex-direction:column;align-items:stretch;gap:0;}
+.ct-track{height:4px;background:rgba(255,255,255,.1);border-radius:2px;position:relative;margin:8px 0 5px;}
+.ct-fill{position:absolute;left:0;top:0;bottom:0;width:50%;background:#0069FF;border-radius:2px;}
+.ct-thumb{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:15px;height:15px;border-radius:50%;background:#fff;border:2.5px solid #0069FF;box-shadow:0 2px 6px rgba(0,0,0,.5);}
+.ct-marks{display:flex;justify-content:space-between;font-size:9.5px;color:rgba(255,255,255,.28);}
+.ct-kill{width:100%;margin-top:14px;padding:11px;border-radius:9px;background:#5A1818;border:1px solid rgba(255,80,80,.2);color:#FF7070;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;}
+
+.cov-card{position:absolute;right:-30px;bottom:-44px;width:188px;background:#111220;border:1px solid rgba(255,255,255,.09);border-radius:13px;padding:14px 16px;z-index:3;box-shadow:0 20px 52px rgba(0,0,0,.65);}
+.cov-lbl{font-size:9px;font-weight:700;letter-spacing:.06em;color:rgba(255,255,255,.4);text-transform:uppercase;display:flex;align-items:center;gap:5px;margin-bottom:10px;}
+.cov-donut-wrap{position:relative;display:flex;align-items:center;justify-content:center;}
+.cov-pct{position:absolute;font-size:20px;font-weight:700;color:#fff;}
+
+/* ── Screens 2 & 3: auth split layout ── */
+#ps-signin,#ps-verify{flex-direction:row;}
+.ps-al{flex:0 0 47%;display:flex;flex-direction:column;padding:48px 64px;min-height:100vh;}
+#ps-signin .ps-al{background:#fff;color:#1A1A1A;}
+#ps-verify .ps-al{background:#fff;color:#1A1A1A;}
+.ps-ar{flex:1;background:#EDE3FF;display:flex;flex-direction:column;padding:56px 60px;}
+.ps-al-logo{display:flex;flex-direction:column;gap:3px;margin-bottom:auto;}
+.ps-al-logo-row{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#1A1A1A;}
+.ps-al-logo-sub{font-size:12.5px;color:rgba(0,0,0,.42);margin-left:32px;}
+.ps-cb-logo-dark svg{width:26px;height:26px;}
+
+.ps-form{flex:1;display:flex;flex-direction:column;justify-content:center;max-width:384px;margin:0 auto;width:100%;}
+.ps-tabs{display:flex;border-bottom:1px solid #E0E0E0;margin-bottom:30px;}
+.ps-tab{padding:10px 22px;font-size:15px;cursor:pointer;color:#9E9E9E;border-bottom:2.5px solid transparent;margin-bottom:-1px;}
+.ps-tab.active{font-weight:700;color:#1A1A1A;border-bottom-color:#0069FF;}
+.ps-sso-label{font-size:11px;font-weight:700;letter-spacing:.1em;color:#AAAAAA;text-align:center;margin-bottom:12px;}
+.ps-sso-btns{display:flex;gap:10px;margin-bottom:20px;}
+.ps-sso-btn{flex:1;padding:11px 12px;border-radius:8px;background:#F4F4F4;border:1px solid #E0E0E0;color:#1A1A1A;font-size:13.5px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;}
+.ps-sso-btn:hover{background:#EBEBEB;}
+.ps-or{display:flex;align-items:center;gap:10px;margin:14px 0;font-size:11px;font-weight:700;letter-spacing:.1em;color:#BBBBBB;}
+.ps-or::before,.ps-or::after{content:'';flex:1;height:1px;background:#E8E8E8;}
+.ps-input-wrap{margin-bottom:14px;position:relative;border:1px solid #C8C8C8;border-radius:6px;padding:8px 14px;}
+.ps-input-label{font-size:11.5px;color:#999;display:block;margin-bottom:2px;}
+.ps-input{width:100%;border:none;outline:none;font-size:14.5px;color:#1A1A1A;background:transparent;padding:0;}
+.ps-submit{width:100%;padding:13px;border-radius:8px;background:#1A56DB;border:none;color:#fff;font-size:15px;font-weight:600;cursor:pointer;margin-top:6px;}
+.ps-submit:hover{background:#1447C0;}
+.ps-terms{font-size:12px;color:#888;text-align:center;margin-top:18px;line-height:1.65;}
+.ps-terms a{color:#1A1A1A;font-weight:600;}
+
+/* Verification */
+.ps-verify-center{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
+.ps-verify-h{font-size:30px;font-weight:700;color:#1A1A1A;margin-bottom:18px;}
+.ps-verify-p{font-size:14px;line-height:1.75;color:#555;max-width:380px;margin:0 auto 30px;}
+.ps-verify-em{color:#1A1A1A;font-weight:600;}
+.ps-verify-primary{width:100%;max-width:400px;padding:14px;border-radius:8px;background:#1A56DB;border:none;color:#fff;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:10px;display:block;}
+.ps-verify-secondary{width:100%;max-width:400px;padding:13px;border-radius:8px;background:#EEF2FF;border:none;color:#1A56DB;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:0;}
+.ps-verify-support{font-size:12.5px;color:#999;margin-top:20px;}
+.ps-verify-support a{color:#1A56DB;}
+.ps-sim-btn{width:100%;max-width:400px;padding:16px 24px;border-radius:10px;background:#1E8A47;border:none;color:#fff;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-top:20px;opacity:0;transform:translateY(8px);transition:opacity .4s ease, transform .4s ease, background .15s;}
+.ps-sim-btn.ps-sim-visible{opacity:1;transform:translateY(0);}
+.ps-sim-btn:hover{background:#177A3D;}
+
+/* Right panel */
+.ps-ar-badge{display:inline-flex;align-items:center;background:#1A56DB;color:#fff;font-size:13px;font-weight:600;padding:6px 16px;border-radius:20px;margin-bottom:24px;width:fit-content;}
+.ps-ar-h{font-size:34px;font-weight:800;color:#1A1A1A;line-height:1.18;margin-bottom:14px;max-width:400px;}
+.ps-ar-sub-strong{font-size:14.5px;font-weight:700;color:#1A1A1A;margin-bottom:8px;}
+.ps-ar-sub{font-size:14px;color:#555;line-height:1.65;margin-bottom:28px;max-width:390px;}
+
+/* Mini Unify Analytics screenshot */
+.mini-unify{background:#13141F;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.08);width:100%;max-width:460px;box-shadow:0 12px 40px rgba(0,0,0,.35);}
+.mu-chrome{height:24px;background:#1A1B2C;display:flex;align-items:center;padding:0 10px;gap:5px;border-bottom:1px solid rgba(255,255,255,.07);}
+.mu-dot{width:6px;height:6px;border-radius:50%;}
+.mu-breadcrumb{font-size:8.5px;color:rgba(255,255,255,.3);padding-left:6px;}
+.mu-sidebar{position:absolute;left:0;top:0;bottom:0;width:28px;background:#0F1020;border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;align-items:center;padding-top:8px;gap:7px;}
+.mu-si{width:14px;height:14px;border-radius:3px;background:rgba(255,255,255,.08);}
+.mu-si.active{background:rgba(0,105,255,.4);}
+.mu-main-wrap{display:flex;position:relative;}
+.mu-main{flex:1;padding:8px 8px 8px 36px;}
+.mu-page-title{font-size:11px;font-weight:700;color:#fff;margin-bottom:5px;}
+.mu-tabbar{display:flex;gap:1px;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:5px;padding-bottom:0;}
+.mu-tab{font-size:7px;padding:3px 6px;color:rgba(255,255,255,.35);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;}
+.mu-tab.a{color:#0069FF;border-bottom-color:#0069FF;}
+.mu-toolbar{display:flex;align-items:center;gap:4px;margin-bottom:6px;}
+.mu-filter-btn{font-size:7px;background:#1A56DB;color:#fff;padding:2px 7px;border-radius:3px;display:flex;align-items:center;gap:3px;}
+.mu-search{flex:0 0 80px;height:15px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:3px;font-size:6.5px;color:rgba(255,255,255,.3);display:flex;align-items:center;padding:0 5px;}
+.mu-create-btn{margin-left:auto;font-size:7px;background:#0069FF;color:#fff;padding:3px 7px;border-radius:3px;}
+.mu-cards{display:flex;flex-direction:column;gap:4px;}
+.mu-row{display:flex;gap:4px;}
+.mc{flex:1;background:rgba(255,255,255,.04);border-radius:4px;padding:5px 6px;min-height:56px;}
+.mc-t{font-size:7px;color:rgba(255,255,255,.5);margin-bottom:4px;}
+.mc-donut{display:flex;align-items:center;gap:4px;}
+.mc-num{font-size:11px;font-weight:700;color:#fff;}
+.mc-sub{font-size:6px;color:rgba(255,255,255,.35);}
+.mc-legend{display:flex;flex-direction:column;gap:2px;}
+.mc-leg-item{font-size:5.5px;color:rgba(255,255,255,.4);display:flex;align-items:center;gap:2px;}
+.mc-leg-dot{width:4px;height:4px;border-radius:50%;}
+.mc-bars{display:flex;align-items:flex-end;gap:1.5px;height:36px;margin-top:2px;}
+.mc-bar{border-radius:1px 1px 0 0;}
+.mc-lines{height:34px;display:flex;align-items:flex-end;gap:1px;margin-top:2px;overflow:hidden;}
+.mc-ln-seg{border-radius:0;width:3px;}
+.mc-hbars{display:flex;flex-direction:column;gap:2px;margin-top:4px;}
+.mc-hbar-row{display:flex;align-items:center;gap:3px;}
+.mc-hbar-label{font-size:5.5px;color:rgba(255,255,255,.3);width:28px;text-align:right;flex-shrink:0;}
+.mc-hbar{height:4px;border-radius:2px;background:#22C55E;}
+
 </style>
 </head>
 <body>
+<!-- ═══════════════════════════════════════════════════════
+     PRE-APP SCREENS
+═══════════════════════════════════════════════════════ -->
+<div id="pre-screens">
+
+<!-- ┌── Screen 1: FM Landing Page ──────────────────────────────────────────┐ -->
+<div class="ps ps-on" id="ps-land">
+  <nav class="ps-topnav">
+    <div class="ps-cb-logo">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px"><rect width="32" height="32" rx="6" fill="#0069FF"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="13" font-weight="800" font-family="Arial">CB</text></svg>
+      CloudBees
+    </div>
+    <div class="ps-nav-links">
+      <span class="ps-nl">Product <span class="ps-nl-chev">&#9662;</span></span>
+      <span class="ps-nl">Solutions <span class="ps-nl-chev">&#9662;</span></span>
+      <span class="ps-nl">Resources <span class="ps-nl-chev">&#9662;</span></span>
+      <span class="ps-nl">About <span class="ps-nl-chev">&#9662;</span></span>
+    </div>
+    <button class="ps-btn-demo" onclick="goToScreen('signin')">Book a demo</button>
+  </nav>
+  <div class="ps-hero">
+    <div class="ps-hl">
+      <p class="ps-eyebrow">CloudBees Unify Feature Management</p>
+      <h1 class="ps-h1">Deliver innovation faster&mdash;without losing control</h1>
+      <p class="ps-body">Shipping software isn&rsquo;t the hard part anymore. Managing risk, visibility, and accountability at scale is. CloudBees Unify Feature Management helps organizations deliver customer value continuously&mdash;while maintaining the control leaders need to protect reliability, trust, and the business.</p>
+      <div class="ps-ctas">
+        <button class="ps-cta-demo" onclick="goToScreen('signin')">Book a demo</button>
+        <button class="ps-cta-free" onclick="goToScreen('signin')">Try for free</button>
+      </div>
+    </div>
+    <div class="ps-hr">
+      <div class="ct-stack">
+        <div class="ct-card">
+          <div class="ct-card-hd"><div class="ct-card-icon">&#10696;</div> Control Tower</div>
+          <div class="ct-row">
+            <span class="ct-lbl">New Checkout UI</span>
+            <div class="ct-tog"></div>
+          </div>
+          <div class="ct-row" style="flex-direction:column;align-items:stretch;gap:0;padding:10px 0;">
+            <span class="ct-lbl">Rollout</span>
+            <div class="ct-track"><div class="ct-fill"></div><div class="ct-thumb"></div></div>
+            <div class="ct-marks"><span>1%</span><span>10%</span><span>50%</span><span>100%</span></div>
+          </div>
+          <button class="ct-kill">&#9889; Kill Switch</button>
+        </div>
+        <div class="cov-card">
+          <div class="cov-lbl">&#128100; User Coverage</div>
+          <div class="cov-donut-wrap">
+            <svg width="130" height="130" viewBox="0 0 130 130">
+              <circle cx="65" cy="65" r="48" fill="none" stroke="#252638" stroke-width="14"/>
+              <circle cx="65" cy="65" r="48" fill="none" stroke="#0069FF" stroke-width="14" stroke-dasharray="150.8 150.8" stroke-dashoffset="0" transform="rotate(-90 65 65)" stroke-linecap="round"/>
+              <circle cx="65" cy="13" r="11" fill="#1E2030" stroke="#0069FF" stroke-width="1.5"/>
+              <text x="65" y="17" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="10">&#9901;</text>
+              <circle cx="117" cy="65" r="11" fill="#1E2030" stroke="#0069FF" stroke-width="1.5"/>
+              <text x="117" y="69" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="10">&#9901;</text>
+              <circle cx="13" cy="65" r="11" fill="#1E2030" stroke="#333" stroke-width="1.5"/>
+              <text x="13" y="69" text-anchor="middle" fill="rgba(255,255,255,.25)" font-size="10">&#9901;</text>
+            </svg>
+            <span class="cov-pct">50%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- └────────────────────────────────────────────────────────────────────────┘ -->
+
+<!-- ┌── Screen 2: Sign-in ───────────────────────────────────────────────────┐ -->
+<div class="ps" id="ps-signin">
+  <div class="ps-al">
+    <div class="ps-al-logo">
+      <div class="ps-al-logo-row">
+        <svg width="26" height="26" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="6" fill="#0069FF"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="13" font-weight="800" font-family="Arial">CB</text></svg>
+        CloudBees
+      </div>
+      <span class="ps-al-logo-sub">Your DevSecOps Control Plane</span>
+    </div>
+    <div class="ps-form">
+      <div class="ps-tabs">
+        <span class="ps-tab active">Sign in</span>
+        <span class="ps-tab">Sign up</span>
+      </div>
+      <p class="ps-sso-label">SIGN IN WITH:</p>
+      <div class="ps-sso-btns">
+        <button class="ps-sso-btn">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="#1A1A1A"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          GitHub
+        </button>
+        <button class="ps-sso-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Google
+        </button>
+      </div>
+      <div class="ps-or">OR SIGN IN WITH EMAIL</div>
+      <div class="ps-input-wrap">
+        <label class="ps-input-label">Email</label>
+        <input class="ps-input" type="email" placeholder=""/>
+      </div>
+      <button class="ps-submit" onclick="goToScreen('verify')">Sign in</button>
+      <p class="ps-terms">By signing in, you agree to abide by the CloudBees <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></p>
+    </div>
+  </div>
+  <div class="ps-ar">
+    <span class="ps-ar-badge">Get started for free</span>
+    <h2 class="ps-ar-h">Ship faster. Stay secure. Let AI handle the toil.</h2>
+    <p class="ps-ar-sub-strong">Unify your software delivery without replatforming</p>
+    <p class="ps-ar-sub">CloudBees Unify connects all your DevOps tools into one intelligent control and context plane, giving you security, visibility, and speed without changing how you work.</p>
+    <div class="mini-unify">
+      <div class="mu-chrome">
+        <span class="mu-dot" style="background:#FF5F56"></span>
+        <span class="mu-dot" style="background:#FEBC2E"></span>
+        <span class="mu-dot" style="background:#27C840"></span>
+        <span class="mu-breadcrumb">CloudBees &rsaquo; Analytics &rsaquo; Software delivery activity</span>
+        <span style="margin-left:auto;font-size:7.5px;color:rgba(255,255,255,.3)">Admin settings &#8964;   Jon Swift &#8964;</span>
+      </div>
+      <div class="mu-main-wrap">
+        <div class="mu-sidebar">
+          <div class="mu-si active"></div><div class="mu-si"></div><div class="mu-si"></div>
+          <div class="mu-si"></div><div class="mu-si"></div><div class="mu-si"></div>
+        </div>
+        <div class="mu-main">
+          <div class="mu-page-title">Analytics</div>
+          <div class="mu-tabbar">
+            <span class="mu-tab a">Software delivery activity</span>
+            <span class="mu-tab">Security insights</span>
+            <span class="mu-tab">Flow metrics</span>
+            <span class="mu-tab">Dora metrics</span>
+          </div>
+          <div class="mu-toolbar">
+            <span class="mu-filter-btn">&#8863; Filter</span>
+            <span class="mu-search">&#128269; Type to search</span>
+            <span class="mu-create-btn">Create release</span>
+          </div>
+          <div class="mu-cards">
+            <div class="mu-row">
+              <div class="mc"><div class="mc-t">Components</div><div class="mc-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="12" fill="none" stroke="#2A2A40" stroke-width="6"/><circle cx="17" cy="17" r="12" fill="none" stroke="#806FF6" stroke-width="6" stroke-dasharray="60 15.4" transform="rotate(-90 17 17)"/></svg><div class="mc-legend"><div class="mc-leg-item"><div class="mc-leg-dot" style="background:#666"></div> 8% Inactive</div><div class="mc-leg-item"><div class="mc-leg-dot" style="background:#806FF6"></div> 92% Active</div></div></div></div>
+              <div class="mc"><div class="mc-t">Workflows</div><div class="mc-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="12" fill="none" stroke="#2A2A40" stroke-width="6"/><circle cx="17" cy="17" r="12" fill="none" stroke="#806FF6" stroke-width="6" stroke-dasharray="67 8.4" transform="rotate(-90 17 17)"/></svg><div class="mc-legend"><div class="mc-leg-item"><div class="mc-leg-dot" style="background:#666"></div> 3% Inactive</div><div class="mc-leg-item"><div class="mc-leg-dot" style="background:#806FF6"></div> 97% Active</div></div></div></div>
+              <div class="mc"><div class="mc-t">Workflow runs</div><div class="mc-bars"><div class="mc-bar" style="width:5px;height:32px;background:#E24B4A"></div><div class="mc-bar" style="width:5px;height:18px;background:#22C55E"></div><div class="mc-bar" style="width:5px;height:24px;background:#22C55E"></div><div class="mc-bar" style="width:5px;height:20px;background:#22C55E"></div><div class="mc-bar" style="width:5px;height:28px;background:#22C55E"></div><div class="mc-bar" style="width:5px;height:16px;background:#E24B4A"></div><div class="mc-bar" style="width:5px;height:30px;background:#22C55E"></div></div></div>
+            </div>
+            <div class="mu-row">
+              <div class="mc"><div class="mc-t">Commits trend</div><div class="mc-lines"><div class="mc-ln-seg" style="height:12px;background:#806FF6"></div><div class="mc-ln-seg" style="height:20px;background:#806FF6"></div><div class="mc-ln-seg" style="height:14px;background:#0069FF"></div><div class="mc-ln-seg" style="height:26px;background:#0069FF"></div><div class="mc-ln-seg" style="height:18px;background:#806FF6"></div><div class="mc-ln-seg" style="height:30px;background:#0069FF"></div></div></div>
+              <div class="mc"><div class="mc-t">Pull request trend</div><div class="mc-bars"><div class="mc-bar" style="width:5px;height:14px;background:#22C55E"></div><div class="mc-bar" style="width:5px;height:22px;background:#806FF6"></div><div class="mc-bar" style="width:5px;height:10px;background:#E24B4A"></div><div class="mc-bar" style="width:5px;height:18px;background:#22C55E"></div><div class="mc-bar" style="width:5px;height:26px;background:#806FF6"></div></div></div>
+              <div class="mc"><div class="mc-t">Code churn</div><div class="mc-lines"><div class="mc-ln-seg" style="height:20px;background:#F59E0B"></div><div class="mc-ln-seg" style="height:28px;background:#F59E0B"></div><div class="mc-ln-seg" style="height:14px;background:#E24B4A"></div><div class="mc-ln-seg" style="height:24px;background:#F59E0B"></div><div class="mc-ln-seg" style="height:18px;background:#E24B4A"></div></div></div>
+            </div>
+            <div class="mu-row">
+              <div class="mc"><div class="mc-t">Build duration</div><div class="mc-hbars"><div class="mc-hbar-row"><span class="mc-hbar-label">pipeline-a</span><div class="mc-hbar" style="width:78%"></div></div><div class="mc-hbar-row"><span class="mc-hbar-label">pipeline-b</span><div class="mc-hbar" style="width:52%"></div></div><div class="mc-hbar-row"><span class="mc-hbar-label">deploy-svc</span><div class="mc-hbar" style="width:88%"></div></div></div></div>
+              <div class="mc"><div class="mc-t">Cycle time</div><div class="mc-hbars"><div class="mc-hbar-row"><span class="mc-hbar-label">Coding</span><div class="mc-hbar" style="width:72%;background:#0069FF"></div></div><div class="mc-hbar-row"><span class="mc-hbar-label">Review</span><div class="mc-hbar" style="width:60%;background:#806FF6"></div></div><div class="mc-hbar-row"><span class="mc-hbar-label">Deploy</span><div class="mc-hbar" style="width:44%;background:#F59E0B"></div></div></div></div>
+              <div class="mc" style="display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px"><div style="font-size:18px;opacity:.2">&#128196;</div><div style="font-size:7px;color:rgba(255,255,255,.2)">No data</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- └────────────────────────────────────────────────────────────────────────┘ -->
+
+<!-- ┌── Screen 3: Verification email sent ──────────────────────────────────┐ -->
+<div class="ps" id="ps-verify">
+  <div class="ps-al">
+    <div class="ps-al-logo">
+      <div class="ps-al-logo-row">
+        <svg width="26" height="26" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="6" fill="#0069FF"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="13" font-weight="800" font-family="Arial">CB</text></svg>
+        CloudBees
+      </div>
+      <span class="ps-al-logo-sub">Your DevSecOps Control Plane</span>
+    </div>
+    <div class="ps-verify-center">
+      <h2 class="ps-verify-h">Verification email sent!</h2>
+      <p class="ps-verify-p">
+        We&rsquo;ve sent a verification email to<br>
+        <span class="ps-verify-em">brepisofernandez@cloudbees.com</span>.<br><br>
+        Please check your inbox and follow the link to verify your account and start using CloudBees products and services.<br><br>
+        If you did not receive a verification email, or if the link is expired, you may request a new verification email below.
+      </p>
+      <button class="ps-verify-primary" onclick="this.textContent='Sent! Check your inbox ✓'">Resend verification email</button>
+      <button class="ps-verify-secondary" onclick="goToScreen('signin')">&larr; Back to sign in</button>
+      <p class="ps-verify-support">Problems signing up? Contact us at <a href="#">support@cloudbees.com</a> for further help.</p>
+      <button class="ps-sim-btn" id="ps-sim-btn" onclick="goToScreen('app')">&#10003; Continue to FM Playground &rarr;</button>
+    </div>
+  </div>
+  <div class="ps-ar">
+    <span class="ps-ar-badge">Get started for free</span>
+    <h2 class="ps-ar-h">Ship faster. Stay secure. Let AI handle the toil.</h2>
+    <p class="ps-ar-sub-strong">Unify your software delivery without replatforming</p>
+    <p class="ps-ar-sub">CloudBees Unify connects all your DevOps tools into one intelligent control and context plane, giving you security, visibility, and speed without changing how you work.</p>
+    <div class="mini-unify">
+      <div class="mu-chrome">
+        <span class="mu-dot" style="background:#FF5F56"></span>
+        <span class="mu-dot" style="background:#FEBC2E"></span>
+        <span class="mu-dot" style="background:#27C840"></span>
+        <span class="mu-breadcrumb">CloudBees &rsaquo; Analytics &rsaquo; Software delivery activity</span>
+        <span style="margin-left:auto;font-size:7.5px;color:rgba(255,255,255,.3)">Admin settings &#8964;   Jon Swift &#8964;</span>
+      </div>
+      <div class="mu-main-wrap">
+        <div class="mu-sidebar">
+          <div class="mu-si active"></div><div class="mu-si"></div><div class="mu-si"></div>
+          <div class="mu-si"></div><div class="mu-si"></div><div class="mu-si"></div>
+        </div>
+        <div class="mu-main">
+          <div class="mu-page-title">Analytics</div>
+          <div class="mu-tabbar">
+            <span class="mu-tab a">Software delivery activity</span>
+            <span class="mu-tab">Security insights</span>
+            <span class="mu-tab">Flow metrics</span>
+            <span class="mu-tab">Dora metrics</span>
+          </div>
+          <div class="mu-toolbar">
+            <span class="mu-filter-btn">&#8863; Filter</span>
+            <span class="mu-search">&#128269; Type to search</span>
+            <span class="mu-create-btn">Create release</span>
+          </div>
+          <div class="mu-cards">
+            <div class="mu-row">
+              <div class="mc"><div class="mc-t">Components</div><div class="mc-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="12" fill="none" stroke="#2A2A40" stroke-width="6"/><circle cx="17" cy="17" r="12" fill="none" stroke="#806FF6" stroke-width="6" stroke-dasharray="60 15.4" transform="rotate(-90 17 17)"/></svg><div class="mc-legend"><div class="mc-leg-item"><div class="mc-leg-dot" style="background:#666"></div> 8% Inactive</div><div class="mc-leg-item"><div class="mc-leg-dot" style="background:#806FF6"></div> 92% Active</div></div></div></div>
+              <div class="mc"><div class="mc-t">Workflows</div><div class="mc-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="12" fill="none" stroke="#2A2A40" stroke-width="6"/><circle cx="17" cy="17" r="12" fill="none" stroke="#806FF6" stroke-width="6" stroke-dasharray="67 8.4" transform="rotate(-90 17 17)"/></svg><div class="mc-legend"><div class="mc-leg-item"><div class="mc-leg-dot" style="background:#666"></div> 3% Inactive</div><div class="mc-leg-item"><div class="mc-leg-dot" style="background:#806FF6"></div> 97% Active</div></div></div></div>
+              <div class="mc"><div class="mc-t">Workflow runs</div><div class="mc-bars"><div class="mc-bar" style="width:5px;height:32px;background:#E24B4A"></div><div class="mc-bar" style="width:5px;height:18px;background:#22C55E"></div><div class="mc-bar" style="width:5px;height:24px;background:#22C55E"></div><div class="mc-bar" style="width:5px;height:20px;background:#22C55E"></div><div class="mc-bar" style="width:5px;height:28px;background:#22C55E"></div><div class="mc-bar" style="width:5px;height:16px;background:#E24B4A"></div><div class="mc-bar" style="width:5px;height:30px;background:#22C55E"></div></div></div>
+            </div>
+            <div class="mu-row">
+              <div class="mc"><div class="mc-t">Commits trend</div><div class="mc-lines"><div class="mc-ln-seg" style="height:12px;background:#806FF6"></div><div class="mc-ln-seg" style="height:20px;background:#806FF6"></div><div class="mc-ln-seg" style="height:14px;background:#0069FF"></div><div class="mc-ln-seg" style="height:26px;background:#0069FF"></div><div class="mc-ln-seg" style="height:18px;background:#806FF6"></div><div class="mc-ln-seg" style="height:30px;background:#0069FF"></div></div></div>
+              <div class="mc"><div class="mc-t">Pull request trend</div><div class="mc-bars"><div class="mc-bar" style="width:5px;height:14px;background:#22C55E"></div><div class="mc-bar" style="width:5px;height:22px;background:#806FF6"></div><div class="mc-bar" style="width:5px;height:10px;background:#E24B4A"></div><div class="mc-bar" style="width:5px;height:18px;background:#22C55E"></div><div class="mc-bar" style="width:5px;height:26px;background:#806FF6"></div></div></div>
+              <div class="mc"><div class="mc-t">Code churn</div><div class="mc-lines"><div class="mc-ln-seg" style="height:20px;background:#F59E0B"></div><div class="mc-ln-seg" style="height:28px;background:#F59E0B"></div><div class="mc-ln-seg" style="height:14px;background:#E24B4A"></div><div class="mc-ln-seg" style="height:24px;background:#F59E0B"></div><div class="mc-ln-seg" style="height:18px;background:#E24B4A"></div></div></div>
+            </div>
+            <div class="mu-row">
+              <div class="mc"><div class="mc-t">Build duration</div><div class="mc-hbars"><div class="mc-hbar-row"><span class="mc-hbar-label">pipeline-a</span><div class="mc-hbar" style="width:78%"></div></div><div class="mc-hbar-row"><span class="mc-hbar-label">pipeline-b</span><div class="mc-hbar" style="width:52%"></div></div><div class="mc-hbar-row"><span class="mc-hbar-label">deploy-svc</span><div class="mc-hbar" style="width:88%"></div></div></div></div>
+              <div class="mc"><div class="mc-t">Cycle time</div><div class="mc-hbars"><div class="mc-hbar-row"><span class="mc-hbar-label">Coding</span><div class="mc-hbar" style="width:72%;background:#0069FF"></div></div><div class="mc-hbar-row"><span class="mc-hbar-label">Review</span><div class="mc-hbar" style="width:60%;background:#806FF6"></div></div><div class="mc-hbar-row"><span class="mc-hbar-label">Deploy</span><div class="mc-hbar" style="width:44%;background:#F59E0B"></div></div></div></div>
+              <div class="mc" style="display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px"><div style="font-size:18px;opacity:.2">&#128196;</div><div style="font-size:7px;color:rgba(255,255,255,.2)">No data</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- └────────────────────────────────────────────────────────────────────────┘ -->
+
+</div><!-- /pre-screens -->
+
 <div class="app" id="appRoot">
 
   <!-- ══════════════════════════════
@@ -1719,6 +2100,28 @@ function showToast(msg) {
   t.style.transform='translateY(0)';t.style.opacity='1';
   clearTimeout(window._tt);
   window._tt=setTimeout(()=>{t.style.transform='translateY(70px)';t.style.opacity='0';},3000);
+}
+
+// ─── Pre-screen navigation ────────────────────────────────────────
+function goToScreen(id) {
+  document.querySelectorAll('.ps').forEach(s => s.classList.remove('ps-on'));
+  if (id === 'app') {
+    const overlay = document.getElementById('pre-screens');
+    overlay.style.transition = 'opacity 0.3s ease';
+    overlay.style.opacity = '0';
+    setTimeout(() => { overlay.style.display = 'none'; }, 320);
+  } else {
+    const el = document.getElementById('ps-' + id);
+    if (el) { el.classList.add('ps-on'); el.scrollTop = 0; }
+    // Delayed green button on verification screen
+    if (id === 'verify') {
+      const btn = document.getElementById('ps-sim-btn');
+      if (btn) {
+        btn.classList.remove('ps-sim-visible');
+        setTimeout(() => btn.classList.add('ps-sim-visible'), 1800);
+      }
+    }
+  }
 }
 
 // ─── Init ─────────────────────────────────────────────────────────
