@@ -890,6 +890,49 @@ a { text-decoration: none; }
 .mc-hbar-label{font-size:5.5px;color:rgba(255,255,255,.3);width:28px;text-align:right;flex-shrink:0;}
 .mc-hbar{height:4px;border-radius:2px;background:#22C55E;}
 
+/* Auth tab switching */
+.ps-ar-panel{transition:opacity .25s ease, transform .25s ease;}
+.ps-ar-panel.ps-hidden{display:none;}
+.ps-form-field{transition:opacity .2s ease;}
+.ps-form-field.ps-hidden{display:none;}
+/* Sign-in returning panel */
+.ps-signin-welcome{margin-top:auto;margin-bottom:auto;}
+.ps-welcome-h{font-size:42px;font-weight:800;color:#1A1A1A;line-height:1.1;margin-bottom:18px;}
+.ps-welcome-sub{font-size:15px;color:#666;line-height:1.7;margin-bottom:32px;max-width:360px;}
+.ps-updates-card{background:#fff;border:1px solid #E4E4E4;border-radius:12px;padding:20px 22px;max-width:400px;}
+.ps-updates-hd{font-size:11px;font-weight:700;letter-spacing:.1em;color:#AAAAAA;text-transform:uppercase;margin-bottom:14px;}
+.ps-update-row{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #F2F2F2;}
+.ps-update-row:last-child{border-bottom:none;padding-bottom:0;}
+.ps-update-dot{width:8px;height:8px;border-radius:50%;background:#0069FF;margin-top:5px;flex-shrink:0;}
+.ps-update-dot.green{background:#1E8A47;}
+.ps-update-dot.purple{background:#806FF6;}
+.ps-update-body{flex:1;}
+.ps-update-label{font-size:12px;font-weight:600;color:#1A1A1A;margin-bottom:2px;}
+.ps-update-desc{font-size:12px;color:#888;line-height:1.5;}
+.ps-update-date{font-size:10.5px;color:#BBBBBB;margin-top:2px;}
+/* Sign-up FM panel */
+.ps-fm-checklist{display:flex;flex-direction:column;gap:10px;margin:0 0 28px;}
+.ps-fm-check{display:flex;align-items:center;gap:10px;font-size:14px;color:#333;}
+.ps-fm-check-icon{width:20px;height:20px;border-radius:50%;background:#E8F5EE;border:1.5px solid #1E8A47;display:flex;align-items:center;justify-content:center;font-size:10px;color:#1E8A47;flex-shrink:0;}
+/* Mini FM flag card */
+.mini-fm-card{background:#13141F;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.08);max-width:420px;box-shadow:0 12px 40px rgba(0,0,0,.25);}
+.mfc-hd{background:#0F1020;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;}
+.mfc-hd-title{font-size:11px;font-weight:700;color:rgba(255,255,255,.7);display:flex;align-items:center;gap:7px;}
+.mfc-badge{background:rgba(0,105,255,.15);border:1px solid rgba(0,105,255,.25);color:#6CA0FF;font-size:9px;padding:2px 8px;border-radius:10px;}
+.mfc-body{padding:12px 14px;display:flex;flex-direction:column;gap:8px;}
+.mfc-row{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;}
+.mfc-flag-name{font-size:12px;font-weight:600;color:rgba(255,255,255,.85);}
+.mfc-flag-sub{font-size:10px;color:rgba(255,255,255,.35);margin-top:2px;}
+.mfc-right{display:flex;align-items:center;gap:10px;}
+.mfc-pct{font-size:11px;color:#6CA0FF;font-weight:600;}
+.mfc-tog-on{width:34px;height:19px;border-radius:10px;background:#22C55E;position:relative;flex-shrink:0;}
+.mfc-tog-on::after{content:'';position:absolute;top:2px;right:2px;width:15px;height:15px;border-radius:50%;background:#fff;}
+.mfc-tog-off{width:34px;height:19px;border-radius:10px;background:rgba(255,255,255,.15);position:relative;flex-shrink:0;}
+.mfc-tog-off::after{content:'';position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:rgba(255,255,255,.6);}
+.mfc-footer{padding:8px 14px 10px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,.05);}
+.mfc-stat{font-size:9.5px;color:rgba(255,255,255,.3);}
+.mfc-stat span{color:rgba(255,255,255,.65);font-weight:600;}
+
 </style>
 </head>
 <body>
@@ -911,7 +954,7 @@ a { text-decoration: none; }
       <span class="ps-nl">Resources <span class="ps-nl-chev">&#9662;</span></span>
       <span class="ps-nl">About <span class="ps-nl-chev">&#9662;</span></span>
     </div>
-    <button class="ps-btn-demo" onclick="goToScreen('signin')">Book a demo</button>
+    <button class="ps-btn-demo" onclick="goToScreen('signin','signin')">Book a demo</button>
   </nav>
   <div class="ps-hero">
     <div class="ps-hl">
@@ -919,8 +962,8 @@ a { text-decoration: none; }
       <h1 class="ps-h1">Deliver innovation faster&mdash;without losing control</h1>
       <p class="ps-body">Shipping software isn&rsquo;t the hard part anymore. Managing risk, visibility, and accountability at scale is. CloudBees Unify Feature Management helps organizations deliver customer value continuously&mdash;while maintaining the control leaders need to protect reliability, trust, and the business.</p>
       <div class="ps-ctas">
-        <button class="ps-cta-demo" onclick="goToScreen('signin')">Book a demo</button>
-        <button class="ps-cta-free" onclick="goToScreen('signin')">Try for free</button>
+        <button class="ps-cta-demo" onclick="goToScreen('signin','signin')">Book a demo</button>
+        <button class="ps-cta-free" onclick="goToScreen('signin','signup')">Try for free</button>
       </div>
     </div>
     <div class="ps-hr">
@@ -972,10 +1015,10 @@ a { text-decoration: none; }
     </div>
     <div class="ps-form">
       <div class="ps-tabs">
-        <span class="ps-tab active">Sign in</span>
-        <span class="ps-tab">Sign up</span>
+        <span class="ps-tab" id="tab-signin" onclick="switchAuthTab('signin')">Sign in</span>
+        <span class="ps-tab" id="tab-signup" onclick="switchAuthTab('signup')">Sign up</span>
       </div>
-      <p class="ps-sso-label">SIGN IN WITH:</p>
+      <p class="ps-sso-label" id="auth-sso-label">SIGN IN WITH:</p>
       <div class="ps-sso-btns">
         <button class="ps-sso-btn">
           <svg width="15" height="15" viewBox="0 0 16 16" fill="#1A1A1A"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
@@ -986,69 +1029,109 @@ a { text-decoration: none; }
           Google
         </button>
       </div>
-      <div class="ps-or">OR SIGN IN WITH EMAIL</div>
+      <div class="ps-or" id="auth-or-label">OR SIGN IN WITH EMAIL</div>
+      <div class="ps-input-wrap ps-form-field ps-hidden" id="field-name">
+        <label class="ps-input-label">Full name</label>
+        <input class="ps-input" type="text" placeholder=""/>
+      </div>
       <div class="ps-input-wrap">
         <label class="ps-input-label">Email</label>
         <input class="ps-input" type="email" placeholder=""/>
       </div>
-      <button class="ps-submit" onclick="goToScreen('verify')">Sign in</button>
-      <p class="ps-terms">By signing in, you agree to abide by the CloudBees <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></p>
+      <button class="ps-submit" id="auth-submit" onclick="goToScreen('verify')">Sign in</button>
+      <p class="ps-terms" id="auth-terms">By signing in, you agree to abide by the CloudBees <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></p>
     </div>
   </div>
-  <div class="ps-ar">
-    <span class="ps-ar-badge">Get started for free</span>
-    <h2 class="ps-ar-h">Ship faster. Stay secure. Let AI handle the toil.</h2>
-    <p class="ps-ar-sub-strong">Unify your software delivery without replatforming</p>
-    <p class="ps-ar-sub">CloudBees Unify connects all your DevOps tools into one intelligent control and context plane, giving you security, visibility, and speed without changing how you work.</p>
-    <div class="mini-unify">
-      <div class="mu-chrome">
-        <span class="mu-dot" style="background:#FF5F56"></span>
-        <span class="mu-dot" style="background:#FEBC2E"></span>
-        <span class="mu-dot" style="background:#27C840"></span>
-        <span class="mu-breadcrumb">CloudBees &rsaquo; Analytics &rsaquo; Software delivery activity</span>
-        <span style="margin-left:auto;font-size:7.5px;color:rgba(255,255,255,.3)">Admin settings &#8964;   Jon Swift &#8964;</span>
+
+  <!-- Right panel: two states toggled by JS -->
+  <div class="ps-ar" style="justify-content:center;">
+
+    <!-- Sign-up state: FM-specific PLG content -->
+    <div class="ps-ar-panel" id="panel-signup">
+      <span class="ps-ar-badge" style="background:#1E8A47;">Feature Management &middot; Free trial</span>
+      <h2 class="ps-ar-h" style="margin-top:16px;">Your FM Playground is ready in minutes.</h2>
+      <p class="ps-ar-sub-strong">No credit card. No infrastructure. Just flags.</p>
+      <p class="ps-ar-sub">Create your first feature flag, roll it out to 10% of users, and flip it live &mdash; all in under 5 minutes.</p>
+      <div class="ps-fm-checklist">
+        <div class="ps-fm-check"><div class="ps-fm-check-icon">&#10003;</div> Instant SDK setup for JS, Python, Java &amp; Go</div>
+        <div class="ps-fm-check"><div class="ps-fm-check-icon">&#10003;</div> Percentage rollouts &amp; instant kill switches</div>
+        <div class="ps-fm-check"><div class="ps-fm-check-icon">&#10003;</div> User targeting, A/B splits &amp; overrides</div>
+        <div class="ps-fm-check"><div class="ps-fm-check-icon">&#10003;</div> Real-time flag evaluation observability</div>
       </div>
-      <div class="mu-main-wrap">
-        <div class="mu-sidebar">
-          <div class="mu-si active"></div><div class="mu-si"></div><div class="mu-si"></div>
-          <div class="mu-si"></div><div class="mu-si"></div><div class="mu-si"></div>
+      <div class="mini-fm-card">
+        <div class="mfc-hd">
+          <div class="mfc-hd-title">&#9873; FM Playground <span class="mfc-badge">Trial</span></div>
+          <span style="font-size:9px;color:rgba(255,255,255,.3)">Acme Corp</span>
         </div>
-        <div class="mu-main">
-          <div class="mu-page-title">Analytics</div>
-          <div class="mu-tabbar">
-            <span class="mu-tab a">Software delivery activity</span>
-            <span class="mu-tab">Security insights</span>
-            <span class="mu-tab">Flow metrics</span>
-            <span class="mu-tab">Dora metrics</span>
-          </div>
-          <div class="mu-toolbar">
-            <span class="mu-filter-btn">&#8863; Filter</span>
-            <span class="mu-search">&#128269; Type to search</span>
-            <span class="mu-create-btn">Create release</span>
-          </div>
-          <div class="mu-cards">
-            <div class="mu-row">
-              <div class="mc"><div class="mc-t">Components</div><div class="mc-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="12" fill="none" stroke="#2A2A40" stroke-width="6"/><circle cx="17" cy="17" r="12" fill="none" stroke="#806FF6" stroke-width="6" stroke-dasharray="60 15.4" transform="rotate(-90 17 17)"/></svg><div class="mc-legend"><div class="mc-leg-item"><div class="mc-leg-dot" style="background:#666"></div> 8% Inactive</div><div class="mc-leg-item"><div class="mc-leg-dot" style="background:#806FF6"></div> 92% Active</div></div></div></div>
-              <div class="mc"><div class="mc-t">Workflows</div><div class="mc-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="12" fill="none" stroke="#2A2A40" stroke-width="6"/><circle cx="17" cy="17" r="12" fill="none" stroke="#806FF6" stroke-width="6" stroke-dasharray="67 8.4" transform="rotate(-90 17 17)"/></svg><div class="mc-legend"><div class="mc-leg-item"><div class="mc-leg-dot" style="background:#666"></div> 3% Inactive</div><div class="mc-leg-item"><div class="mc-leg-dot" style="background:#806FF6"></div> 97% Active</div></div></div></div>
-              <div class="mc"><div class="mc-t">Workflow runs</div><div class="mc-bars"><div class="mc-bar" style="width:5px;height:32px;background:#E24B4A"></div><div class="mc-bar" style="width:5px;height:18px;background:#22C55E"></div><div class="mc-bar" style="width:5px;height:24px;background:#22C55E"></div><div class="mc-bar" style="width:5px;height:20px;background:#22C55E"></div><div class="mc-bar" style="width:5px;height:28px;background:#22C55E"></div><div class="mc-bar" style="width:5px;height:16px;background:#E24B4A"></div><div class="mc-bar" style="width:5px;height:30px;background:#22C55E"></div></div></div>
+        <div class="mfc-body">
+          <div class="mfc-row">
+            <div>
+              <div class="mfc-flag-name">new-checkout-ui</div>
+              <div class="mfc-flag-sub">Percentage rollout &middot; Production</div>
             </div>
-            <div class="mu-row">
-              <div class="mc"><div class="mc-t">Commits trend</div><div class="mc-lines"><div class="mc-ln-seg" style="height:12px;background:#806FF6"></div><div class="mc-ln-seg" style="height:20px;background:#806FF6"></div><div class="mc-ln-seg" style="height:14px;background:#0069FF"></div><div class="mc-ln-seg" style="height:26px;background:#0069FF"></div><div class="mc-ln-seg" style="height:18px;background:#806FF6"></div><div class="mc-ln-seg" style="height:30px;background:#0069FF"></div></div></div>
-              <div class="mc"><div class="mc-t">Pull request trend</div><div class="mc-bars"><div class="mc-bar" style="width:5px;height:14px;background:#22C55E"></div><div class="mc-bar" style="width:5px;height:22px;background:#806FF6"></div><div class="mc-bar" style="width:5px;height:10px;background:#E24B4A"></div><div class="mc-bar" style="width:5px;height:18px;background:#22C55E"></div><div class="mc-bar" style="width:5px;height:26px;background:#806FF6"></div></div></div>
-              <div class="mc"><div class="mc-t">Code churn</div><div class="mc-lines"><div class="mc-ln-seg" style="height:20px;background:#F59E0B"></div><div class="mc-ln-seg" style="height:28px;background:#F59E0B"></div><div class="mc-ln-seg" style="height:14px;background:#E24B4A"></div><div class="mc-ln-seg" style="height:24px;background:#F59E0B"></div><div class="mc-ln-seg" style="height:18px;background:#E24B4A"></div></div></div>
+            <div class="mfc-right"><span class="mfc-pct">50%</span><div class="mfc-tog-on"></div></div>
+          </div>
+          <div class="mfc-row">
+            <div>
+              <div class="mfc-flag-name">dark-mode-beta</div>
+              <div class="mfc-flag-sub">User targeting &middot; Staging</div>
             </div>
-            <div class="mu-row">
-              <div class="mc"><div class="mc-t">Build duration</div><div class="mc-hbars"><div class="mc-hbar-row"><span class="mc-hbar-label">pipeline-a</span><div class="mc-hbar" style="width:78%"></div></div><div class="mc-hbar-row"><span class="mc-hbar-label">pipeline-b</span><div class="mc-hbar" style="width:52%"></div></div><div class="mc-hbar-row"><span class="mc-hbar-label">deploy-svc</span><div class="mc-hbar" style="width:88%"></div></div></div></div>
-              <div class="mc"><div class="mc-t">Cycle time</div><div class="mc-hbars"><div class="mc-hbar-row"><span class="mc-hbar-label">Coding</span><div class="mc-hbar" style="width:72%;background:#0069FF"></div></div><div class="mc-hbar-row"><span class="mc-hbar-label">Review</span><div class="mc-hbar" style="width:60%;background:#806FF6"></div></div><div class="mc-hbar-row"><span class="mc-hbar-label">Deploy</span><div class="mc-hbar" style="width:44%;background:#F59E0B"></div></div></div></div>
-              <div class="mc" style="display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px"><div style="font-size:18px;opacity:.2">&#128196;</div><div style="font-size:7px;color:rgba(255,255,255,.2)">No data</div></div>
+            <div class="mfc-right"><span class="mfc-pct">10%</span><div class="mfc-tog-on"></div></div>
+          </div>
+          <div class="mfc-row">
+            <div>
+              <div class="mfc-flag-name">legacy-payment-flow</div>
+              <div class="mfc-flag-sub">Kill switch &middot; Production</div>
+            </div>
+            <div class="mfc-right"><span class="mfc-pct">&mdash;</span><div class="mfc-tog-off"></div></div>
+          </div>
+        </div>
+        <div class="mfc-footer">
+          <span class="mfc-stat"><span>3</span> flags active</span>
+          <span class="mfc-stat"><span>12,440</span> evaluations today</span>
+          <span class="mfc-stat" style="color:#22C55E">&#9679; Connected</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sign-in state: returning user, no acquisition -->
+    <div class="ps-ar-panel ps-hidden" id="panel-signin">
+      <div class="ps-signin-welcome">
+        <p style="font-size:11px;font-weight:700;letter-spacing:.1em;color:#9B8CCC;text-transform:uppercase;margin-bottom:16px;">Welcome back</p>
+        <h2 class="ps-welcome-h">Good to see<br>you again.</h2>
+        <p class="ps-welcome-sub">Pick up where you left off. Your flags, your rollouts, and your team are all waiting.</p>
+        <div class="ps-updates-card">
+          <div class="ps-updates-hd">What&rsquo;s new in Unify</div>
+          <div class="ps-update-row">
+            <div class="ps-update-dot"></div>
+            <div class="ps-update-body">
+              <div class="ps-update-label">AI-powered flag recommendations</div>
+              <div class="ps-update-desc">Claude now suggests optimal rollout strategies based on your traffic patterns.</div>
+              <div class="ps-update-date">June 12, 2026</div>
+            </div>
+          </div>
+          <div class="ps-update-row">
+            <div class="ps-update-dot green"></div>
+            <div class="ps-update-body">
+              <div class="ps-update-label">Slack kill-switch integration</div>
+              <div class="ps-update-desc">Disable flags directly from a Slack command. No login required.</div>
+              <div class="ps-update-date">June 5, 2026</div>
+            </div>
+          </div>
+          <div class="ps-update-row">
+            <div class="ps-update-dot purple"></div>
+            <div class="ps-update-body">
+              <div class="ps-update-label">Multi-environment overrides</div>
+              <div class="ps-update-desc">Override flag state per user across staging and prod simultaneously.</div>
+              <div class="ps-update-date">May 28, 2026</div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
   </div>
 </div>
-<!-- └────────────────────────────────────────────────────────────────────────┘ -->
 
 <!-- ┌── Screen 3: Verification email sent ──────────────────────────────────┐ -->
 <div class="ps" id="ps-verify">
@@ -2103,7 +2186,7 @@ function showToast(msg) {
 }
 
 // ─── Pre-screen navigation ────────────────────────────────────────
-function goToScreen(id) {
+function goToScreen(id, authTab) {
   document.querySelectorAll('.ps').forEach(s => s.classList.remove('ps-on'));
   if (id === 'app') {
     const overlay = document.getElementById('pre-screens');
@@ -2113,7 +2196,9 @@ function goToScreen(id) {
   } else {
     const el = document.getElementById('ps-' + id);
     if (el) { el.classList.add('ps-on'); el.scrollTop = 0; }
-    // Delayed green button on verification screen
+    if (id === 'signin') {
+      switchAuthTab(authTab || 'signup'); // default to sign-up for PLG flow
+    }
     if (id === 'verify') {
       const btn = document.getElementById('ps-sim-btn');
       if (btn) {
@@ -2122,6 +2207,26 @@ function goToScreen(id) {
       }
     }
   }
+}
+
+function switchAuthTab(tab) {
+  const isSignup = tab === 'signup';
+  // Tabs
+  document.getElementById('tab-signin').classList.toggle('active', !isSignup);
+  document.getElementById('tab-signup').classList.toggle('active', isSignup);
+  // Right panels
+  document.getElementById('panel-signup').classList.toggle('ps-hidden', !isSignup);
+  document.getElementById('panel-signin').classList.toggle('ps-hidden', isSignup);
+  // Form labels
+  document.getElementById('auth-sso-label').textContent = isSignup ? 'SIGN UP WITH:' : 'SIGN IN WITH:';
+  document.getElementById('auth-or-label').textContent = isSignup ? 'OR SIGN UP WITH EMAIL' : 'OR SIGN IN WITH EMAIL';
+  document.getElementById('auth-submit').textContent = isSignup ? 'Create free account' : 'Sign in';
+  document.getElementById('auth-terms').innerHTML = isSignup
+    ? 'By creating an account, you agree to the CloudBees <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>'
+    : 'By signing in, you agree to abide by the CloudBees <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>';
+  // Name field: show only on sign-up
+  const nameField = document.getElementById('field-name');
+  if (nameField) nameField.classList.toggle('ps-hidden', !isSignup);
 }
 
 // ─── Init ─────────────────────────────────────────────────────────
